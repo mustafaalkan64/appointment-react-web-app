@@ -5,7 +5,6 @@ import background from "./../assets/img/login-background-image.png";
 import { Link } from 'react-router-dom';
 import UserContext from "./../contexts/UserContext";
 import API from './../api'
-import { useGoogleReCaptchaV2 } from 'react-google-recaptcha-hooks'
 const {Title} = Typography;
 
 const UserLogin = () => {
@@ -14,22 +13,6 @@ const UserLogin = () => {
   const [loading, setLoading] = useState(false);
   const { setIsLoggedIn } = useContext(UserContext);
 
-  const {
-    ReCaptchaBadge,
-    executeReCaptcha,
-    resetReCaptcha
-  } = useGoogleReCaptchaV2({
-    siteKey: 'test-deneme-123',
-    language: 'tr'
-  })
-
-    const handeCaptcha = async () => {
-      const token = await executeReCaptcha()
-  
-      setTimeout(() => {
-        resetReCaptcha()
-      }, 3000)
-    }
 
     const handleSubmit = (values) => {
       console.log(values);
@@ -105,10 +88,6 @@ return (
                 <Checkbox>Beni Hatırla</Checkbox>
             </Form.Item>
             
-            <Form.Item>
-              {ReCaptchaBadge}
-              <button onClick={handeCaptcha}>Click</button>
-            </Form.Item>
             <Form.Item  wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
               <Button type="primary" loading={loading} htmlType="submit">Login</Button>
             </Form.Item>
