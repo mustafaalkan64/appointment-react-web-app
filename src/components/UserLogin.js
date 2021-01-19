@@ -12,8 +12,6 @@ const UserLogin = () => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   const { setIsLoggedIn } = useContext(UserContext);
-
-
     const handleSubmit = (values) => {
       console.log(values);
       setLoading(true);
