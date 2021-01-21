@@ -15,8 +15,7 @@ import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 const { Header, Sider, Content } = Layout;
 
 export default function UserLayout() {
-  const { isLoggedIn } = useContext(UserContext);
-  const token = localStorage.getItem("auth_token");
+  const { isLoggedIn, token } = useContext(UserContext);
 
   const handleToggle = (event) => {
     event.preventDefault();
