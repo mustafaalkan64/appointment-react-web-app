@@ -22,7 +22,6 @@ const UserLogin = () => {
   const [loading, setLoading] = useState(false);
   const { setIsLoggedIn, setToken } = useContext(UserContext);
   const handleSubmit = (values) => {
-    console.log(values);
     setLoading(true);
     const user = {
       Email: values.email,
@@ -82,10 +81,6 @@ const UserLogin = () => {
               name="email"
               label="Email"
               rules={[
-                {
-                  type: "email",
-                  message: "Email Adresinizi Doğru Formatta Değil!",
-                },
                 {
                   required: true,
                   message: "Lütfen Email Adresi Giriniz",

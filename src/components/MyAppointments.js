@@ -1,11 +1,11 @@
 //src/components/pages/list.tsx
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import { Table, Row, Col, Button, Typography, Input } from "antd";
 import { useHistory } from "react-router";
 import { Tag, Space, message, Spin, Select } from "antd";
 import API from "./../api";
 import { serialize } from "./../utils";
-import alertify from "alertifyjs";
+import UserContext from "./../contexts/UserContext";
 
 export default function MyAppointments(props) {
   const { Title } = Typography;
@@ -15,10 +15,12 @@ export default function MyAppointments(props) {
   const [searchText, setSearchText] = useState("");
   const [sortValue, setSortValue] = useState("");
   const type = props.isCanceled ? 0 : 1;
+  const { token } = useContext(UserContext);
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
   });
+
   const pageHeader = props.isCanceled
     ? "İptal Ettiğim Randevularım"
     : "Aktif Randevularım";
@@ -48,6 +50,7 @@ export default function MyAppointments(props) {
       API.put(`Appointment/cancelAppointment?id=${obj.id}`, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       })
         .then((res) => {
@@ -56,7 +59,7 @@ export default function MyAppointments(props) {
         })
         .catch((error) => {
           if (error.response.status === 401) {
-            this.props.history.push("/login");
+            history.push("/login");
             message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
           } else if (error.response.status === 404) {
             message.warning("Böyle Bir Randevu Bulunamadı");
@@ -97,12 +100,16 @@ export default function MyAppointments(props) {
     var queryString = serialize({
       current: params.pagination.current,
       pageSize: params.pagination.pageSize,
-      userId: 1,
       type: type,
       searchText,
       sortValue,
     });
-    API.get(`Appointment/getByUserId?${queryString}`)
+    API.get(`Appointment/getByUserId?${queryString}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => {
         setAppointmentData(res.data.item1);
         setLoading(false);
@@ -113,8 +120,8 @@ export default function MyAppointments(props) {
       })
       .catch((error) => {
         if (error.response.status === 401) {
-          this.props.history.push("/login");
-          alertify.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
+          history.push("/login");
+          message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
         } else {
           message.error("Randevuları Getirme Esnasında Hata ile Karşılaşıldı!");
         }
