@@ -64,8 +64,8 @@ const MyPersonelInformations = () => {
       });
   };
 
-  const getCities = () => {
-    API.get(`Place/getCities`, {
+  const getCities = async () => {
+    await API.get(`Place/getCities`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -80,8 +80,8 @@ const MyPersonelInformations = () => {
       });
   };
 
-  const getDistricts = (cityId) => {
-    API.get(`Place/getDistrictsByCityId?cityId=${cityId}`, {
+  const getDistricts = async (cityId) => {
+    await API.get(`Place/getDistrictsByCityId?cityId=${cityId}`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -95,8 +95,8 @@ const MyPersonelInformations = () => {
       });
   };
 
-  const getZones = (districtId) => {
-    API.get(`Place/GetZonesByDistrictId?districtId=${districtId}`, {
+  const getZones = async (districtId) => {
+    await API.get(`Place/GetZonesByDistrictId?districtId=${districtId}`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -112,9 +112,9 @@ const MyPersonelInformations = () => {
 
   useEffect(() => {
     forceUpdate({});
-    const getCurrentUser = () => {
+    const getCurrentUser = async () => {
       setLoading(true);
-      API.get(`User/currentUser?`, {
+      await API.get(`User/currentUser?`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

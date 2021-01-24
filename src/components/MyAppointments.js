@@ -26,10 +26,6 @@ export default function MyAppointments(props) {
     : "Aktif Randevularım";
   const { Option } = Select;
 
-  useEffect(() => {
-    fetch({ pagination });
-  }, []);
-
   const handleClick = () => {
     history.push("/form");
   };
@@ -42,6 +38,7 @@ export default function MyAppointments(props) {
   );
 
   useEffect(() => {
+    debugger;
     fetch({ pagination });
   }, [sortValue, searchText]);
 
@@ -95,7 +92,7 @@ export default function MyAppointments(props) {
     });
   };
 
-  const fetch = (params) => {
+  const fetch = async (params) => {
     setLoading(true);
     var queryString = serialize({
       current: params.pagination.current,
@@ -104,7 +101,7 @@ export default function MyAppointments(props) {
       searchText,
       sortValue,
     });
-    API.get(`Appointment/getByUserId?${queryString}`, {
+    await API.get(`Appointment/getByUserId?${queryString}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
