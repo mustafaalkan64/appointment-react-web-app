@@ -10,22 +10,20 @@ import UserLogin from "./UserLogin";
 import NoMatch from "./NoMatch";
 import Home from "./UserHome";
 import SideNav from "./SideNav";
-import { Layout } from "antd";
+import ChangeMyPassword from "./ChangeMyPassword";
+import { Layout, Menu, Breadcrumb } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 const { Header, Sider, Content } = Layout;
 
 export default function UserLayout() {
   const { isLoggedIn, token } = useContext(UserContext);
 
-  const handleToggle = (event) => {
-    event.preventDefault();
-    collapse1 ? setCollapse(false) : setCollapse(true);
-  };
+  const [collapsed, setCollapse] = useState(false);
+  useEffect(() => {}, []);
 
-  const [collapse1, setCollapse] = useState(false);
-  useEffect(() => {
-    window.innerWidth <= 760 ? setCollapse(true) : setCollapse(false);
-  }, []);
+  const onCollapse = (collapsed) => {
+    setCollapse(collapsed);
+  };
 
   return (
     <div>
@@ -37,23 +35,27 @@ export default function UserLayout() {
           render={() =>
             isLoggedIn || token != null ? (
               <Layout>
-                <Sider trigger={null} collapsible collapsed={collapse1}>
+                <Sider
+                  collapsible
+                  collapsed={collapsed}
+                  onCollapse={onCollapse}
+                >
                   <SideNav />
                 </Sider>
                 <Layout>
-                  <Header
-                    className="siteLayoutBackground"
-                    style={{ padding: 0, background: "#001529" }}
-                  >
-                    {React.createElement(
-                      collapse1 ? MenuUnfoldOutlined : MenuFoldOutlined,
-                      {
-                        className: "trigger",
-                        onClick: handleToggle,
-                        style: { color: "#fff" },
-                      }
-                    )}
+                  <Header className="header">
+                    <div className="logo" />
+                    <Menu
+                      theme="dark"
+                      mode="horizontal"
+                      defaultSelectedKeys={["2"]}
+                    >
+                      <Menu.Item key="1">nav 1</Menu.Item>
+                      <Menu.Item key="2">nav 2</Menu.Item>
+                      <Menu.Item key="3">nav 3</Menu.Item>
+                    </Menu>
                   </Header>
+
                   <Content
                     style={{
                       margin: "24px 16px",
@@ -62,6 +64,11 @@ export default function UserLayout() {
                       background: "#fff",
                     }}
                   >
+                    <Breadcrumb style={{ margin: "16px 0" }}>
+                      <Breadcrumb.Item>Home</Breadcrumb.Item>
+                      <Breadcrumb.Item>List</Breadcrumb.Item>
+                      <Breadcrumb.Item>App</Breadcrumb.Item>
+                    </Breadcrumb>
                     <Switch>
                       <Route path="/" exact component={Home} />
                       <Route
@@ -84,6 +91,10 @@ export default function UserLayout() {
                       <Route
                         path="/myPersonelInformations"
                         component={MyPersonelInformations}
+                      />
+                      <Route
+                        path="/changeMyPassword"
+                        component={ChangeMyPassword}
                       />
                       <Route path="*">
                         <NoMatch />

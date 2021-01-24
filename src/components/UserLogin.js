@@ -30,7 +30,7 @@ const UserLogin = () => {
     API.post(`User/authenticate`, user)
       .then((res) => {
         localStorage.setItem("auth_token", res.data);
-        message.success("Başarıyla Giriş Yaptınız!");
+        message.success("Hoşgeldiniz!");
         setIsLoggedIn(true);
         setToken(res.data);
         setLoading(false);
