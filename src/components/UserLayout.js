@@ -11,9 +11,12 @@ import NoMatch from "./NoMatch";
 import Home from "./UserHome";
 import SideNav from "./SideNav";
 import ChangeMyPassword from "./ChangeMyPassword";
-import { Layout, Menu, Breadcrumb } from "antd";
-import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
+import { Layout, Menu, Breadcrumb, Typography } from "antd";
+import { UserOutlined, SettingFilled } from "@ant-design/icons";
+
 const { Header, Sider, Content } = Layout;
+const { SubMenu } = Menu;
+const { Title } = Typography;
 
 export default function UserLayout() {
   const { isLoggedIn, token } = useContext(UserContext);
@@ -45,14 +48,21 @@ export default function UserLayout() {
                 <Layout>
                   <Header className="header">
                     <div className="logo" />
+
                     <Menu
                       theme="dark"
                       mode="horizontal"
+                      style={{ float: "right" }}
                       defaultSelectedKeys={["2"]}
                     >
-                      <Menu.Item key="1">nav 1</Menu.Item>
-                      <Menu.Item key="2">nav 2</Menu.Item>
-                      <Menu.Item key="3">nav 3</Menu.Item>
+                      <Menu.Item key="deneme">
+                        Hoşgeldiniz Mustafa ALKAN
+                      </Menu.Item>
+                      <SubMenu key="account" icon={<SettingFilled />}>
+                        <Menu.Item key="setting:1">Hesap Bilgilerim</Menu.Item>
+                        <Menu.Item key="setting:2">Ayarlar</Menu.Item>
+                        <Menu.Item key="setting:3">Çıkış</Menu.Item>
+                      </SubMenu>
                     </Menu>
                   </Header>
 
