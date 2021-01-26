@@ -42,26 +42,30 @@ export default function MyAppointments(props) {
     fetch({ pagination });
   }, [sortValue, searchText]);
 
-  const cancelAppointment = (obj) => {
+  const cancelAppointment = async (obj) => {
     if (window.confirm("Randevuyu İptal Etmek İstediğinize Emin misiniz?")) {
-      API.put(`Appointment/cancelAppointment?id=${obj.id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      await API.put(
+        `Appointment/cancelAppointment/${obj.id}`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
         .then((res) => {
           message.success("Randevunuzu İptal Ettiniz.");
           fetch({ pagination });
         })
         .catch((error) => {
           if (error.response.status === 401) {
-            history.push("/login");
+            //history.push("/login");
             message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
           } else if (error.response.status === 404) {
             message.warning("Böyle Bir Randevu Bulunamadı");
           } else {
-            message.error("İşlem Sırasında Hata Oluştu!");
+            message.error(error.response.data);
           }
         });
     }
@@ -84,7 +88,6 @@ export default function MyAppointments(props) {
   };
 
   const handleChangeSearch = (e) => {
-    console.log(e.target.value);
     setSearchText(e.target.value);
     setPagination({
       current: 1,

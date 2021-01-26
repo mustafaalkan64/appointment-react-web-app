@@ -12,11 +12,10 @@ import Home from "./UserHome";
 import SideNav from "./SideNav";
 import ChangeMyPassword from "./ChangeMyPassword";
 import { Layout, Menu, Breadcrumb, Typography } from "antd";
-import { UserOutlined, SettingFilled } from "@ant-design/icons";
+import { SettingFilled } from "@ant-design/icons";
 
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
-const { Title } = Typography;
 
 export default function UserLayout() {
   const { isLoggedIn, token } = useContext(UserContext);
