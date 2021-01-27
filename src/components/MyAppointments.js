@@ -63,7 +63,6 @@ export default function MyAppointments(props) {
 
   const cancelAppointment = async (appointmentId, cancelReasonText) => {
     if (window.confirm("Randevuyu İptal Etmek İstediğinize Emin misiniz?")) {
-      debugger;
       const cancelReason = {
         CancelReason: cancelReasonText,
       };
@@ -297,6 +296,9 @@ export default function MyAppointments(props) {
         title="Randevu İptal"
         visible={isModalVisible}
         onOk={handleOk}
+        okButtonProps={{
+          disabled: appointmentCancelReason == "" ? true : false,
+        }}
         onCancel={handleCancel}
       >
         <Row gutter={[40, 0]}>
