@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router";
 import UserContext from "./../contexts/UserContext";
+import BreadCrumbContext from "./../contexts/BreadcrumbContext";
 import {
   Form,
   Input,
@@ -24,6 +25,11 @@ const { Title } = Typography;
 const MyPersonelInformations = () => {
   const [form] = Form.useForm();
   const { token } = useContext(UserContext);
+  const {
+    setFirstBreadcrumb,
+    setSecondBreadcrumb,
+    setLastBreadcrumb,
+  } = useContext(BreadCrumbContext);
   const history = useHistory();
   const [, forceUpdate] = useState({}); // To disable submit button at the beginning.
   const [cities, setCities] = useState([]);
@@ -150,6 +156,9 @@ const MyPersonelInformations = () => {
     };
     getCities();
     getCurrentUser();
+    setFirstBreadcrumb("Anasayfa");
+    setSecondBreadcrumb("Hesap");
+    setLastBreadcrumb("Profilim");
   }, []);
 
   const handleCityChange = (value) => {

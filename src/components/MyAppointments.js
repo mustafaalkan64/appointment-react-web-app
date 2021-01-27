@@ -6,6 +6,7 @@ import { Tag, Space, message, Spin, Select } from "antd";
 import API from "./../api";
 import { serialize } from "./../utils";
 import UserContext from "./../contexts/UserContext";
+import BreadCrumbContext from "./../contexts/BreadcrumbContext";
 const { TextArea } = Input;
 
 export default function MyAppointments(props) {
@@ -17,6 +18,11 @@ export default function MyAppointments(props) {
   const [sortValue, setSortValue] = useState("");
   const type = props.isCanceled ? 0 : 1;
   const { token } = useContext(UserContext);
+  const {
+    setFirstBreadcrumb,
+    setSecondBreadcrumb,
+    setLastBreadcrumb,
+  } = useContext(BreadCrumbContext);
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
@@ -59,6 +65,11 @@ export default function MyAppointments(props) {
 
   useEffect(() => {
     fetch({ pagination });
+    setFirstBreadcrumb("Anasayfa");
+    setSecondBreadcrumb("Randevu Bilgilerim");
+    type == 0
+      ? setLastBreadcrumb("İptal Edilen Randevularım")
+      : setLastBreadcrumb("Aktif Randevularım");
   }, [sortValue, searchText]);
 
   const cancelAppointment = async (appointmentId, cancelReasonText) => {

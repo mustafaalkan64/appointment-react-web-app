@@ -1,7 +1,8 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Form, Input, Row, Col, Button, Typography, message } from "antd";
 import { useHistory } from "react-router";
 import UserContext from "./../contexts/UserContext";
+import BreadCrumbContext from "./../contexts/BreadcrumbContext";
 import API from "./../api";
 
 const { Title } = Typography;
@@ -32,8 +33,19 @@ const tailFormItemLayout = {
 export default function ChangeMyPassword() {
   const [form] = Form.useForm();
   const { token } = useContext(UserContext);
+  const {
+    setFirstBreadcrumb,
+    setSecondBreadcrumb,
+    setLastBreadcrumb,
+  } = useContext(BreadCrumbContext);
   const history = useHistory();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setFirstBreadcrumb("Anasayfa");
+    setSecondBreadcrumb("Hesap");
+    setLastBreadcrumb("Şifremi Değiştir");
+  }, []);
 
   const onFinish = (values) => {
     console.log("Received values of form: ", values);

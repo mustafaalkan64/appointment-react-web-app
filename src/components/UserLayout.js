@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Route, Switch } from "react-router-dom";
 import UserContext from "./../contexts/UserContext";
+import BreadCrumbContext from "./../contexts/BreadcrumbContext";
 import MyActiveAppointments from "./myActiveAppointments";
 import MyCanceledAppointments from "./myCanceledAppointments";
 import CreateAppointment from "./CreateAppointment";
@@ -19,6 +20,9 @@ const { Sider, Content } = Layout;
 
 export default function UserLayout() {
   const { isLoggedIn, token } = useContext(UserContext);
+  const { firstBreadcrumb, secondBreadcrumb, lastBreadcrumb } = useContext(
+    BreadCrumbContext
+  );
 
   const [collapsed, setCollapse] = useState(false);
   useEffect(() => {}, []);
@@ -56,9 +60,9 @@ export default function UserLayout() {
                     }}
                   >
                     <Breadcrumb style={{ margin: "16px 0" }}>
-                      <Breadcrumb.Item>Home</Breadcrumb.Item>
-                      <Breadcrumb.Item>List</Breadcrumb.Item>
-                      <Breadcrumb.Item>App</Breadcrumb.Item>
+                      <Breadcrumb.Item>{firstBreadcrumb}</Breadcrumb.Item>
+                      <Breadcrumb.Item>{secondBreadcrumb}</Breadcrumb.Item>
+                      <Breadcrumb.Item>{lastBreadcrumb}</Breadcrumb.Item>
                     </Breadcrumb>
                     <Switch>
                       <Route path="/" exact component={Home} />
