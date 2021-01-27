@@ -1,11 +1,12 @@
 //src/components/pages/list.tsx
 import React, { useEffect, useState, useCallback, useContext } from "react";
-import { Table, Row, Col, Button, Typography, Input } from "antd";
+import { Table, Row, Col, Button, Typography, Input, Modal } from "antd";
 import { useHistory } from "react-router";
 import { Tag, Space, message, Spin, Select } from "antd";
 import API from "./../api";
 import { serialize } from "./../utils";
 import UserContext from "./../contexts/UserContext";
+const { TextArea } = Input;
 
 export default function MyAppointments(props) {
   const { Title } = Typography;
@@ -20,6 +21,25 @@ export default function MyAppointments(props) {
     current: 1,
     pageSize: 10,
   });
+  const [appointmentCancelReason, setAppointmentCancelReason] = useState("");
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState(0);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModel = (obj) => {
+    setIsModalVisible(true);
+    setSelectedAppointmentId(obj.id);
+    setAppointmentCancelReason("");
+  };
+
+  const handleOk = () => {
+    cancelAppointment(selectedAppointmentId, appointmentCancelReason);
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
   const pageHeader = props.isCanceled
     ? "İptal Ettiğim Randevularım"
@@ -38,15 +58,18 @@ export default function MyAppointments(props) {
   );
 
   useEffect(() => {
-    debugger;
     fetch({ pagination });
   }, [sortValue, searchText]);
 
-  const cancelAppointment = async (obj) => {
+  const cancelAppointment = async (appointmentId, cancelReasonText) => {
     if (window.confirm("Randevuyu İptal Etmek İstediğinize Emin misiniz?")) {
+      debugger;
+      const cancelReason = {
+        CancelReason: cancelReasonText,
+      };
       await API.put(
-        `Appointment/cancelAppointment/${obj.id}`,
-        {},
+        `Appointment/cancelAppointment/${appointmentId}`,
+        cancelReason,
         {
           headers: {
             "Content-Type": "application/json",
@@ -60,7 +83,7 @@ export default function MyAppointments(props) {
         })
         .catch((error) => {
           if (error.response.status === 401) {
-            //history.push("/login");
+            history.push("/login");
             message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
           } else if (error.response.status === 404) {
             message.warning("Böyle Bir Randevu Bulunamadı");
@@ -199,7 +222,7 @@ export default function MyAppointments(props) {
             disabled={obj.status === 0}
             block
             type={obj.status === 1 ? "danger" : "primary"}
-            onClick={() => cancelAppointment(obj)}
+            onClick={() => showModel(obj)}
           >
             {obj.status == 1 ? "İptal Et" : "Aktif Et"}
           </Button>
@@ -270,6 +293,28 @@ export default function MyAppointments(props) {
           )}
         </Col>
       </Row>
+      <Modal
+        title="Randevu İptal"
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <Row gutter={[40, 0]}>
+          <Col span={24}>Randevu İptal Nedeni</Col>
+        </Row>
+        <Row gutter={[40, 0]}>
+          <Col span={24}>
+            <TextArea
+              showCount
+              value={appointmentCancelReason}
+              onChange={(event) =>
+                setAppointmentCancelReason(event.target.value)
+              }
+              maxLength={500}
+            />
+          </Col>
+        </Row>
+      </Modal>
     </div>
   );
 }
