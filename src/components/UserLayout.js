@@ -10,12 +10,12 @@ import UserLogin from "./UserLogin";
 import NoMatch from "./NoMatch";
 import Home from "./UserHome";
 import SideNav from "./SideNav";
+import LayoutHeader from "./LayoutHeader";
 import ChangeMyPassword from "./ChangeMyPassword";
-import { Layout, Menu, Breadcrumb, Typography } from "antd";
-import { SettingFilled } from "@ant-design/icons";
+import UserSettings from "./UserSettings";
+import { Layout, Menu, Breadcrumb } from "antd";
 
-const { Header, Sider, Content } = Layout;
-const { SubMenu } = Menu;
+const { Sider, Content } = Layout;
 
 export default function UserLayout() {
   const { isLoggedIn, token } = useContext(UserContext);
@@ -45,25 +45,7 @@ export default function UserLayout() {
                   <SideNav />
                 </Sider>
                 <Layout>
-                  <Header className="header">
-                    <div className="logo" />
-
-                    <Menu
-                      theme="dark"
-                      mode="horizontal"
-                      style={{ float: "right" }}
-                      defaultSelectedKeys={["2"]}
-                    >
-                      <Menu.Item key="deneme">
-                        Hoşgeldiniz Mustafa ALKAN
-                      </Menu.Item>
-                      <SubMenu key="account" icon={<SettingFilled />}>
-                        <Menu.Item key="setting:1">Hesap Bilgilerim</Menu.Item>
-                        <Menu.Item key="setting:2">Ayarlar</Menu.Item>
-                        <Menu.Item key="setting:3">Çıkış</Menu.Item>
-                      </SubMenu>
-                    </Menu>
-                  </Header>
+                  <LayoutHeader />
 
                   <Content
                     style={{
@@ -105,6 +87,7 @@ export default function UserLayout() {
                         path="/changeMyPassword"
                         component={ChangeMyPassword}
                       />
+                      <Route path="/userSettings" component={UserSettings} />
                       <Route path="*">
                         <NoMatch />
                       </Route>

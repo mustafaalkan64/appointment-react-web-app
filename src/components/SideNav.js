@@ -30,7 +30,7 @@ const SideNav = () => {
   const redirectHomePage = () => {
     history.push("/");
   };
-  const handeLogout = () => {
+  const handleLogout = () => {
     localStorage.removeItem("auth_token");
     setIsLoggedIn(false);
     setToken(null);
@@ -78,7 +78,7 @@ const SideNav = () => {
           </Menu.Item>
         </SubMenu>
 
-        <Menu.Item icon={<LogoutOutlined />} key="10" onClick={handeLogout}>
+        <Menu.Item icon={<LogoutOutlined />} key="10" onClick={handleLogout}>
           <span>Çıkış</span>
         </Menu.Item>
       </Menu>
