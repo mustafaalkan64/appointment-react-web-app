@@ -143,6 +143,7 @@ const UserRegister = () => {
                   required: true,
                   message: "Lütfen Şifrenizi Giriniz",
                 },
+                { min: 8, message: "Şifreniz En Az 8 Karakterden Oluşmalıdır" },
               ]}
               hasFeedback
             >

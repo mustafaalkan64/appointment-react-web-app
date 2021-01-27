@@ -62,7 +62,6 @@ export default function ChangeMyPassword() {
         setLoading(false);
       })
       .catch((error) => {
-        debugger;
         setLoading(false);
         if (error.response.status === 401) {
           history.push("/login");
@@ -111,7 +110,7 @@ export default function ChangeMyPassword() {
               required: true,
               message: "Lütfen Yeni Şifrenizi Giriniz",
             },
-            { min: 6, message: "Şifreniz En Az 6 Karakterden Oluşmalıdır" },
+            { min: 8, message: "Şifreniz En Az 8 Karakterden Oluşmalıdır" },
             ({ getFieldValue }) => ({
               validator(_, value) {
                 if (!value || getFieldValue("currentPassword") != value) {
