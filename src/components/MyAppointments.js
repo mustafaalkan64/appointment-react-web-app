@@ -67,7 +67,7 @@ export default function MyAppointments(props) {
         CancelReason: cancelReasonText,
       };
       await API.put(
-        `Appointment/cancelAppointment/${appointmentId}`,
+        `appointment/cancelAppointment/${appointmentId}`,
         cancelReason,
         {
           headers: {
@@ -126,7 +126,7 @@ export default function MyAppointments(props) {
       searchText,
       sortValue,
     });
-    await API.get(`Appointment/getByUserId?${queryString}`, {
+    await API.get(`appointment/getByUserId?${queryString}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

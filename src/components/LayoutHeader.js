@@ -20,7 +20,7 @@ export default function LayoutHeader() {
 
   useEffect(() => {
     const getCurrentUsers = async () => {
-      await API.get(`User/currentUser`, {
+      await API.get(`user/currentUser`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

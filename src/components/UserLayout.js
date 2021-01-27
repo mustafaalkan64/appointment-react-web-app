@@ -13,7 +13,7 @@ import SideNav from "./SideNav";
 import LayoutHeader from "./LayoutHeader";
 import ChangeMyPassword from "./ChangeMyPassword";
 import UserSettings from "./UserSettings";
-import { Layout, Menu, Breadcrumb } from "antd";
+import { Layout, Breadcrumb } from "antd";
 
 const { Sider, Content } = Layout;
 

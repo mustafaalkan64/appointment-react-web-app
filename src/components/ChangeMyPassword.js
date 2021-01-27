@@ -47,7 +47,7 @@ export default function ChangeMyPassword() {
 
   const setPassword = async (changePasswordModel) => {
     setLoading(true);
-    await API.put(`User/changePassword`, changePasswordModel, {
+    await API.put(`user/changePassword`, changePasswordModel, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

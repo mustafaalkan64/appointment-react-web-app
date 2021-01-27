@@ -27,7 +27,7 @@ const UserLogin = () => {
       Email: values.email,
       Password: values.password,
     };
-    await API.post(`User/authenticate`, user)
+    await API.post(`user/authenticate`, user)
       .then((res) => {
         localStorage.setItem("auth_token", res.data);
         message.success("Hoşgeldiniz!");
@@ -39,22 +39,6 @@ const UserLogin = () => {
       .catch((error) => {
         message.error(error.response.data);
         setLoading(false);
-      });
-  };
-
-  const getCurrentUsers = async () => {
-    await API.get(`User/currentUser`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        setCities(res.data);
-        console.log(form.city);
-        console.log(cities);
-      })
-      .catch((error) => {
-        message.error("Şehirleri Getirme Sırasında Hata ile Karşılaşıldı");
       });
   };
 

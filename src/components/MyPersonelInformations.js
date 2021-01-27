@@ -37,7 +37,7 @@ const MyPersonelInformations = () => {
 
   const setCurrenUser = (userForm) => {
     setLoading(true);
-    API.put(`User/updateUser`, userForm, {
+    API.put(`user/updateUser`, userForm, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -65,7 +65,7 @@ const MyPersonelInformations = () => {
   };
 
   const getCities = async () => {
-    await API.get(`Place/getCities`, {
+    await API.get(`place/getCities`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -81,7 +81,7 @@ const MyPersonelInformations = () => {
   };
 
   const getDistricts = async (cityId) => {
-    await API.get(`Place/getDistrictsByCityId?cityId=${cityId}`, {
+    await API.get(`place/getDistrictsByCityId?cityId=${cityId}`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -96,7 +96,7 @@ const MyPersonelInformations = () => {
   };
 
   const getZones = async (districtId) => {
-    await API.get(`Place/GetZonesByDistrictId?districtId=${districtId}`, {
+    await API.get(`place/GetZonesByDistrictId?districtId=${districtId}`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -114,7 +114,7 @@ const MyPersonelInformations = () => {
     forceUpdate({});
     const getCurrentUser = async () => {
       setLoading(true);
-      await API.get(`User/currentUser?`, {
+      await API.get(`user/currentUser?`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

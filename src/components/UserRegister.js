@@ -32,7 +32,7 @@ const UserRegister = () => {
       Gender: values.gender,
     };
     setLoading(true);
-    API.post(`User/register`, user)
+    API.post(`user/register`, user)
       .then((res) => {
         localStorage.setItem("auth_token", res.data.response);
         message.success("You've Registered Successfuly!");
