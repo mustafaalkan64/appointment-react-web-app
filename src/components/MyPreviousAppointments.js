@@ -1,12 +1,12 @@
 import React from "react";
 import MyAppointments from "./MyAppointments";
 
-export default function myCanceledAppointments() {
+export default function myPreviousAppointments() {
   return (
     <div>
       <MyAppointments
-        status={0}
-        header={"İptal Ettiğim Randevularım"}
+        status={2}
+        header={"Geçmiş Randevularım"}
       ></MyAppointments>
     </div>
   );

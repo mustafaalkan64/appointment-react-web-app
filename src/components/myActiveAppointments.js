@@ -1,10 +1,10 @@
-import React from 'react'
-import MyAppointments from './MyAppointments'
+import React from "react";
+import MyAppointments from "./MyAppointments";
 
 export default function myActiveAppointments() {
-    return (
-        <div>
-            <MyAppointments isCanceled={false}></MyAppointments>
-        </div>
-    )
+  return (
+    <div>
+      <MyAppointments status={1} header={"Aktif Randevularım"}></MyAppointments>
+    </div>
+  );
 }

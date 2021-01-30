@@ -3,7 +3,9 @@ import { Route, Switch } from "react-router-dom";
 import UserContext from "./../contexts/UserContext";
 import BreadCrumbContext from "./../contexts/BreadcrumbContext";
 import MyActiveAppointments from "./myActiveAppointments";
-import MyCanceledAppointments from "./myCanceledAppointments";
+import MyCanceledAppointments from "./MyCanceledAppointments";
+import MyPreviousAppointments from "./MyPreviousAppointments";
+import MyOncomingAppointments from "./MyOncomingAppointments";
 import CreateAppointment from "./CreateAppointment";
 import MyPersonelInformations from "./MyPersonelInformations";
 import UserRegister from "./UserRegister";
@@ -15,6 +17,7 @@ import LayoutHeader from "./LayoutHeader";
 import ChangeMyPassword from "./ChangeMyPassword";
 import UserSettings from "./UserSettings";
 import { Layout, Breadcrumb } from "antd";
+import myOncomingAppointments from "./MyOncomingAppointments";
 
 const { Sider, Content } = Layout;
 
@@ -80,12 +83,20 @@ export default function UserLayout() {
                         component={MyCanceledAppointments}
                       />
                       <Route
+                        path="/MyPreviousAppointments"
+                        component={MyPreviousAppointments}
+                      />
+                      <Route
                         path="/createAppointment"
                         component={CreateAppointment}
                       />
                       <Route
                         path="/myPersonelInformations"
                         component={MyPersonelInformations}
+                      />
+                      <Route
+                        path="/myOncomingAppointments"
+                        component={MyOncomingAppointments}
                       />
                       <Route
                         path="/changeMyPassword"

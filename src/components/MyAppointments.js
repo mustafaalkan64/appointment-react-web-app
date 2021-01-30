@@ -16,7 +16,8 @@ export default function MyAppointments(props) {
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [sortValue, setSortValue] = useState("");
-  const type = props.isCanceled ? 0 : 1;
+  const type = props.status;
+  const header = props.header;
   const { token } = useContext(UserContext);
   const {
     setFirstBreadcrumb,
@@ -47,9 +48,7 @@ export default function MyAppointments(props) {
     setIsModalVisible(false);
   };
 
-  const pageHeader = props.isCanceled
-    ? "İptal Ettiğim Randevularım"
-    : "Aktif Randevularım";
+  const pageHeader = header;
   const { Option } = Select;
 
   const handleClick = () => {
@@ -67,9 +66,7 @@ export default function MyAppointments(props) {
     fetch({ pagination });
     setFirstBreadcrumb("Anasayfa");
     setSecondBreadcrumb("Randevu Bilgilerim");
-    type == 0
-      ? setLastBreadcrumb("İptal Edilen Randevularım")
-      : setLastBreadcrumb("Aktif Randevularım");
+    setLastBreadcrumb(header);
   }, [sortValue, searchText]);
 
   const cancelAppointment = async (appointmentId, cancelReasonText) => {
@@ -104,13 +101,16 @@ export default function MyAppointments(props) {
     }
   };
 
-  const convertWithoutTimeZone = (datetime) => {
+  const convertToFullDate = (datetime) => {
     var d = new Date(datetime);
     var month = d.getUTCMonth() + 1; //months from 1-12
     var day = d.getDate();
     var year = d.getUTCFullYear();
 
-    var newdate = day + "." + month + "." + year;
+    var minutes = d.getMinutes();
+    var hour = d.getHours();
+
+    var newdate = `${day}.${month}.${year} ${hour}:${minutes}`;
     return newdate;
   };
 
@@ -154,7 +154,6 @@ export default function MyAppointments(props) {
       .catch((error) => {
         if (error.response.status === 401) {
           history.push("/login");
-          message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
         } else {
           message.error("Randevuları Getirme Esnasında Hata ile Karşılaşıldı!");
         }
@@ -174,20 +173,16 @@ export default function MyAppointments(props) {
       render: (text) => <a>{text}</a>,
     },
     {
-      title: "Randevu Tarihi",
-      dataIndex: "appointmentDate",
-      key: "appointmentDate",
-      render: (date) => <a>{convertWithoutTimeZone(date)}</a>,
+      title: "Randevu Başlangıç Tarihi",
+      dataIndex: "appointmentBeginDate",
+      key: "appointmentBeginDate",
+      render: (date) => <a>{convertToFullDate(date)}</a>,
     },
     {
-      title: "Başlangıç Saati",
-      dataIndex: "beginDate",
-      key: "beginDate",
-    },
-    {
-      title: "Bitiş Saati",
-      dataIndex: "endDate",
-      key: "endDate",
+      title: "Randevu Bitiş Tarihi",
+      dataIndex: "appointmentEndDate",
+      key: "appointmentEndDate",
+      render: (date) => <a>{convertToFullDate(date)}</a>,
     },
     {
       title: "Durumu",

@@ -27,6 +27,12 @@ const SideNav = () => {
   const handleChangeMyPassword = () => {
     history.push("/changeMyPassword");
   };
+  const handleMyPreviousAppointments = () => {
+    history.push("/myPreviousAppointments");
+  };
+  const handleMyOncomingAppointments = () => {
+    history.push("/myOncomingAppointments");
+  };
   const redirectHomePage = () => {
     history.push("/");
   };
@@ -61,8 +67,12 @@ const SideNav = () => {
           <Menu.Item key="5" onClick={handleMyCanceledAppointments}>
             İptal Edilen Randevularım
           </Menu.Item>
-          <Menu.Item key="6">Yaklaşan Randevularım</Menu.Item>
-          <Menu.Item key="7">Geçmiş Randevularım</Menu.Item>
+          <Menu.Item key="6" onClick={handleMyOncomingAppointments}>
+            Yaklaşan Randevularım
+          </Menu.Item>
+          <Menu.Item key="7" onClick={handleMyPreviousAppointments}>
+            Geçmiş Randevularım
+          </Menu.Item>
         </SubMenu>
 
         <SubMenu
