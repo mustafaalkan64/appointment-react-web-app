@@ -8,6 +8,7 @@ import MyPreviousAppointments from "./MyPreviousAppointments";
 import MyOncomingAppointments from "./MyOncomingAppointments";
 import CreateAppointment from "./CreateAppointment";
 import MyPersonelInformations from "./MyPersonelInformations";
+import ForgotPassword from "./ForgotPassword";
 import UserRegister from "./UserRegister";
 import UserLogin from "./UserLogin";
 import NoMatch from "./NoMatch";
@@ -17,7 +18,6 @@ import LayoutHeader from "./LayoutHeader";
 import ChangeMyPassword from "./ChangeMyPassword";
 import UserSettings from "./UserSettings";
 import { Layout, Breadcrumb } from "antd";
-import myOncomingAppointments from "./MyOncomingAppointments";
 
 const { Sider, Content } = Layout;
 
@@ -39,6 +39,7 @@ export default function UserLayout() {
       <Switch>
         <Route exact path="/login" component={UserLogin} />
         <Route exact path="/signup" component={UserRegister} />
+        <Route exact path="/forgotPassword" component={ForgotPassword} />
         <Route
           path="/"
           render={() =>

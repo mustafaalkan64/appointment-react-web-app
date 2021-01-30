@@ -42,7 +42,7 @@ const UserRegister = () => {
         history.push("/");
       })
       .catch((error) => {
-        message.error(error.response.data.message);
+        message.error(error.response.data);
         setLoading(false);
       });
   };

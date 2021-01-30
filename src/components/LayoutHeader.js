@@ -63,7 +63,7 @@ export default function LayoutHeader() {
           <Menu.Item key="deneme">Hoşgeldiniz {userNameSurname}</Menu.Item>
           <SubMenu key="account" icon={<SettingFilled />}>
             <Menu.Item onClick={handleMyPersonelInformations} key="setting:1">
-              Hesap Bilgilerim
+              Profilim
             </Menu.Item>
             <Menu.Item onClick={handleSettings} key="setting:2">
               Ayarlar
