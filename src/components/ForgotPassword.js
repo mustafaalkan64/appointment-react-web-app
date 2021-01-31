@@ -1,14 +1,13 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Row, Col, Typography, Input, Form, Button, message } from "antd";
 import { useHistory } from "react-router";
 import background from "./../assets/img/login-background-image.png";
-import UserContext from "./../contexts/UserContext";
+import { Link } from "react-router-dom";
 import API from "./../api";
 const { Title } = Typography;
 
 const ForgotPassword = () => {
   const [form] = Form.useForm();
-  const history = useHistory();
   const [loading, setLoading] = useState(false);
   const handleSubmit = async (values) => {
     setLoading(true);
@@ -23,7 +22,6 @@ const ForgotPassword = () => {
         setLoading(false);
       })
       .catch((error) => {
-        debugger;
         message.error(error.response.data);
         setLoading(false);
       });
@@ -60,7 +58,7 @@ const ForgotPassword = () => {
           <Form
             {...layout}
             form={form}
-            name="login"
+            name="forgotPassword"
             layout="horizontal"
             onFinish={handleSubmit}
           >
@@ -90,6 +88,9 @@ const ForgotPassword = () => {
               <Button type="primary" loading={loading} htmlType="submit">
                 Şifre Gönder
               </Button>
+            </Form.Item>
+            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
+              <Link to="/login">Login</Link> Sayfasına Geri Dön
             </Form.Item>
           </Form>
         </Col>

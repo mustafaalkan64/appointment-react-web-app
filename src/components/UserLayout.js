@@ -9,6 +9,7 @@ import MyOncomingAppointments from "./MyOncomingAppointments";
 import CreateAppointment from "./CreateAppointment";
 import MyPersonelInformations from "./MyPersonelInformations";
 import ForgotPassword from "./ForgotPassword";
+import ResetPassword from "./ResetPassword";
 import UserRegister from "./UserRegister";
 import UserLogin from "./UserLogin";
 import NoMatch from "./NoMatch";
@@ -40,6 +41,11 @@ export default function UserLayout() {
         <Route exact path="/login" component={UserLogin} />
         <Route exact path="/signup" component={UserRegister} />
         <Route exact path="/forgotPassword" component={ForgotPassword} />
+        <Route
+          exact
+          path="/resetPassword/:verify_token"
+          component={ResetPassword}
+        />
         <Route
           path="/"
           render={() =>
