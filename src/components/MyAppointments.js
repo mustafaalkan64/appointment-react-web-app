@@ -85,7 +85,7 @@ export default function MyAppointments(props) {
         }
       )
         .then((res) => {
-          message.success("Randevunuzu İptal Ettiniz.");
+          message.success(res.data.response);
           fetch({ pagination });
         })
         .catch((error) => {
@@ -93,7 +93,7 @@ export default function MyAppointments(props) {
             history.push("/login");
             message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
           } else if (error.response.status === 404) {
-            message.warning("Böyle Bir Randevu Bulunamadı");
+            message.warning(error.response.data);
           } else {
             message.error(error.response.data);
           }

@@ -19,12 +19,8 @@ const ResetPassword = () => {
     };
     await API.post(`user/resetPassword`, resetPasswordModel)
       .then((res) => {
-        if (res.status) {
-          message.success("Şifrenizi Başarıyla Güncellediniz!");
-          history.push("/login");
-        } else {
-          message.error(res.response);
-        }
+        message.success("Şifrenizi Başarıyla Güncellediniz!");
+        history.push("/login");
         setLoading(false);
       })
       .catch((error) => {

@@ -81,7 +81,7 @@ const SideNav = () => {
           title={<span>Hesap Ayarları</span>}
         >
           <Menu.Item key="8" onClick={handleMyPersonelInformations}>
-            Kullanıcı Bilgilerim
+            Profilim
           </Menu.Item>
           <Menu.Item key="9" onClick={handleChangeMyPassword}>
             Şifre Değiştir

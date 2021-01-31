@@ -37,7 +37,7 @@ const UserRegister = () => {
         localStorage.setItem("auth_token", res.data.response);
         message.success("You've Registered Successfuly!");
         setIsLoggedIn(true);
-        setToken(res.data);
+        setToken(res.data.response);
         setLoading(false);
         history.push("/");
       })

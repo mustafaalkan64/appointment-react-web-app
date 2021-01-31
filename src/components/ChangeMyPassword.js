@@ -66,11 +66,7 @@ export default function ChangeMyPassword() {
       },
     })
       .then((res) => {
-        if (res.data.status) {
-          message.success("Şifreniz Başarıyla Güncellendi!");
-        } else {
-          message.error(res.data.response);
-        }
+        message.success(res.data.response);
         setLoading(false);
       })
       .catch((error) => {

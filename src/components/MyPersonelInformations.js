@@ -50,11 +50,7 @@ const MyPersonelInformations = () => {
       },
     })
       .then((res) => {
-        if (res.data.status) {
-          message.success(res.data.response);
-        } else {
-          message.error(res.data.response);
-        }
+        message.success(res.data.response);
         setLoading(false);
       })
       .catch((error) => {
@@ -202,7 +198,7 @@ const MyPersonelInformations = () => {
       <Row>
         <Col span={23}>
           <Title style={{ textAlign: "center" }} level={2}>
-            Kişisel Bilgilerim
+            Profil Bilgilerim
           </Title>
         </Col>
       </Row>
