@@ -108,22 +108,25 @@ const UserLogin = () => {
               <Input.Password placeholder="Lütfen Şifrenizi Giriniz" />
             </Form.Item>
 
-            <Form.Item
-              style={{ marginBottom: 8 }}
-              wrapperCol={{ ...layout.wrapperCol, offset: 6 }}
-            >
-              <Checkbox>Beni Hatırla</Checkbox>
+            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
+              <Form.Item name="remember" valuePropName="checked" noStyle>
+                <Checkbox>Beni Hatırla</Checkbox>
+              </Form.Item>
+
+              <a className="login-form-forgot" href="">
+                <Link to="/forgotPassword">Şifreni mi Unuttun?</Link>
+              </a>
             </Form.Item>
 
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
-              <Button type="primary" loading={loading} htmlType="submit">
+              <Button
+                type="primary"
+                loading={loading}
+                className="login-form-button"
+                htmlType="submit"
+              >
                 Login
               </Button>
-            </Form.Item>
-            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
-              <Link to="/forgotPassword">Şifreni mi Unuttun?</Link>
-            </Form.Item>
-            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
               Henüz Üye Değilmisin? <Link to="/signUp">Üye Ol</Link>
             </Form.Item>
           </Form>

@@ -101,7 +101,12 @@ const ResetPassword = () => {
             </Form.Item>
 
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
-              <Button type="primary" loading={loading} htmlType="submit">
+              <Button
+                type="primary"
+                loading={loading}
+                className="login-form-button"
+                htmlType="submit"
+              >
                 Şifremi Güncelle
               </Button>
             </Form.Item>

@@ -58,3 +58,10 @@ code {
   padding: 30px 50px;
   margin: 20px 0;
 }
+
+.login-form-forgot {
+  float: right;
+}
+.login-form-button {
+  width: 100%;
+}

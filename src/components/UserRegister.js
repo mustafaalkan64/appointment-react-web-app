@@ -198,11 +198,14 @@ const UserRegister = () => {
               </Checkbox>
             </Form.Item>
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
-              <Button type="primary" loading={loading} htmlType="submit">
+              <Button
+                type="primary"
+                className="login-form-button"
+                loading={loading}
+                htmlType="submit"
+              >
                 Register
               </Button>
-            </Form.Item>
-            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
               Zaten Üye misin? <Link to="/login">Giriş Yap</Link>
             </Form.Item>
           </Form>

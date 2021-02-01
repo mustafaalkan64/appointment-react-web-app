@@ -83,15 +83,20 @@ const ForgotPassword = () => {
             >
               <Input placeholder="Lütfen Email Giriniz" />
             </Form.Item>
-
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
-              <Button type="primary" loading={loading} htmlType="submit">
+              <Button
+                type="primary"
+                loading={loading}
+                className="login-form-button"
+                htmlType="submit"
+              >
                 Şifre Gönder
               </Button>
-            </Form.Item>
-            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
               <Link to="/login">Login</Link> Sayfasına Geri Dön
             </Form.Item>
+            <Form.Item
+              wrapperCol={{ ...layout.wrapperCol, offset: 6 }}
+            ></Form.Item>
           </Form>
         </Col>
       </Row>
