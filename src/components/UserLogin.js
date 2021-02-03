@@ -64,18 +64,10 @@ const UserLogin = () => {
         //backgroundColor: "light-gray",
         backgroundImage: `url(${background})`,
         backgroundRepeat: "no-repeat",
-        height: "980px",
+        height: "978px",
         backgroundSize: "cover",
       }}
-      //className="site-card-wrapper"
     >
-      {/* <Row>
-          <Col span={23}>
-            <Title style={{ textAlign: "center" }} level={2}>
-              Giriş Yap
-            </Title>
-          </Col>
-        </Row> */}
       <Row>
         <Col span={12} offset={6}>
           <Card
