@@ -61,6 +61,7 @@ code {
 
 .login-form-forgot {
   float: right;
+  text-align: right;
 }
 .login-form-button {
   width: 100%;

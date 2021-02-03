@@ -8,9 +8,10 @@ import {
   Button,
   Checkbox,
   message,
+  Card,
 } from "antd";
 import { useHistory } from "react-router";
-import background from "./../assets/img/login-background-image.png";
+import background from "./../assets/img/backgroundLogin.jpg";
 import { Link } from "react-router-dom";
 import UserContext from "./../contexts/UserContext";
 import API from "./../api";
@@ -59,77 +60,92 @@ const UserLogin = () => {
   return (
     <div
       style={{
-        marginTop: 70,
+        paddingTop: "150px",
+        //backgroundColor: "light-gray",
         backgroundImage: `url(${background})`,
         backgroundRepeat: "no-repeat",
-        height: "974px",
+        height: "980px",
         backgroundSize: "cover",
       }}
+      //className="site-card-wrapper"
     >
-      <Row>
-        <Col span={23}>
-          <Title style={{ textAlign: "center" }} level={2}>
-            Giriş Yap
-          </Title>
-        </Col>
-      </Row>
+      {/* <Row>
+          <Col span={23}>
+            <Title style={{ textAlign: "center" }} level={2}>
+              Giriş Yap
+            </Title>
+          </Col>
+        </Row> */}
       <Row>
         <Col span={12} offset={6}>
-          <Form
-            {...layout}
-            form={form}
-            name="login"
-            layout="horizontal"
-            onFinish={handleSubmit}
+          <Card
+            title="Giriş Yap"
+            hoverable
+            bordered={true}
+            style={{ width: "100%" }}
+            headStyle={{
+              textAlign: "center",
+              fontSize: "19px",
+            }}
           >
-            <Form.Item
-              name="email"
-              label="Email"
-              rules={[
-                {
-                  required: true,
-                  message: "Lütfen Email Adresi Giriniz",
-                },
-                {
-                  max: 50,
-                  message:
-                    "Email Adresiniz En Fazla 50 Karakterden Oluşmalıdır",
-                },
-              ]}
+            <Form
+              {...layout}
+              form={form}
+              name="login"
+              layout="horizontal"
+              onFinish={handleSubmit}
             >
-              <Input placeholder="Lütfen Email Giriniz" />
-            </Form.Item>
-
-            <Form.Item
-              label="Password"
-              name="password"
-              rules={[{ required: true, message: "Lütfen Şifrenizi Giriniz" }]}
-            >
-              <Input.Password placeholder="Lütfen Şifrenizi Giriniz" />
-            </Form.Item>
-
-            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
-              <Form.Item name="remember" valuePropName="checked" noStyle>
-                <Checkbox>Beni Hatırla</Checkbox>
+              <Form.Item
+                name="email"
+                label="Email"
+                rules={[
+                  {
+                    required: true,
+                    message: "Lütfen Email Adresi Giriniz",
+                  },
+                  {
+                    max: 50,
+                    message:
+                      "Email Adresiniz En Fazla 50 Karakterden Oluşmalıdır",
+                  },
+                ]}
+              >
+                <Input placeholder="Lütfen Email Giriniz" />
               </Form.Item>
 
-              <a className="login-form-forgot" href="">
-                <Link to="/forgotPassword">Şifreni mi Unuttun?</Link>
-              </a>
-            </Form.Item>
-
-            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
-              <Button
-                type="primary"
-                loading={loading}
-                className="login-form-button"
-                htmlType="submit"
+              <Form.Item
+                label="Şifre"
+                name="password"
+                rules={[
+                  { required: true, message: "Lütfen Şifrenizi Giriniz" },
+                ]}
               >
-                Login
-              </Button>
-              Henüz Üye Değilmisin? <Link to="/signUp">Üye Ol</Link>
-            </Form.Item>
-          </Form>
+                <Input.Password placeholder="Lütfen Şifrenizi Giriniz" />
+              </Form.Item>
+
+              <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
+                <Form.Item name="remember" valuePropName="checked" noStyle>
+                  <Checkbox>Beni Hatırla</Checkbox>
+                </Form.Item>
+
+                <a className="login-form-forgot" href="">
+                  <Link to="/forgotPassword">Şifreni mi Unuttun?</Link>
+                </a>
+              </Form.Item>
+
+              <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
+                <Button
+                  type="primary"
+                  loading={loading}
+                  className="login-form-button"
+                  htmlType="submit"
+                >
+                  Giriş Yap
+                </Button>
+                Henüz Üye Değilmisin? <Link to="/signUp">Üye Ol</Link>
+              </Form.Item>
+            </Form>
+          </Card>
         </Col>
       </Row>
     </div>
