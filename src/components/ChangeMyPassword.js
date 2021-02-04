@@ -45,7 +45,7 @@ export default function ChangeMyPassword() {
     setFirstBreadcrumb("Anasayfa");
     setSecondBreadcrumb("Hesap");
     setLastBreadcrumb("Şifremi Değiştir");
-  }, []);
+  }, [setFirstBreadcrumb, setSecondBreadcrumb, setLastBreadcrumb]);
 
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
@@ -121,7 +121,7 @@ export default function ChangeMyPassword() {
             { min: 8, message: "Şifreniz En Az 8 Karakterden Oluşmalıdır" },
             ({ getFieldValue }) => ({
               validator(_, value) {
-                if (!value || getFieldValue("currentPassword") != value) {
+                if (!value || getFieldValue("currentPassword") !== value) {
                   return Promise.resolve();
                 }
                 return Promise.reject("Yeni Şifreniz Eskisiyle Aynı Olamaz!");

@@ -42,7 +42,6 @@ const UserLogin = () => {
         }
       })
       .catch((error) => {
-        console.log(error.response.data);
         message.error(error.response.data);
         setLoading(false);
       });
@@ -61,7 +60,6 @@ const UserLogin = () => {
     <div
       style={{
         paddingTop: "150px",
-        //backgroundColor: "light-gray",
         backgroundImage: `url(${background})`,
         backgroundRepeat: "no-repeat",
         height: "978px",

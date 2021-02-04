@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Row, Col, Typography, Input, Form, Button, message } from "antd";
-import { useHistory } from "react-router";
 import background from "./../assets/img/login-background-image.png";
 import { Link } from "react-router-dom";
 import API from "./../api";

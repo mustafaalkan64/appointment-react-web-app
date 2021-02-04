@@ -191,7 +191,7 @@ export default function MyAppointments(props) {
       render: (status) => (
         <div>
           <Tag color={status === 1 ? "green" : "red"}>
-            {status == 1 ? "Aktif" : "Pasif"}
+            {status === 1 ? "Aktif" : "Pasif"}
           </Tag>
         </div>
       ),
@@ -229,7 +229,7 @@ export default function MyAppointments(props) {
             type={obj.status === 1 ? "danger" : "primary"}
             onClick={() => showModel(obj)}
           >
-            {obj.status == 1 ? "İptal Et" : "Aktif Et"}
+            {obj.status === 1 ? "İptal Et" : "Aktif Et"}
           </Button>
         </Space>
       ),
@@ -303,7 +303,7 @@ export default function MyAppointments(props) {
         visible={isModalVisible}
         onOk={handleOk}
         okButtonProps={{
-          disabled: appointmentCancelReason == "" ? true : false,
+          disabled: appointmentCancelReason === "" ? true : false,
         }}
         onCancel={handleCancel}
       >

@@ -36,8 +36,9 @@ const MyPersonelInformations = () => {
   const [loading, setLoading] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [zones, setZones] = useState([]);
-  const [birthday, setBirthday] = useState([]);
+  const [userBirthday, setUserBirthday] = useState("");
   const dateFormat = "DD.MM.YYYY";
+  const { Option } = Select;
 
   const style = { padding: "8px 0" };
 
@@ -74,8 +75,6 @@ const MyPersonelInformations = () => {
     })
       .then((res) => {
         setCities(res.data);
-        console.log(form.city);
-        console.log(cities);
       })
       .catch((error) => {
         message.error("Şehirleri Getirme Sırasında Hata ile Karşılaşıldı");
@@ -90,7 +89,6 @@ const MyPersonelInformations = () => {
     })
       .then((res) => {
         setDistricts(res.data);
-        console.log(cities);
       })
       .catch((error) => {
         message.error("İlçeleri Getirme Sırasında Hata ile Karşılaşıldı");
@@ -105,51 +103,54 @@ const MyPersonelInformations = () => {
     })
       .then((res) => {
         setZones(res.data);
-        console.log(cities);
       })
       .catch((error) => {
         message.error("Bölgeleri Getirme Sırasında Hata ile Karşılaşıldı");
       });
   };
 
+  const getCurrentUser = async () => {
+    setLoading(true);
+    await API.get(`user/currentUser?`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        setLoading(false);
+        var d = new Date(res.data.birthday);
+        var birthdaystring = d.toLocaleString("tr-TR").substring(0, 10);
+        setUserBirthday(birthdaystring);
+        form.setFieldsValue({
+          name: res.data.firstName,
+          surname: res.data.lastName,
+          email: res.data.email,
+          birthDay: birthdaystring,
+          city: res.data.cityId,
+          district: res.data.districtId,
+          zone: res.data.zoneId,
+          username: res.data.username,
+        });
+        getDistricts(res.data.cityId);
+        getZones(res.data.districtId);
+        console.log(userBirthday);
+      })
+      .catch((error) => {
+        if (error.response.status === 401) {
+          history.push("/login");
+          message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
+        } else {
+          message.error(
+            "Kişisel Bilgileri Getirme Esnasında Hata ile Karşılaşıldı!"
+          );
+        }
+      });
+  };
+
   useEffect(() => {
     forceUpdate({});
-    const getCurrentUser = async () => {
-      setLoading(true);
-      await API.get(`user/currentUser?`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => {
-          setLoading(false);
-          var d = new Date(res.data.birthday);
-          var birthday = d.toLocaleString("tr-TR").substring(0, 10);
-          setBirthday(res.data.birthday);
-          form.setFieldsValue({
-            name: res.data.firstName,
-            surname: res.data.lastName,
-            email: res.data.email,
-            birthDay: birthday,
-            city: res.data.cityId,
-            district: res.data.districtId,
-            zone: res.data.zoneId,
-          });
-          getDistricts(res.data.cityId);
-          getZones(res.data.districtId);
-        })
-        .catch((error) => {
-          if (error.response.status === 401) {
-            history.push("/login");
-            message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
-          } else {
-            message.error(
-              "Kişisel Bilgileri Getirme Esnasında Hata ile Karşılaşıldı!"
-            );
-          }
-        });
-    };
+
     getCities();
     getCurrentUser();
     setFirstBreadcrumb("Anasayfa");
@@ -180,6 +181,7 @@ const MyPersonelInformations = () => {
     form.setFieldsValue({
       birthDay: dateString,
     });
+    setUserBirthday(dateString);
   };
 
   const onFinish = (values) => {
@@ -190,9 +192,20 @@ const MyPersonelInformations = () => {
       DistrictId: values.district,
       ZoneId: values.zone,
       BirthDay: values.birthDay,
+      Username: values.username,
     };
     setCurrenUser(userForm);
   };
+
+  const layout = {
+    labelCol: {
+      span: 6,
+    },
+    wrapperCol: {
+      span: 18,
+    },
+  };
+
   return (
     <div>
       <Row>
@@ -210,7 +223,7 @@ const MyPersonelInformations = () => {
         onFinish={onFinish}
       >
         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-          <Col className="gutter-row" span={8} offset={4}>
+          <Col className="gutter-row" span={12} offset={4}>
             <div style={style}>
               <Form.Item
                 label="İsim"
@@ -231,13 +244,16 @@ const MyPersonelInformations = () => {
               </Form.Item>
             </div>
           </Col>
-          <Col className="gutter-row" span={8}>
+        </Row>
+
+        <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+          <Col className="gutter-row" span={12} offset={4}>
             <div style={style}>
               <Form.Item
                 name="surname"
                 label="Soyisim"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 20 }}
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 18 }}
                 rules={[
                   {
                     required: true,
@@ -255,7 +271,7 @@ const MyPersonelInformations = () => {
         </Row>
 
         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-          <Col className="gutter-row" span={8} offset={4}>
+          <Col className="gutter-row" span={12} offset={4}>
             <div style={style}>
               <Form.Item
                 name="birthDay"
@@ -272,7 +288,8 @@ const MyPersonelInformations = () => {
                 <ConfigProvider locale={locale}>
                   <DatePicker
                     format={dateFormat}
-                    defaultValue={moment(birthday)}
+                    defaultValue={moment(userBirthday, dateFormat)}
+                    value={moment(userBirthday, dateFormat)}
                     onChange={onBirthdayChange}
                     placeholder="Doğum Tarihiniz"
                     style={{ width: "100%" }}
@@ -281,12 +298,36 @@ const MyPersonelInformations = () => {
               </Form.Item>
             </div>
           </Col>
-          <Col className="gutter-row" span={8}>
+        </Row>
+
+        <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+          <Col className="gutter-row" span={12} offset={4}>
+            <div style={style}>
+              <Form.Item
+                name="username"
+                label="Kullanıcı Adı"
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 18 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Lütfen Kullanıcı Adını Giriniz!",
+                  },
+                ]}
+              >
+                <Input placeholder="Kullanıcı Adı" />
+              </Form.Item>
+            </div>
+          </Col>
+        </Row>
+
+        <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+          <Col className="gutter-row" span={12} offset={4}>
             <div style={style}>
               <Form.Item
                 name="email"
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 20 }}
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 18 }}
                 label="Email"
               >
                 <Input placeholder="email" disabled="disabled" />
@@ -296,13 +337,13 @@ const MyPersonelInformations = () => {
         </Row>
 
         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-          <Col className="gutter-row" span={8} offset={4}>
+          <Col className="gutter-row" span={12} offset={4}>
             <div style={style}>
               <Form.Item
                 name="city"
                 label="İl"
                 labelCol={{ span: 6 }}
-                wrapperCol={{ span: 18 }}
+                wrapperCol={{ span: 20 }}
                 rules={[
                   {
                     required: true,
@@ -317,21 +358,24 @@ const MyPersonelInformations = () => {
                 >
                   {cities.map((city, key) => {
                     return (
-                      <option value={city.id} key={city.id}>
+                      <Option value={city.id} key={city.id}>
                         {city.cityName}
-                      </option>
+                      </Option>
                     );
                   })}
                 </Select>
               </Form.Item>
             </div>
           </Col>
-          <Col className="gutter-row" span={8}>
+        </Row>
+
+        <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+          <Col className="gutter-row" span={12} offset={4}>
             <div style={style}>
               <Form.Item
                 name="district"
                 label="İlçe"
-                labelCol={{ span: 4 }}
+                labelCol={{ span: 6 }}
                 wrapperCol={{ span: 20 }}
                 rules={[
                   {
@@ -347,9 +391,9 @@ const MyPersonelInformations = () => {
                 >
                   {districts.map((district, key) => {
                     return (
-                      <option value={district.id} key={district.id}>
+                      <Option value={district.id} key={district.id}>
                         {district.districtName}
-                      </option>
+                      </Option>
                     );
                   })}
                 </Select>
@@ -359,11 +403,11 @@ const MyPersonelInformations = () => {
         </Row>
 
         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-          <Col className="gutter-row" span={8} offset={4}>
+          <Col className="gutter-row" span={12} offset={4}>
             <div style={style}>
               <Form.Item
                 labelCol={{ span: 6 }}
-                wrapperCol={{ span: 18 }}
+                wrapperCol={{ span: 20 }}
                 name="zone"
                 label="Köy/Mahalle"
                 rules={[
@@ -380,9 +424,9 @@ const MyPersonelInformations = () => {
                 >
                   {zones.map((zone, key) => {
                     return (
-                      <option value={zone.id} key={zone.id}>
+                      <Option value={zone.id} key={zone.id}>
                         {zone.zoneName}
-                      </option>
+                      </Option>
                     );
                   })}
                 </Select>
@@ -392,14 +436,18 @@ const MyPersonelInformations = () => {
         </Row>
 
         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-          <Col className="gutter-row" span={8} offset={6}>
+          <Col className="gutter-row" span={12} offset={4}>
             <div style={style}>
-              <Form.Item shouldUpdate={true}>
+              <Form.Item
+                wrapperCol={{ ...layout.wrapperCol, offset: 6 }}
+                shouldUpdate={true}
+              >
                 {() => (
                   <Button
                     type="primary"
                     loading={loading}
                     htmlType="submit"
+                    style={{ width: "100%" }}
                     disabled={
                       !!form
                         .getFieldsError()
