@@ -16,7 +16,7 @@ export default function MyAppointments(props) {
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [sortValue, setSortValue] = useState("");
-  const type = props.status;
+  const status = props.status;
   const header = props.header;
   const { token } = useContext(UserContext);
   const {
@@ -133,11 +133,11 @@ export default function MyAppointments(props) {
     var queryString = serialize({
       current: params.pagination.current,
       pageSize: params.pagination.pageSize,
-      type: type,
+      status,
       searchText,
       sortValue,
     });
-    await API.get(`appointment/getByUserId?${queryString}`, {
+    await API.get(`appointment/filter?${queryString}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
