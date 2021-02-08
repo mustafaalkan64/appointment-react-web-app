@@ -40,17 +40,17 @@ const ResetPassword = () => {
 
   return (
     <div
-    style={{
-      paddingTop: "150px",
-      backgroundImage: `url(${background})`,
-      backgroundRepeat: "no-repeat",
-      height: "978px",
-      backgroundSize: "cover",
-    }}
+      style={{
+        paddingTop: "150px",
+        backgroundImage: `url(${background})`,
+        backgroundRepeat: "no-repeat",
+        height: "978px",
+        backgroundSize: "cover",
+      }}
     >
       <Row>
         <Col span={12} offset={6}>
-        <Card
+          <Card
             title="Şifremi Yenile"
             hoverable
             bordered={true}
@@ -60,60 +60,63 @@ const ResetPassword = () => {
               fontSize: "19px",
             }}
           >
-          <Form
-            {...layout}
-            form={form}
-            name="resetPassword"
-            layout="horizontal"
-            onFinish={handleSubmit}
-          >
-            <Form.Item
-              label="Şifre"
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: "Lütfen Şifrenizi Giriniz",
-                },
-                { min: 8, message: "Şifreniz En Az 8 Karakterden Oluşmalıdır" },
-              ]}
+            <Form
+              {...layout}
+              form={form}
+              name="resetPassword"
+              layout="horizontal"
+              onFinish={handleSubmit}
             >
-              <Input.Password placeholder="Lütfen Şifrenizi Giriniz" />
-            </Form.Item>
-            <Form.Item
-              name="confirm"
-              label="Şifreyi Onayla"
-              dependencies={["password"]}
-              hasFeedback
-              rules={[
-                {
-                  required: true,
-                  message: "Lütfen Şifrenizi Onaylayınız",
-                },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value || getFieldValue("password") === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject("Girdiğiniz Şifreler Eşleşmiyor!");
+              <Form.Item
+                label="Şifre"
+                name="password"
+                rules={[
+                  {
+                    required: true,
+                    message: "Lütfen Şifrenizi Giriniz",
                   },
-                }),
-              ]}
-            >
-              <Input.Password placeholder="Lütfen Şifreyi Onaylayınız" />
-            </Form.Item>
-
-            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
-              <Button
-                type="primary"
-                loading={loading}
-                className="login-form-button"
-                htmlType="submit"
+                  {
+                    min: 8,
+                    message: "Şifreniz En Az 8 Karakterden Oluşmalıdır",
+                  },
+                ]}
               >
-                Şifremi Güncelle
-              </Button>
-            </Form.Item>
-          </Form>
+                <Input.Password placeholder="Lütfen Şifrenizi Giriniz" />
+              </Form.Item>
+              <Form.Item
+                name="confirm"
+                label="Şifreyi Onayla"
+                dependencies={["password"]}
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: "Lütfen Şifrenizi Onaylayınız",
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("password") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject("Girdiğiniz Şifreler Eşleşmiyor!");
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password placeholder="Lütfen Şifreyi Onaylayınız" />
+              </Form.Item>
+
+              <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
+                <Button
+                  type="primary"
+                  loading={loading}
+                  className="login-form-button"
+                  htmlType="submit"
+                >
+                  Şifremi Güncelle
+                </Button>
+              </Form.Item>
+            </Form>
           </Card>
         </Col>
       </Row>

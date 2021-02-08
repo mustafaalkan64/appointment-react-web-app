@@ -58,13 +58,13 @@ const UserLogin = () => {
 
   return (
     <div
-      style={{
-        paddingTop: "150px",
-        backgroundImage: `url(${background})`,
-        backgroundRepeat: "no-repeat",
-        height: "978px",
-        backgroundSize: "cover",
-      }}
+        style={{
+          paddingTop: "150px",
+          backgroundImage: `url(${background})`,
+          backgroundRepeat: "no-repeat",
+          height: "978px",
+          backgroundSize: "cover",
+        }}
     >
       <Row>
         <Col span={12} offset={6}>

@@ -37,17 +37,17 @@ const ForgotPassword = () => {
 
   return (
     <div
-    style={{
-      paddingTop: "150px",
-      backgroundImage: `url(${background})`,
-      backgroundRepeat: "no-repeat",
-      height: "978px",
-      backgroundSize: "cover",
-    }}
+      style={{
+        paddingTop: "150px",
+        backgroundImage: `url(${background})`,
+        backgroundRepeat: "no-repeat",
+        height: "978px",
+        backgroundSize: "cover",
+      }}
     >
       <Row>
         <Col span={12} offset={6}>
-        <Card
+          <Card
             title="Şifremi Unuttum"
             hoverable
             bordered={true}
@@ -57,49 +57,49 @@ const ForgotPassword = () => {
               fontSize: "19px",
             }}
           >
-          <Form
-            {...layout}
-            form={form}
-            name="forgotPassword"
-            layout="horizontal"
-            onFinish={handleSubmit}
-          >
-            <Form.Item
-              name="email"
-              label="Email"
-              rules={[
-                {
-                  required: true,
-                  message: "Lütfen Email Adresi Giriniz",
-                },
-                {
-                  type: "email",
-                  message: "Email Adresinizi Doğru Formatta Değil",
-                },
-                {
-                  max: 50,
-                  message:
-                    "Email Adresiniz En Fazla 50 Karakterden Oluşmalıdır",
-                },
-              ]}
+            <Form
+              {...layout}
+              form={form}
+              name="forgotPassword"
+              layout="horizontal"
+              onFinish={handleSubmit}
             >
-              <Input placeholder="Lütfen Email Giriniz" />
-            </Form.Item>
-            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
-              <Button
-                type="primary"
-                loading={loading}
-                className="login-form-button"
-                htmlType="submit"
+              <Form.Item
+                name="email"
+                label="Email"
+                rules={[
+                  {
+                    required: true,
+                    message: "Lütfen Email Adresi Giriniz",
+                  },
+                  {
+                    type: "email",
+                    message: "Email Adresinizi Doğru Formatta Değil",
+                  },
+                  {
+                    max: 50,
+                    message:
+                      "Email Adresiniz En Fazla 50 Karakterden Oluşmalıdır",
+                  },
+                ]}
               >
-                Şifre Gönder
-              </Button>
-              <Link to="/login">Login</Link> Sayfasına Geri Dön
-            </Form.Item>
-            <Form.Item
-              wrapperCol={{ ...layout.wrapperCol, offset: 6 }}
-            ></Form.Item>
-          </Form>
+                <Input placeholder="Lütfen Email Giriniz" />
+              </Form.Item>
+              <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
+                <Button
+                  type="primary"
+                  loading={loading}
+                  className="login-form-button"
+                  htmlType="submit"
+                >
+                  Şifre Gönder
+                </Button>
+                <Link to="/login">Login</Link> Sayfasına Geri Dön
+              </Form.Item>
+              <Form.Item
+                wrapperCol={{ ...layout.wrapperCol, offset: 6 }}
+              ></Form.Item>
+            </Form>
           </Card>
         </Col>
       </Row>
