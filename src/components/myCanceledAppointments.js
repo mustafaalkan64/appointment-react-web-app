@@ -1,7 +1,7 @@
 import React from "react";
 import MyAppointments from "./MyAppointments";
 
-export default function myCanceledAppointments() {
+export default function MyCanceledAppointments() {
   return (
     <div>
       <MyAppointments
