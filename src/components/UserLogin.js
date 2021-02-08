@@ -11,7 +11,7 @@ import {
   Card,
 } from "antd";
 import { useHistory } from "react-router";
-import background from "./../assets/img/backgroundLogin.jpg";
+import background from "./../assets/img/login-background-image.png";
 import { Link } from "react-router-dom";
 import UserContext from "./../contexts/UserContext";
 import API from "./../api";

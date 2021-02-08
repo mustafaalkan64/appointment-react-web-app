@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Row, Col, Typography, Input, Form, Button, message } from "antd";
+import { Row, Col, Typography, Input, Form, Button, message, Card } from "antd";
 import background from "./../assets/img/login-background-image.png";
 import { Link } from "react-router-dom";
 import API from "./../api";
@@ -37,23 +37,26 @@ const ForgotPassword = () => {
 
   return (
     <div
-      style={{
-        marginTop: 70,
-        backgroundImage: `url(${background})`,
-        backgroundRepeat: "no-repeat",
-        height: "974px",
-        backgroundSize: "cover",
-      }}
+    style={{
+      paddingTop: "150px",
+      backgroundImage: `url(${background})`,
+      backgroundRepeat: "no-repeat",
+      height: "978px",
+      backgroundSize: "cover",
+    }}
     >
       <Row>
-        <Col span={23}>
-          <Title style={{ textAlign: "center" }} level={2}>
-            Şifremi Unuttum
-          </Title>
-        </Col>
-      </Row>
-      <Row>
         <Col span={12} offset={6}>
+        <Card
+            title="Şifremi Unuttum"
+            hoverable
+            bordered={true}
+            style={{ width: "100%" }}
+            headStyle={{
+              textAlign: "center",
+              fontSize: "19px",
+            }}
+          >
           <Form
             {...layout}
             form={form}
@@ -97,6 +100,7 @@ const ForgotPassword = () => {
               wrapperCol={{ ...layout.wrapperCol, offset: 6 }}
             ></Form.Item>
           </Form>
+          </Card>
         </Col>
       </Row>
     </div>

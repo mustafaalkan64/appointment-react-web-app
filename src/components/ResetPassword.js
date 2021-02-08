@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router";
-import { Row, Col, Typography, Input, Form, Button, message } from "antd";
+import { Row, Col, Typography, Input, Form, Button, message, Card } from "antd";
 import { useHistory } from "react-router";
 import background from "./../assets/img/login-background-image.png";
 import API from "./../api";
@@ -40,23 +40,26 @@ const ResetPassword = () => {
 
   return (
     <div
-      style={{
-        marginTop: 70,
-        backgroundImage: `url(${background})`,
-        backgroundRepeat: "no-repeat",
-        height: "974px",
-        backgroundSize: "cover",
-      }}
+    style={{
+      paddingTop: "150px",
+      backgroundImage: `url(${background})`,
+      backgroundRepeat: "no-repeat",
+      height: "978px",
+      backgroundSize: "cover",
+    }}
     >
       <Row>
-        <Col span={23}>
-          <Title style={{ textAlign: "center" }} level={2}>
-            Şifremi Güncelle
-          </Title>
-        </Col>
-      </Row>
-      <Row>
         <Col span={12} offset={6}>
+        <Card
+            title="Şifremi Yenile"
+            hoverable
+            bordered={true}
+            style={{ width: "100%" }}
+            headStyle={{
+              textAlign: "center",
+              fontSize: "19px",
+            }}
+          >
           <Form
             {...layout}
             form={form}
@@ -111,6 +114,7 @@ const ResetPassword = () => {
               </Button>
             </Form.Item>
           </Form>
+          </Card>
         </Col>
       </Row>
     </div>

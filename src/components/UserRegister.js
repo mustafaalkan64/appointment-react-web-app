@@ -9,6 +9,7 @@ import {
   Radio,
   message,
   Checkbox,
+  Card,
 } from "antd";
 import { useHistory } from "react-router";
 import background from "./../assets/img/login-background-image.png";
@@ -59,22 +60,25 @@ const UserRegister = () => {
   return (
     <div
       style={{
-        marginTop: 70,
+        paddingTop: 120,
         backgroundImage: `url(${background})`,
         backgroundRepeat: "no-repeat",
-        height: "974px",
+        height: "965px",
         backgroundSize: "cover",
       }}
     >
       <Row>
-        <Col span={23}>
-          <Title style={{ textAlign: "center" }} level={2}>
-            Üye Ol
-          </Title>
-        </Col>
-      </Row>
-      <Row>
         <Col span={12} offset={6}>
+        <Card
+            title="Üye Kaydı"
+            hoverable
+            bordered={true}
+            style={{ width: "100%" }}
+            headStyle={{
+              textAlign: "center",
+              fontSize: "19px",
+            }}
+          >
           <Form
             {...layout}
             form={form}
@@ -204,11 +208,12 @@ const UserRegister = () => {
                 loading={loading}
                 htmlType="submit"
               >
-                Register
+                Üye Ol
               </Button>
               Zaten Üye misin? <Link to="/login">Giriş Yap</Link>
             </Form.Item>
           </Form>
+          </Card>
         </Col>
       </Row>
     </div>
