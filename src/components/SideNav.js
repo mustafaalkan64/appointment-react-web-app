@@ -21,8 +21,8 @@ const SideNav = () => {
   const handleMyCanceledAppointments = () => {
     history.push("/myCanceledAppointments");
   };
-  const handleMyPersonelInformations = () => {
-    history.push("/myPersonelInformations");
+  const handleUserProfile = () => {
+    history.push("/userProfile");
   };
   const handleChangeMyPassword = () => {
     history.push("/changeMyPassword");
@@ -80,7 +80,7 @@ const SideNav = () => {
           icon={<UserOutlined />}
           title={<span>Hesap Ayarları</span>}
         >
-          <Menu.Item key="8" onClick={handleMyPersonelInformations}>
+          <Menu.Item key="8" onClick={handleUserProfile}>
             Profilim
           </Menu.Item>
           <Menu.Item key="9" onClick={handleChangeMyPassword}>

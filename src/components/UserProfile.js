@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router";
-import UserContext from "./../contexts/UserContext";
-import BreadCrumbContext from "./../contexts/BreadcrumbContext";
+import UserContext from "../contexts/UserContext";
+import BreadCrumbContext from "../contexts/BreadcrumbContext";
 import {
   Form,
   Input,
@@ -14,7 +14,7 @@ import {
   ConfigProvider,
   message,
 } from "antd";
-import API from "./../api";
+import API from "../api";
 import { UserOutlined } from "@ant-design/icons";
 import "moment/locale/tr";
 import locale from "antd/lib/locale/tr_TR";
@@ -22,7 +22,7 @@ import moment from "moment";
 
 const { Title } = Typography;
 
-const MyPersonelInformations = () => {
+const UserProfile = () => {
   const [form] = Form.useForm();
   const { token } = useContext(UserContext);
   const {
@@ -465,4 +465,4 @@ const MyPersonelInformations = () => {
     </div>
   );
 };
-export default MyPersonelInformations;
+export default UserProfile;

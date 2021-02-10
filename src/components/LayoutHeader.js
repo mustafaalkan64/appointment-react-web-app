@@ -36,8 +36,8 @@ export default function LayoutHeader() {
     getCurrentUsers();
   }, []);
 
-  const handleMyPersonelInformations = () => {
-    history.push("/myPersonelInformations");
+  const handleUserProfile = () => {
+    history.push("/userProfile");
   };
   const handleSettings = () => {
     history.push("/userSettings");
@@ -62,7 +62,7 @@ export default function LayoutHeader() {
         >
           <Menu.Item key="deneme">Hoşgeldiniz {userNameSurname}</Menu.Item>
           <SubMenu key="account" icon={<SettingFilled />}>
-            <Menu.Item onClick={handleMyPersonelInformations} key="setting:1">
+            <Menu.Item onClick={handleUserProfile} key="setting:1">
               Profilim
             </Menu.Item>
             <Menu.Item onClick={handleSettings} key="setting:2">

@@ -7,10 +7,11 @@ import MyCanceledAppointments from "./MyCanceledAppointments";
 import MyPreviousAppointments from "./MyPreviousAppointments";
 import MyOncomingAppointments from "./MyOncomingAppointments";
 import CreateAppointment from "./CreateAppointment";
-import MyPersonelInformations from "./MyPersonelInformations";
+import UserProfile from "./UserProfile";
 import ForgotPassword from "./ForgotPassword";
 import ResetPassword from "./ResetPassword";
 import UserRegister from "./UserRegister";
+import ShopRegister from "./ShopRegister";
 import UserLogin from "./UserLogin";
 import NoMatch from "./NoMatch";
 import Home from "./UserHome";
@@ -40,6 +41,7 @@ export default function UserLayout() {
       <Switch>
         <Route exact path="/login" component={UserLogin} />
         <Route exact path="/signup" component={UserRegister} />
+        <Route exact path="/shopSignup" component={ShopRegister} />
         <Route exact path="/forgotPassword" component={ForgotPassword} />
         <Route
           exact
@@ -78,7 +80,7 @@ export default function UserLayout() {
                       <Route path="/" exact component={Home} />
                       <Route
                         path="/myPersonelInformations"
-                        component={MyPersonelInformations}
+                        component={UserProfile}
                       />
                       {/* <Route path="/myPersonelInformations/:id" component={MyPersonelInformations} /> */}
                       <Route
@@ -97,10 +99,7 @@ export default function UserLayout() {
                         path="/createAppointment"
                         component={CreateAppointment}
                       />
-                      <Route
-                        path="/myPersonelInformations"
-                        component={MyPersonelInformations}
-                      />
+                      <Route path="/userProfile" component={UserProfile} />
                       <Route
                         path="/myOncomingAppointments"
                         component={MyOncomingAppointments}
