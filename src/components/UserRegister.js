@@ -62,14 +62,16 @@ const UserRegister = () => {
       style={{
         paddingTop: 120,
         backgroundImage: `url(${background})`,
-        backgroundRepeat: "no-repeat",
-        height: "965px",
+        backgroundPosition: "center",
         backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        width: "100vw",
+        height: "100vh",
       }}
     >
       <Row>
         <Col span={12} offset={6}>
-        <Card
+          <Card
             title="Üye Kaydı"
             hoverable
             bordered={true}
@@ -79,140 +81,143 @@ const UserRegister = () => {
               fontSize: "19px",
             }}
           >
-          <Form
-            {...layout}
-            form={form}
-            name="register"
-            layout="horizontal"
-            onFinish={handleSubmit}
-          >
-            <Form.Item
-              name="name"
-              label="Ad"
-              rules={[
-                {
-                  required: true,
-                  message: "Lütfen Adınızı Giriniz",
-                },
-              ]}
+            <Form
+              {...layout}
+              form={form}
+              name="register"
+              layout="horizontal"
+              onFinish={handleSubmit}
             >
-              <Input placeholder="Lütfen Adınızı Giriniz" />
-            </Form.Item>
-            <Form.Item
-              name="surname"
-              label="Soyad"
-              rules={[
-                {
-                  required: true,
-                  message: "Lütfen Soyadınızı Giriniz",
-                },
-              ]}
-            >
-              <Input placeholder="Lütfen Soyadınızı Giriniz" />
-            </Form.Item>
-            <Form.Item
-              name="username"
-              label="Kullanıcı Adı"
-              rules={[
-                {
-                  required: true,
-                  message: "Lütfen Kullanıcı Adı Giriniz",
-                },
-              ]}
-            >
-              <Input placeholder="Lütfen Kullanıcı Adı Giriniz" />
-            </Form.Item>
-            <Form.Item
-              name="email"
-              label="Email"
-              rules={[
-                {
-                  type: "email",
-                  message: "Email Adresinizi Doğru Formatta Değil!",
-                },
-                {
-                  required: true,
-                  message: "Lütfen Email Adresinizi Giriniz",
-                },
-              ]}
-            >
-              <Input placeholder="Lütfen Email Adresinizi Giriniz" />
-            </Form.Item>
-
-            <Form.Item
-              name="password"
-              label="Şifre"
-              rules={[
-                {
-                  required: true,
-                  message: "Lütfen Şifrenizi Giriniz",
-                },
-                { min: 8, message: "Şifreniz En Az 8 Karakterden Oluşmalıdır" },
-              ]}
-              hasFeedback
-            >
-              <Input.Password />
-            </Form.Item>
-            <Form.Item
-              name="confirm"
-              label="Şifreyi Onayla"
-              dependencies={["password"]}
-              hasFeedback
-              rules={[
-                {
-                  required: true,
-                  message: "Lütfen Şifrenizi Onaylayınız",
-                },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value || getFieldValue("password") === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject("Girdiğiniz Şifreler Eşleşmiyor!");
+              <Form.Item
+                name="name"
+                label="Ad"
+                rules={[
+                  {
+                    required: true,
+                    message: "Lütfen Adınızı Giriniz",
                   },
-                }),
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
-
-            <Form.Item
-              name="gender"
-              label="Cinsiyet"
-              rules={[
-                {
-                  required: true,
-                  message: "Please select your gender",
-                },
-              ]}
-            >
-              <Radio.Group>
-                <Radio value="0">Kadın</Radio>
-                <Radio value="1">Erkek</Radio>
-                <Radio value="2">Diğer</Radio>
-              </Radio.Group>
-            </Form.Item>
-
-            <Form.Item
-              style={{ marginBottom: 8 }}
-              wrapperCol={{ ...layout.wrapperCol, offset: 6 }}
-            >
-              <Checkbox>
-                I have read the <Link to="Agreement" value="agreement" />
-              </Checkbox>
-            </Form.Item>
-            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
-              <Button
-                type="primary"
-                className="login-form-button"
-                loading={loading}
-                htmlType="submit"
+                ]}
               >
-                Üye Ol
-              </Button>
-              Zaten Üye misin? <Link to="/login">Giriş Yap</Link>
-            </Form.Item>
-          </Form>
+                <Input placeholder="Lütfen Adınızı Giriniz" />
+              </Form.Item>
+              <Form.Item
+                name="surname"
+                label="Soyad"
+                rules={[
+                  {
+                    required: true,
+                    message: "Lütfen Soyadınızı Giriniz",
+                  },
+                ]}
+              >
+                <Input placeholder="Lütfen Soyadınızı Giriniz" />
+              </Form.Item>
+              <Form.Item
+                name="username"
+                label="Kullanıcı Adı"
+                rules={[
+                  {
+                    required: true,
+                    message: "Lütfen Kullanıcı Adı Giriniz",
+                  },
+                ]}
+              >
+                <Input placeholder="Lütfen Kullanıcı Adı Giriniz" />
+              </Form.Item>
+              <Form.Item
+                name="email"
+                label="Email"
+                rules={[
+                  {
+                    type: "email",
+                    message: "Email Adresinizi Doğru Formatta Değil!",
+                  },
+                  {
+                    required: true,
+                    message: "Lütfen Email Adresinizi Giriniz",
+                  },
+                ]}
+              >
+                <Input placeholder="Lütfen Email Adresinizi Giriniz" />
+              </Form.Item>
+
+              <Form.Item
+                name="password"
+                label="Şifre"
+                rules={[
+                  {
+                    required: true,
+                    message: "Lütfen Şifrenizi Giriniz",
+                  },
+                  {
+                    min: 8,
+                    message: "Şifreniz En Az 8 Karakterden Oluşmalıdır",
+                  },
+                ]}
+                hasFeedback
+              >
+                <Input.Password />
+              </Form.Item>
+              <Form.Item
+                name="confirm"
+                label="Şifreyi Onayla"
+                dependencies={["password"]}
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: "Lütfen Şifrenizi Onaylayınız",
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("password") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject("Girdiğiniz Şifreler Eşleşmiyor!");
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password />
+              </Form.Item>
+
+              <Form.Item
+                name="gender"
+                label="Cinsiyet"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select your gender",
+                  },
+                ]}
+              >
+                <Radio.Group>
+                  <Radio value="0">Kadın</Radio>
+                  <Radio value="1">Erkek</Radio>
+                  <Radio value="2">Diğer</Radio>
+                </Radio.Group>
+              </Form.Item>
+
+              <Form.Item
+                style={{ marginBottom: 8 }}
+                wrapperCol={{ ...layout.wrapperCol, offset: 6 }}
+              >
+                <Checkbox>
+                  I have read the <Link to="Agreement" value="agreement" />
+                </Checkbox>
+              </Form.Item>
+              <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
+                <Button
+                  type="primary"
+                  className="login-form-button"
+                  loading={loading}
+                  htmlType="submit"
+                >
+                  Üye Ol
+                </Button>
+                Zaten Üye misin? <Link to="/login">Giriş Yap</Link>
+              </Form.Item>
+            </Form>
           </Card>
         </Col>
       </Row>

@@ -38,11 +38,13 @@ const ForgotPassword = () => {
   return (
     <div
       style={{
-        paddingTop: "150px",
+        paddingTop: 150,
         backgroundImage: `url(${background})`,
-        backgroundRepeat: "no-repeat",
-        height: "978px",
+        backgroundPosition: "center",
         backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        width: "100vw",
+        height: "100vh",
       }}
     >
       <Row>

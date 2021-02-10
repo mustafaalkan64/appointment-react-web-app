@@ -167,11 +167,13 @@ const ShopRegister = () => {
   return (
     <div
       style={{
-        paddingTop: 60,
+        paddingTop: 20,
         backgroundImage: `url(${background})`,
-        backgroundRepeat: "no-repeat",
-        height: "980px",
+        backgroundPosition: "center",
         backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        width: "100vw",
+        height: "100vh",
       }}
     >
       <Row>
