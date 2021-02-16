@@ -30,16 +30,23 @@ const ShopRegister = () => {
   const { TextArea } = Input;
 
   const handleSubmit = (values) => {
-    const user = {
+    const shopRegisterModel = {
       Email: values.email,
       Password: values.password,
-      FirstName: values.name,
-      LastName: values.surname,
-      UserName: values.username,
-      Gender: values.gender,
+      ShopTitle: values.shopTitle,
+      Address: values.shopAddress,
+      ShopDescription: values.shopDescription,
+      OwnerName: values.ownerName,
+      PhoneNumber: values.phone,
+      WebSite: values.website,
+      CityId: values.city,
+      DistrictId: values.district,
+      ZoneId: values.zone,
+      TaxNumber: values.taxNumber,
+      TaxAddress: values.taxAddress,
     };
     setLoading(true);
-    API.post(`user/register`, user)
+    API.post(`shop/register`, shopRegisterModel)
       .then((res) => {
         localStorage.setItem("auth_token", res.data.response);
         message.success("You've Registered Successfuly!");
@@ -167,19 +174,19 @@ const ShopRegister = () => {
   return (
     <div
       style={{
-        paddingTop: 20,
+        paddingTop: 0,
         backgroundImage: `url(${background})`,
         backgroundPosition: "center",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         width: "100vw",
-        height: "100vh",
+        height: "120vh",
       }}
     >
       <Row>
         <Col span={12} offset={6}>
           <Card
-            title="Mağaza Kaydı"
+            title="Yeni Mağaza Kaydı"
             hoverable
             bordered={true}
             style={{ width: "100%" }}
@@ -196,16 +203,16 @@ const ShopRegister = () => {
               onFinish={handleSubmit}
             >
               <Form.Item
-                name="shopName"
-                label="Mağaza Adı"
+                name="shopTitle"
+                label="Mağaza Unvanı"
                 rules={[
                   {
                     required: true,
-                    message: "Lütfen Mağaza Adını Giriniz",
+                    message: "Lütfen Mağaza Unvanı Giriniz",
                   },
                 ]}
               >
-                <Input placeholder="Mağaza Adı" />
+                <Input placeholder="Mağaza Unvanı" />
               </Form.Item>
               <Form.Item
                 name="ownerName"
@@ -219,15 +226,17 @@ const ShopRegister = () => {
               >
                 <Input placeholder="Mağaza Sahibi" />
               </Form.Item>
-              <Form.Item name="phone" label="Telefon">
+              <Form.Item name="taxNumber" label="Vergi Numarası">
+                <Input placeholder="Vergi Numarası" />
+              </Form.Item>
+              <Form.Item name="taxAddress" label="Vergi Adresi">
+                <Input placeholder="Vergi Adresi" />
+              </Form.Item>
+              <Form.Item name="phone" label="Telefon Numarası">
                 <Input addonBefore={prefixSelector} style={{ width: "100%" }} />
               </Form.Item>
 
-              <Form.Item
-                name="website"
-                label="Website"
-                rules={[{ required: true, message: "Please input website!" }]}
-              >
+              <Form.Item name="website" label="Website">
                 <AutoComplete
                   options={websiteOptions}
                   onChange={onWebsiteChange}
@@ -236,8 +245,18 @@ const ShopRegister = () => {
                   <Input />
                 </AutoComplete>
               </Form.Item>
-              <Form.Item name="shopDetail" label="Mağaza Detay">
-                <TextArea placeholder="Mağaza Detay" />
+              <Form.Item
+                name="shopDescription"
+                label="Mağaza Açıklaması"
+                rules={[
+                  {
+                    max: 500,
+                    message:
+                      "Mağaza Açıklaması En Fazla 500 Karakterden Oluşabilir",
+                  },
+                ]}
+              >
+                <TextArea placeholder="Mağaza Açıklaması" />
               </Form.Item>
 
               <Form.Item

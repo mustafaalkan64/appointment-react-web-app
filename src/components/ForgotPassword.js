@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Row, Col, Typography, Input, Form, Button, message, Card } from "antd";
+import { Row, Col, Input, Form, Button, message, Card } from "antd";
 import background from "./../assets/img/login-background-image.png";
 import { Link } from "react-router-dom";
 import API from "./../api";
-const { Title } = Typography;
 
 const ForgotPassword = () => {
   const [form] = Form.useForm();

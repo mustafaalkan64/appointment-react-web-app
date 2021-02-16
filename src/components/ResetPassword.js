@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { useParams } from "react-router";
-import { Row, Col, Typography, Input, Form, Button, message, Card } from "antd";
+import { Row, Col, Input, Form, Button, message, Card } from "antd";
 import { useHistory } from "react-router";
 import background from "./../assets/img/login-background-image.png";
 import API from "./../api";
-const { Title } = Typography;
 
 const ResetPassword = () => {
   const [form] = Form.useForm();

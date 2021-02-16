@@ -1,21 +1,10 @@
 import React, { useState, useContext } from "react";
-import {
-  Row,
-  Col,
-  Typography,
-  Input,
-  Form,
-  Button,
-  Checkbox,
-  message,
-  Card,
-} from "antd";
+import { Row, Col, Input, Form, Button, Checkbox, message, Card } from "antd";
 import { useHistory } from "react-router";
 import background from "./../assets/img/login-background-image.png";
 import { Link } from "react-router-dom";
 import UserContext from "./../contexts/UserContext";
 import API from "./../api";
-const { Title } = Typography;
 
 const UserLogin = () => {
   const [form] = Form.useForm();
