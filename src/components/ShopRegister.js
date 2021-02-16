@@ -232,7 +232,17 @@ const ShopRegister = () => {
               <Form.Item name="taxAddress" label="Vergi Adresi">
                 <Input placeholder="Vergi Adresi" />
               </Form.Item>
-              <Form.Item name="phone" label="Telefon Numarası">
+              <Form.Item
+                name="phone"
+                label="Telefon Numarası"
+                rules={[
+                  {
+                    max: 10,
+                    message:
+                      "Telefon Numarası Belirlenen Max Karakter Sınırını Geçemezsiniz",
+                  },
+                ]}
+              >
                 <Input addonBefore={prefixSelector} style={{ width: "100%" }} />
               </Form.Item>
 
