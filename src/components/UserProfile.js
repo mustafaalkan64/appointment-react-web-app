@@ -186,8 +186,8 @@ const UserProfile = () => {
 
   const onFinish = (values) => {
     const userForm = {
-      Name: values.name,
-      Surname: values.surname,
+      FirstName: values.name,
+      LastName: values.surname,
       CityId: values.city,
       DistrictId: values.district,
       ZoneId: values.zone,

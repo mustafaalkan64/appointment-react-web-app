@@ -56,7 +56,7 @@ const ShopRegister = () => {
         history.push("/");
       })
       .catch((error) => {
-        message.error(error.response.data);
+        message.error(error.response.data.message);
         setLoading(false);
       });
   };
