@@ -15,13 +15,12 @@ export default function LayoutHeader() {
     token,
     setUserNameSurname,
     userNameSurname,
-    setUserRole,
     userRole,
   } = useContext(UserContext);
   const history = useHistory();
 
   useEffect(() => {
-    const getCurrentUsers = async () => {
+    const getCurrentUser = async () => {
       await API.get(`user/currentUser`, {
         headers: {
           "Content-Type": "application/json",
@@ -35,27 +34,14 @@ export default function LayoutHeader() {
           console.log(error);
         });
     };
-
-    const getCurrentUserRole = async () => {
-      await API.get(`user/currentUserRole`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => {
-          setUserRole(res.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
-    getCurrentUsers();
-    getCurrentUserRole();
+    getCurrentUser();
   }, []);
 
   const handleUserProfile = () => {
     history.push("/userProfile");
+  };
+  const handleShopProfile = () => {
+    history.push("/shopProfile");
   };
   const handleSettings = () => {
     history.push("/userSettings");
@@ -80,9 +66,15 @@ export default function LayoutHeader() {
         >
           <Menu.Item key="deneme">Hoşgeldiniz {userNameSurname}</Menu.Item>
           <SubMenu key="account" icon={<SettingFilled />}>
-            <Menu.Item onClick={handleUserProfile} key="setting:1">
-              Profilim
-            </Menu.Item>
+            {userRole == "User" ? (
+              <Menu.Item key="10" onClick={handleUserProfile}>
+                Profilim
+              </Menu.Item>
+            ) : (
+              <Menu.Item key="11" onClick={handleShopProfile}>
+                Mağaza Bilgilerim
+              </Menu.Item>
+            )}
             <Menu.Item onClick={handleSettings} key="setting:2">
               Ayarlar
             </Menu.Item>
