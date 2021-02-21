@@ -15,6 +15,8 @@ export default function LayoutHeader() {
     token,
     setUserNameSurname,
     userNameSurname,
+    setUserRole,
+    userRole,
   } = useContext(UserContext);
   const history = useHistory();
 
@@ -33,7 +35,23 @@ export default function LayoutHeader() {
           console.log(error);
         });
     };
+
+    const getCurrentUserRole = async () => {
+      await API.get(`user/currentUserRole`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          setUserRole(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
     getCurrentUsers();
+    getCurrentUserRole();
   }, []);
 
   const handleUserProfile = () => {

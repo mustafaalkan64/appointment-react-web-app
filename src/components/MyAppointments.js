@@ -152,10 +152,16 @@ export default function MyAppointments(props) {
         });
       })
       .catch((error) => {
+        setLoading(false);
+        if (error.response.status === 403) {
+          message.error("Bu Sayfayı Görmeye Yetkili Değilsiniz!");
+          return;
+        }
         if (error.response.status === 401) {
           history.push("/login");
         } else {
           message.error("Randevuları Getirme Esnasında Hata ile Karşılaşıldı!");
+          return;
         }
       });
   };
