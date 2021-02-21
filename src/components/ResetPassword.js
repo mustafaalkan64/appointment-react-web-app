@@ -23,7 +23,13 @@ const ResetPassword = () => {
         setLoading(false);
       })
       .catch((error) => {
-        message.error(error.response.data);
+        if (error.response != undefined) {
+          message.error(error.response.data);
+        } else {
+          message.error(
+            "Şüpheli karakterler tespit edildi. < > & gibi karakterleri kaldırıp lütfen tekrar deneyiniz."
+          );
+        }
         setLoading(false);
       });
   };
