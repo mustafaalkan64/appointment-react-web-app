@@ -33,10 +33,11 @@ const UserRegister = () => {
     setLoading(true);
     API.post(`user/register`, user)
       .then((res) => {
+        const token = res.data.response;
         localStorage.setItem("auth_token", res.data.response);
-        message.success("You've Registered Successfuly!");
+        setToken(token);
+        message.success("Başarıyla Kayıt Oldunuz!");
         setIsLoggedIn(true);
-        setToken(res.data.response);
         setLoading(false);
         history.push("/");
       })

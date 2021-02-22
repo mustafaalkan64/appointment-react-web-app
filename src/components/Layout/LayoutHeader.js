@@ -12,30 +12,12 @@ export default function LayoutHeader() {
   const {
     setIsLoggedIn,
     setToken,
-    token,
-    setUserNameSurname,
     userNameSurname,
     userRole,
+    token,
+    setUserNameSurname,
   } = useContext(UserContext);
   const history = useHistory();
-
-  useEffect(() => {
-    const getCurrentUser = async () => {
-      await API.get(`user/currentUser`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => {
-          setUserNameSurname(res.data.firstName + " " + res.data.lastName);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
-    getCurrentUser();
-  }, []);
 
   const handleUserProfile = () => {
     history.push("/userProfile");
@@ -49,9 +31,12 @@ export default function LayoutHeader() {
   const handleLogout = () => {
     localStorage.removeItem("auth_token");
     setIsLoggedIn(false);
-    setToken(null);
-    history.push("/");
+    setToken("");
+    setUserNameSurname("");
+    history.push("/login");
   };
+
+  useEffect(() => {}, []);
 
   return (
     <div>

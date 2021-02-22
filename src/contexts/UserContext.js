@@ -5,11 +5,8 @@ const UserContext = createContext(null);
 export const UserProvider = ({ children }) => {
   const [userRole, setUserRole] = useState("User");
   const [userNameSurname, setUserNameSurname] = useState("");
-  const auth_token = localStorage.getItem("auth_token");
-  const [token, setToken] = useState(auth_token);
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    auth_token == null ? false : true
-  );
+  const [token, setToken] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const values = {
     isLoggedIn,

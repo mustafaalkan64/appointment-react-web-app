@@ -20,17 +20,24 @@ import LayoutHeader from "./LayoutHeader";
 import ChangeMyPassword from "../Common/ChangeMyPassword";
 import UserSettings from "../User/UserSettings";
 import { Layout, Breadcrumb } from "antd";
+import API from "../../api";
 
 const { Sider, Content } = Layout;
 
 export default function UserLayout() {
-  const { isLoggedIn, token } = useContext(UserContext);
+  const {
+    isLoggedIn,
+    userRole,
+    setUserRole,
+    token,
+    setUserNameSurname,
+    userNameSurname,
+  } = useContext(UserContext);
   const { firstBreadcrumb, secondBreadcrumb, lastBreadcrumb } = useContext(
     BreadCrumbContext
   );
 
   const [collapsed, setCollapse] = useState(false);
-  useEffect(() => {}, []);
 
   const onCollapse = (collapsed) => {
     setCollapse(collapsed);

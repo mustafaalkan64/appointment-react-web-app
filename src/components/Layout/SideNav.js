@@ -14,9 +14,14 @@ const { SubMenu } = Menu;
 
 const SideNav = () => {
   const history = useHistory();
-  const { setIsLoggedIn, setToken, userRole, setUserRole, token } = useContext(
-    UserContext
-  );
+  const {
+    setIsLoggedIn,
+    setToken,
+    userRole,
+    token,
+    setUserRole,
+    setUserNameSurname,
+  } = useContext(UserContext);
 
   useEffect(() => {
     const getCurrentUserRole = async () => {
@@ -33,6 +38,21 @@ const SideNav = () => {
           console.log(error);
         });
     };
+    const getCurrentUser = async () => {
+      await API.get(`user/currentUser`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          setUserNameSurname(res.data.firstName + " " + res.data.lastName);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+    getCurrentUser();
     getCurrentUserRole();
   }, []);
 

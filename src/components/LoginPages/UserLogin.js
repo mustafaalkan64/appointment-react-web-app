@@ -21,10 +21,11 @@ const UserLogin = () => {
     await API.post(`user/authenticate`, user)
       .then((res) => {
         if (res.status) {
+          const token = res.data.response;
           localStorage.setItem("auth_token", res.data.response);
+          setToken(token);
           message.success("Hoşgeldiniz!");
           setIsLoggedIn(true);
-          setToken(res.data.response);
           setLoading(false);
           history.push("/");
         } else {
