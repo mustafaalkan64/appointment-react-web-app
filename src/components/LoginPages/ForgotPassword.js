@@ -1,25 +1,22 @@
 import React, { useState } from "react";
-import { useParams } from "react-router";
 import { Row, Col, Input, Form, Button, message, Card } from "antd";
-import { useHistory } from "react-router";
-import background from "./../assets/img/login-background-image.png";
-import API from "./../api";
+import background from "../../assets/img/login-background-image.png";
+import { Link } from "react-router-dom";
+import API from "../../api";
 
-const ResetPassword = () => {
+const ForgotPassword = () => {
   const [form] = Form.useForm();
-  const history = useHistory();
   const [loading, setLoading] = useState(false);
-  const { verify_token } = useParams();
   const handleSubmit = async (values) => {
     setLoading(true);
-    const resetPasswordModel = {
-      Password: values.password,
-      VerifyToken: verify_token,
+    const forgotPasswordModel = {
+      Email: values.email,
     };
-    await API.post(`user/resetPassword`, resetPasswordModel)
+    await API.post(`user/forgotPassword`, forgotPasswordModel)
       .then((res) => {
-        message.success("Şifrenizi Başarıyla Güncellediniz!");
-        history.push("/login");
+        message.success(
+          "Şifrenizi Yenilemek İçin Gerekli Olan İşlemleri Email Adresinize Gönderdik!"
+        );
         setLoading(false);
       })
       .catch((error) => {
@@ -58,7 +55,7 @@ const ResetPassword = () => {
       <Row>
         <Col span={12} offset={6}>
           <Card
-            title="Şifremi Yenile"
+            title="Şifremi Unuttum"
             hoverable
             bordered={true}
             style={{ width: "100%" }}
@@ -70,49 +67,31 @@ const ResetPassword = () => {
             <Form
               {...layout}
               form={form}
-              name="resetPassword"
+              name="forgotPassword"
               layout="horizontal"
               onFinish={handleSubmit}
             >
               <Form.Item
-                label="Şifre"
-                name="password"
+                name="email"
+                label="Email"
                 rules={[
                   {
                     required: true,
-                    message: "Lütfen Şifrenizi Giriniz",
+                    message: "Lütfen Email Adresi Giriniz",
                   },
                   {
-                    min: 8,
-                    message: "Şifreniz En Az 8 Karakterden Oluşmalıdır",
+                    type: "email",
+                    message: "Email Adresinizi Doğru Formatta Değil",
+                  },
+                  {
+                    max: 50,
+                    message:
+                      "Email Adresiniz En Fazla 50 Karakterden Oluşmalıdır",
                   },
                 ]}
               >
-                <Input.Password placeholder="Lütfen Şifrenizi Giriniz" />
+                <Input placeholder="Lütfen Email Giriniz" />
               </Form.Item>
-              <Form.Item
-                name="confirm"
-                label="Şifreyi Onayla"
-                dependencies={["password"]}
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: "Lütfen Şifrenizi Onaylayınız",
-                  },
-                  ({ getFieldValue }) => ({
-                    validator(_, value) {
-                      if (!value || getFieldValue("password") === value) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject("Girdiğiniz Şifreler Eşleşmiyor!");
-                    },
-                  }),
-                ]}
-              >
-                <Input.Password placeholder="Lütfen Şifreyi Onaylayınız" />
-              </Form.Item>
-
               <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
                 <Button
                   type="primary"
@@ -120,9 +99,13 @@ const ResetPassword = () => {
                   className="login-form-button"
                   htmlType="submit"
                 >
-                  Şifremi Güncelle
+                  Şifre Gönder
                 </Button>
+                <Link to="/login">Login</Link> Sayfasına Geri Dön
               </Form.Item>
+              <Form.Item
+                wrapperCol={{ ...layout.wrapperCol, offset: 6 }}
+              ></Form.Item>
             </Form>
           </Card>
         </Col>
@@ -130,4 +113,4 @@ const ResetPassword = () => {
     </div>
   );
 };
-export default ResetPassword;
+export default ForgotPassword;

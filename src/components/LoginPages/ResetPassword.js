@@ -1,34 +1,26 @@
-import React, { useState, useContext } from "react";
-import { Row, Col, Input, Form, Button, Checkbox, message, Card } from "antd";
+import React, { useState } from "react";
+import { useParams } from "react-router";
+import { Row, Col, Input, Form, Button, message, Card } from "antd";
 import { useHistory } from "react-router";
-import background from "./../assets/img/login-background-image.png";
-import { Link } from "react-router-dom";
-import UserContext from "./../contexts/UserContext";
-import API from "./../api";
+import background from "../../assets/img/login-background-image.png";
+import API from "../../api";
 
-const UserLogin = () => {
+const ResetPassword = () => {
   const [form] = Form.useForm();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
-  const { setIsLoggedIn, setToken } = useContext(UserContext);
+  const { verify_token } = useParams();
   const handleSubmit = async (values) => {
     setLoading(true);
-    const user = {
-      Email: values.email,
+    const resetPasswordModel = {
       Password: values.password,
+      VerifyToken: verify_token,
     };
-    await API.post(`user/authenticate`, user)
+    await API.post(`user/resetPassword`, resetPasswordModel)
       .then((res) => {
-        if (res.status) {
-          localStorage.setItem("auth_token", res.data.response);
-          message.success("Hoşgeldiniz!");
-          setIsLoggedIn(true);
-          setToken(res.data.response);
-          setLoading(false);
-          history.push("/");
-        } else {
-          message.error(res.response);
-        }
+        message.success("Şifrenizi Başarıyla Güncellediniz!");
+        history.push("/login");
+        setLoading(false);
       })
       .catch((error) => {
         if (error.response != undefined) {
@@ -66,7 +58,7 @@ const UserLogin = () => {
       <Row>
         <Col span={12} offset={6}>
           <Card
-            title="Giriş Yap"
+            title="Şifremi Yenile"
             hoverable
             bordered={true}
             style={{ width: "100%" }}
@@ -78,46 +70,47 @@ const UserLogin = () => {
             <Form
               {...layout}
               form={form}
-              name="login"
+              name="resetPassword"
               layout="horizontal"
               onFinish={handleSubmit}
             >
               <Form.Item
-                name="email"
-                label="Email"
-                rules={[
-                  {
-                    required: true,
-                    message: "Lütfen Email Adresi Giriniz",
-                  },
-                  {
-                    max: 50,
-                    message:
-                      "Email Adresiniz En Fazla 50 Karakterden Oluşmalıdır",
-                  },
-                ]}
-              >
-                <Input placeholder="Lütfen Email Giriniz" />
-              </Form.Item>
-
-              <Form.Item
                 label="Şifre"
                 name="password"
                 rules={[
-                  { required: true, message: "Lütfen Şifrenizi Giriniz" },
+                  {
+                    required: true,
+                    message: "Lütfen Şifrenizi Giriniz",
+                  },
+                  {
+                    min: 8,
+                    message: "Şifreniz En Az 8 Karakterden Oluşmalıdır",
+                  },
                 ]}
               >
                 <Input.Password placeholder="Lütfen Şifrenizi Giriniz" />
               </Form.Item>
-
-              <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
-                <Form.Item name="remember" valuePropName="checked" noStyle>
-                  <Checkbox>Beni Hatırla</Checkbox>
-                </Form.Item>
-
-                <a className="login-form-forgot" href="">
-                  <Link to="/forgotPassword">Şifreni mi Unuttun?</Link>
-                </a>
+              <Form.Item
+                name="confirm"
+                label="Şifreyi Onayla"
+                dependencies={["password"]}
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: "Lütfen Şifrenizi Onaylayınız",
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("password") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject("Girdiğiniz Şifreler Eşleşmiyor!");
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password placeholder="Lütfen Şifreyi Onaylayınız" />
               </Form.Item>
 
               <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
@@ -127,9 +120,8 @@ const UserLogin = () => {
                   className="login-form-button"
                   htmlType="submit"
                 >
-                  Giriş Yap
+                  Şifremi Güncelle
                 </Button>
-                Henüz Üye Değilmisin? <Link to="/signUp">Üye Ol</Link>
               </Form.Item>
             </Form>
           </Card>
@@ -138,4 +130,4 @@ const UserLogin = () => {
     </div>
   );
 };
-export default UserLogin;
+export default ResetPassword;

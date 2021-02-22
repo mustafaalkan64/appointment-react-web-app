@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Form, Input, Row, Col, Button, Typography, message } from "antd";
 import { useHistory } from "react-router";
-import UserContext from "./../contexts/UserContext";
-import BreadCrumbContext from "./../contexts/BreadcrumbContext";
-import API from "./../api";
+import UserContext from "../../contexts/UserContext";
+import BreadCrumbContext from "../../contexts/BreadcrumbContext";
+import API from "../../api";
 
 const { Title } = Typography;
 

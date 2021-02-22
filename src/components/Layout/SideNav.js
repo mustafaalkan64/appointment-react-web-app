@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Menu } from "antd";
-import API from "./../api";
-import UserContext from "./../contexts/UserContext";
+import API from "../../api";
+import UserContext from "../../contexts/UserContext";
 
 import {
   UserOutlined,

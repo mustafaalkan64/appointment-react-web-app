@@ -12,10 +12,10 @@ import {
   AutoComplete,
 } from "antd";
 import { useHistory } from "react-router";
-import background from "./../assets/img/login-background-image.png";
+import background from "../../assets/img/login-background-image.png";
 import { Link } from "react-router-dom";
-import UserContext from "../contexts/UserContext";
-import API from "../api";
+import UserContext from "../../contexts/UserContext";
+import API from "../../api";
 
 const ShopRegister = () => {
   const [loading, setLoading] = useState(false);

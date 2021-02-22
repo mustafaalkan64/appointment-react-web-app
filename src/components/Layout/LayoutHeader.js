@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from "react";
 import { Menu, Layout } from "antd";
-import UserContext from "./../contexts/UserContext";
+import UserContext from "../../contexts/UserContext";
 import { SettingFilled } from "@ant-design/icons";
-import API from "./../api";
+import API from "../../api";
 import { useHistory } from "react-router";
 
 const { SubMenu } = Menu;

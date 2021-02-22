@@ -3,10 +3,10 @@ import React, { useEffect, useState, useCallback, useContext } from "react";
 import { Table, Row, Col, Button, Typography, Input, Modal } from "antd";
 import { useHistory } from "react-router";
 import { Tag, Space, message, Spin, Select } from "antd";
-import API from "./../api";
-import { serialize } from "./../utils";
-import UserContext from "./../contexts/UserContext";
-import BreadCrumbContext from "./../contexts/BreadcrumbContext";
+import API from "../../api";
+import { serialize } from "../../utils";
+import UserContext from "../../contexts/UserContext";
+import BreadCrumbContext from "../../contexts/BreadcrumbContext";
 const { TextArea } = Input;
 
 export default function MyAppointments(props) {
