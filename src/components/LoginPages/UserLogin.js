@@ -5,6 +5,7 @@ import background from "../../assets/img/login-background-image.png";
 import { Link } from "react-router-dom";
 import UserContext from "../../contexts/UserContext";
 import API from "../../api";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 const UserLogin = () => {
   const [form] = Form.useForm();
@@ -97,7 +98,10 @@ const UserLogin = () => {
                   },
                 ]}
               >
-                <Input placeholder="Lütfen Email Giriniz" />
+                <Input
+                  placeholder="Lütfen Email Giriniz"
+                  prefix={<UserOutlined className="site-form-item-icon" />}
+                />
               </Form.Item>
 
               <Form.Item
@@ -107,7 +111,10 @@ const UserLogin = () => {
                   { required: true, message: "Lütfen Şifrenizi Giriniz" },
                 ]}
               >
-                <Input.Password placeholder="Lütfen Şifrenizi Giriniz" />
+                <Input.Password
+                  placeholder="Lütfen Şifrenizi Giriniz"
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                />
               </Form.Item>
 
               <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
