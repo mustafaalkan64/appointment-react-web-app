@@ -130,14 +130,14 @@ export default function MyAppointments(props) {
 
   const fetch = async (params) => {
     setLoading(true);
-    var queryString = serialize({
-      current: params.pagination.current,
-      pageSize: params.pagination.pageSize,
-      status,
-      searchText,
-      sortValue,
+    var filterAppointmentDto = serialize({
+      Current: params.pagination.current,
+      PageSize: params.pagination.pageSize,
+      Status: status,
+      SearchText: searchText,
+      SortValue: sortValue,
     });
-    await API.get(`appointment/filter?${queryString}`, {
+    await API.get(`appointment/filter?${filterAppointmentDto}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
