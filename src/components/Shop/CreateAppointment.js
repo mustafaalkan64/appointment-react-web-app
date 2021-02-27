@@ -11,6 +11,7 @@ import {
   Select,
   Typography,
   message,
+  ConfigProvider,
 } from "antd";
 import API from "../../api";
 import "moment/locale/tr";
@@ -39,8 +40,7 @@ const CreateAppointment = () => {
   const format = "HH:mm";
   const { RangePicker } = TimePicker;
   const [componentSize, setComponentSize] = useState("default");
-
-  const style = { padding: "8px 0" };
+  moment.locale("tr-TR");
 
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
@@ -48,7 +48,7 @@ const CreateAppointment = () => {
 
   const createAppointment = (createAppointmentForm) => {
     setLoading(true);
-    API.post(`shop/createAppointment`, createAppointmentForm, {
+    API.post(`appointment/createAppointment`, createAppointmentForm, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -92,17 +92,23 @@ const CreateAppointment = () => {
   }
 
   function onTimeRangeChange(time, timeString) {
-    setTimeRanges(time);
+    var times = [];
+    time.map((item) => {
+      if (item != undefined) {
+        times.push(item.format("YYYY-MM-DDTHH:mm:ss"));
+      }
+    });
+    setTimeRanges(times);
   }
 
   const onFinish = (values) => {
     const createAppointmentForm = {
       WeekDays: values.weekdays,
-      AppointmentPeriod: values.appointmentPeriod,
-      StartTime: startTime,
-      EndTime: endTime,
+      AppointmentPeriod: parseInt(values.appointmentPeriod),
+      StartTime: startTime.format("YYYY-MM-DDTHH:mm:ss"),
+      EndTime: endTime.format("YYYY-MM-DDTHH:mm:ss"),
       EmptyTimeRange: timeRanges,
-      AppointmentLong: values.appointmentLong,
+      AppointmentLong: parseInt(values.appointmentLong),
     };
     createAppointment(createAppointmentForm);
   };
@@ -162,7 +168,7 @@ const CreateAppointment = () => {
             <Option key="4">Perşembe</Option>
             <Option key="5">Cuma</Option>
             <Option key="6">Cumartesi</Option>
-            <Option key="7">Pazar</Option>
+            <Option key="0">Pazar</Option>
           </Select>
         </Form.Item>
 
@@ -190,58 +196,64 @@ const CreateAppointment = () => {
           </Select>
         </Form.Item>
 
-        <Form.Item
-          label="Açılış Saati"
-          name="startTime"
-          rules={[
-            {
-              required: true,
-              message: "Lütfen Saat Giriniz!",
-            },
-          ]}
-        >
-          <TimePicker
-            onChange={onStartTimeChange}
-            defaultValue={moment("00:00", format)}
-            format={format}
-          />
-        </Form.Item>
+        <ConfigProvider locale={locale}>
+          <Form.Item
+            label="Açılış Saati"
+            name="startTime"
+            rules={[
+              {
+                required: true,
+                message: "Lütfen Saat Giriniz!",
+              },
+            ]}
+          >
+            <TimePicker
+              onChange={onStartTimeChange}
+              defaultValue={moment("00:00", format)}
+              format={format}
+            />
+          </Form.Item>
+        </ConfigProvider>
 
-        <Form.Item
-          label="Kapanış Saati"
-          name="endTime"
-          rules={[
-            {
-              required: true,
-              message: "Lütfen Saat Giriniz!",
-            },
-          ]}
-        >
-          <TimePicker
-            onChange={onEndTimeChange}
-            defaultValue={moment("00:00", format)}
-            format={format}
-          />
-        </Form.Item>
+        <ConfigProvider locale={locale}>
+          <Form.Item
+            label="Kapanış Saati"
+            name="endTime"
+            rules={[
+              {
+                required: true,
+                message: "Lütfen Saat Giriniz!",
+              },
+            ]}
+          >
+            <TimePicker
+              onChange={onEndTimeChange}
+              defaultValue={moment("00:00", format)}
+              format={format}
+            />
+          </Form.Item>
+        </ConfigProvider>
 
-        <Form.Item
-          label="Hizmet Verilmeyen Saat Aralığı"
-          name="emptyTimeRange"
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 18 }}
-          rules={[
-            {
-              required: true,
-              message: "Lütfen Saat Giriniz!",
-            },
-          ]}
-        >
-          <RangePicker
-            format={format}
-            onChange={onTimeRangeChange}
-            defaultValue={moment("00:00", format)}
-          />
-        </Form.Item>
+        <ConfigProvider locale={locale}>
+          <Form.Item
+            label="Mola Aralığı"
+            name="emptyTimeRange"
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 18 }}
+            rules={[
+              {
+                required: true,
+                message: "Lütfen Saat Giriniz!",
+              },
+            ]}
+          >
+            <RangePicker
+              format={format}
+              onChange={onTimeRangeChange}
+              defaultValue={moment("00:00", format)}
+            />
+          </Form.Item>
+        </ConfigProvider>
 
         <Form.Item
           label="Hizmet Süresi"
