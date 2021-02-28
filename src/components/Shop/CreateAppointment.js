@@ -46,9 +46,9 @@ const CreateAppointment = () => {
     setComponentSize(size);
   };
 
-  const createAppointment = (createAppointmentForm) => {
+  const createAppointment = (createAppointmentPlanForm) => {
     setLoading(true);
-    API.post(`appointment/createAppointment`, createAppointmentForm, {
+    API.post(`shop/createOrUpdateAppointment`, createAppointmentPlanForm, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -102,7 +102,7 @@ const CreateAppointment = () => {
   }
 
   const onFinish = (values) => {
-    const createAppointmentForm = {
+    const createAppointmentPlanForm = {
       WeekDays: values.weekdays,
       AppointmentPeriod: parseInt(values.appointmentPeriod),
       StartTime: startTime.format("YYYY-MM-DDTHH:mm:ss"),
@@ -110,7 +110,7 @@ const CreateAppointment = () => {
       EmptyTimeRange: timeRanges,
       AppointmentLong: parseInt(values.appointmentLong),
     };
-    createAppointment(createAppointmentForm);
+    createAppointment(createAppointmentPlanForm);
   };
 
   const layout = {
