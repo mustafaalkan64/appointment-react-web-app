@@ -20,7 +20,7 @@ import moment from "moment";
 
 const { Title } = Typography;
 
-const CreateAppointment = () => {
+const AppointmentPlan = () => {
   const [form] = Form.useForm();
   const { token } = useContext(UserContext);
   const {
@@ -34,8 +34,7 @@ const CreateAppointment = () => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [timeRanges, setTimeRanges] = useState([]);
-  const [size, setSize] = React.useState("default");
-  const dateFormat = "DD.MM.YYYY";
+  const [size] = React.useState("default");
   const { Option } = Select;
   const format = "HH:mm";
   const { RangePicker } = TimePicker;
@@ -302,4 +301,4 @@ const CreateAppointment = () => {
     </div>
   );
 };
-export default CreateAppointment;
+export default AppointmentPlan;

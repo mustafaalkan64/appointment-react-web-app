@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Menu } from "antd";
+import { Menu, message } from "antd";
 import API from "../../api";
 import UserContext from "../../contexts/UserContext";
 
@@ -18,10 +18,10 @@ const SideNav = () => {
     setIsLoggedIn,
     setToken,
     userRole,
-    token,
     setUserRole,
     setUserNameSurname,
   } = useContext(UserContext);
+  const token = localStorage.getItem("auth_token");
 
   useEffect(() => {
     const getCurrentUserRole = async () => {
@@ -46,10 +46,17 @@ const SideNav = () => {
         },
       })
         .then((res) => {
-          setUserNameSurname(res.data.firstName + " " + res.data.lastName);
+          setUserNameSurname(
+            res.data.firstName + " " + (res.data.lastName ?? "")
+          );
         })
         .catch((error) => {
-          console.log(error);
+          if (error.response.status === 401) {
+            history.push("/login");
+            message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
+          } else {
+            message.error(error.response.data);
+          }
         });
     };
     getCurrentUser();
@@ -59,8 +66,8 @@ const SideNav = () => {
   const handleMyActiveAppointments = () => {
     history.push("/myActiveAppointments");
   };
-  const handleCreateAppointment = () => {
-    history.push("/createAppointment");
+  const handleAppointmentPlan = () => {
+    history.push("/appointmentPlan");
   };
   const handleMyCanceledAppointments = () => {
     history.push("/myCanceledAppointments");
@@ -129,10 +136,10 @@ const SideNav = () => {
             icon={<CheckSquareOutlined />}
             title={<span>Randevu Bilgilerim</span>}
           >
-            <Menu.Item key="8" onClick={handleCreateAppointment}>
-              Randevu Oluştur
+            <Menu.Item key="8" onClick={handleAppointmentPlan}>
+              Randevu Planı Yönetme
             </Menu.Item>
-            <Menu.Item key="9" onClick={handleCreateAppointment}>
+            <Menu.Item key="9" onClick={handleAppointmentPlan}>
               Randevu Defterim
             </Menu.Item>
           </SubMenu>

@@ -24,6 +24,7 @@ const ShopRegister = () => {
   const [autoCompleteResult, setAutoCompleteResult] = useState([]);
   const { setIsLoggedIn, setToken } = useContext(UserContext);
   const [cities, setCities] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [zones, setZones] = useState([]);
   const { Option } = Select;
@@ -44,6 +45,7 @@ const ShopRegister = () => {
       ZoneId: values.zone,
       TaxNumber: values.taxNumber,
       TaxAddress: values.taxAddress,
+      Categories: values.categories,
     };
     setLoading(true);
     API.post(`shop/register`, shopRegisterModel)
@@ -105,6 +107,20 @@ const ShopRegister = () => {
       })
       .catch((error) => {
         message.error("Şehirleri Getirme Sırasında Hata ile Karşılaşıldı");
+      });
+  };
+
+  const getCategories = async () => {
+    await API.get(`categories/getCategories`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        setCategories(res.data);
+      })
+      .catch((error) => {
+        message.error("Kategorileri Getirme Sırasında Hata ile Karşılaşıldı");
       });
   };
 
@@ -175,6 +191,7 @@ const ShopRegister = () => {
 
   useEffect(() => {
     getCities();
+    getCategories();
   }, []);
 
   return (
@@ -359,6 +376,30 @@ const ShopRegister = () => {
               <Form.Item name="shopAddress" label="Mağaza Adresi">
                 <TextArea placeholder="Mağaza Adresi" />
               </Form.Item>
+
+              <Form.Item
+                name="categories"
+                label="Kategoriler"
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 14 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Lütfen Kategori(ler) Seçiniz!",
+                  },
+                ]}
+              >
+                <Select mode="tags" size={"default"} style={{ width: "100%" }}>
+                  {categories.map((category, key) => {
+                    return (
+                      <Option value={category.id} key={category.id}>
+                        {category.categoryName}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+
               <Form.Item
                 name="email"
                 label="Email"

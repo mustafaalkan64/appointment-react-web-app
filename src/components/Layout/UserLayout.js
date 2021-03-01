@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Route, Switch } from "react-router-dom";
 import UserContext from "../../contexts/UserContext";
 import BreadCrumbContext from "../../contexts/BreadcrumbContext";
@@ -6,7 +6,7 @@ import MyActiveAppointments from "../../components/User/myActiveAppointments";
 import MyCanceledAppointments from "../../components/User/MyCanceledAppointments";
 import MyPreviousAppointments from "../../components/User/MyPreviousAppointments";
 import MyOncomingAppointments from "../../components/User/MyOncomingAppointments";
-import CreateAppointment from "../../components/Shop/CreateAppointment";
+import AppointmentPlan from "../Shop/AppointmentPlan";
 import UserProfile from "../../components/User/UserProfile";
 import ForgotPassword from "../LoginPages/ForgotPassword";
 import ResetPassword from "../LoginPages/ResetPassword";
@@ -20,19 +20,11 @@ import LayoutHeader from "./LayoutHeader";
 import ChangeMyPassword from "../Common/ChangeMyPassword";
 import UserSettings from "../User/UserSettings";
 import { Layout, Breadcrumb } from "antd";
-import API from "../../api";
 
 const { Sider, Content } = Layout;
 
 export default function UserLayout() {
-  const {
-    isLoggedIn,
-    userRole,
-    setUserRole,
-    token,
-    setUserNameSurname,
-    userNameSurname,
-  } = useContext(UserContext);
+  const { isLoggedIn, token } = useContext(UserContext);
   const { firstBreadcrumb, secondBreadcrumb, lastBreadcrumb } = useContext(
     BreadCrumbContext
   );
@@ -103,8 +95,8 @@ export default function UserLayout() {
                         component={MyPreviousAppointments}
                       />
                       <Route
-                        path="/createAppointment"
-                        component={CreateAppointment}
+                        path="/appointmentPlan"
+                        component={AppointmentPlan}
                       />
                       <Route path="/userProfile" component={UserProfile} />
                       <Route

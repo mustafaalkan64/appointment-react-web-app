@@ -2,7 +2,6 @@ import React, { useContext, useEffect } from "react";
 import { Menu, Layout } from "antd";
 import UserContext from "../../contexts/UserContext";
 import { SettingFilled } from "@ant-design/icons";
-import API from "../../api";
 import { useHistory } from "react-router";
 
 const { SubMenu } = Menu;
@@ -14,7 +13,6 @@ export default function LayoutHeader() {
     setToken,
     userNameSurname,
     userRole,
-    token,
     setUserNameSurname,
   } = useContext(UserContext);
   const history = useHistory();
