@@ -39,16 +39,14 @@ const SideNav = () => {
         });
     };
     const getCurrentUser = async () => {
-      await API.get(`user/currentUser`, {
+      await API.get(`user/getCurrentUserName`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       })
         .then((res) => {
-          setUserNameSurname(
-            res.data.firstName + " " + (res.data.lastName ?? "")
-          );
+          setUserNameSurname(res.data);
         })
         .catch((error) => {
           if (error.response.status === 401) {

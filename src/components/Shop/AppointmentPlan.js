@@ -22,7 +22,6 @@ const { Title } = Typography;
 
 const AppointmentPlan = () => {
   const [form] = Form.useForm();
-  const { token } = useContext(UserContext);
   const {
     setFirstBreadcrumb,
     setSecondBreadcrumb,
@@ -39,13 +38,15 @@ const AppointmentPlan = () => {
   const format = "HH:mm";
   const { RangePicker } = TimePicker;
   const [componentSize, setComponentSize] = useState("default");
+  const token = localStorage.getItem("auth_token");
   moment.locale("tr-TR");
 
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
   };
 
-  const createAppointment = (createAppointmentPlanForm) => {
+  const createAppointmentPlan = (createAppointmentPlanForm) => {
+    debugger;
     setLoading(true);
     API.post(`shop/createOrUpdateAppointment`, createAppointmentPlanForm, {
       headers: {
@@ -73,6 +74,54 @@ const AppointmentPlan = () => {
   useEffect(() => {
     forceUpdate({});
 
+    const getAppointmentPlan = async () => {
+      setLoading(true);
+      await API.get(`shop/getAppointmentPlan`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          setLoading(false);
+          if (res.data != "") {
+            debugger;
+            form.setFieldsValue({
+              weekdays: res.data.weekDays,
+              appointmentPeriod: parseInt(res.data.appointmentPeriod),
+              startTime: moment(res.data.startTime, format),
+              endTime: moment(res.data.endTime, format),
+              emptyTimeRange: [
+                moment(res.data.emptyTimeRange[0], format),
+                moment(res.data.emptyTimeRange[1], format),
+              ],
+              appointmentLong: parseInt(res.data.appointmentLong),
+            });
+            setStartTime(moment(res.data.startTime, format));
+            setEndTime(moment(res.data.endTime, format));
+
+            let times = [];
+            res.data.emptyTimeRange.map((item) => {
+              if (item != undefined) {
+                times.push(item);
+              }
+            });
+            setTimeRanges(times);
+          }
+        })
+        .catch((error) => {
+          debugger;
+          if (error.response.status === 401) {
+            history.push("/login");
+            message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
+          } else {
+            message.error(
+              "Kişisel Bilgileri Getirme Esnasında Hata ile Karşılaşıldı!"
+            );
+          }
+        });
+    };
+    getAppointmentPlan();
     setFirstBreadcrumb("Anasayfa");
     setSecondBreadcrumb("Randevular");
     setLastBreadcrumb("Randevu Oluştur");
@@ -94,22 +143,23 @@ const AppointmentPlan = () => {
     var times = [];
     time.map((item) => {
       if (item != undefined) {
-        times.push(item.format("YYYY-MM-DDTHH:mm:ss"));
+        times.push(item.format("HH:mm"));
       }
     });
     setTimeRanges(times);
   }
 
   const onFinish = (values) => {
+    debugger;
     const createAppointmentPlanForm = {
-      WeekDays: values.weekdays,
-      AppointmentPeriod: parseInt(values.appointmentPeriod),
-      StartTime: startTime.format("YYYY-MM-DDTHH:mm:ss"),
-      EndTime: endTime.format("YYYY-MM-DDTHH:mm:ss"),
-      EmptyTimeRange: timeRanges,
-      AppointmentLong: parseInt(values.appointmentLong),
+      weekDays: values.weekdays,
+      appointmentPeriod: parseInt(values.appointmentPeriod),
+      startTime: startTime.format("HH:mm"),
+      endTime: endTime.format("HH:mm"),
+      emptyTimeRange: timeRanges,
+      appointmentLong: parseInt(values.appointmentLong),
     };
-    createAppointment(createAppointmentPlanForm);
+    createAppointmentPlan(createAppointmentPlanForm);
   };
 
   const layout = {
@@ -161,13 +211,27 @@ const AppointmentPlan = () => {
             onChange={handleChange}
             style={{ width: "100%" }}
           >
-            <Option key="1">Pazartesi</Option>
-            <Option key="2">Salı</Option>
-            <Option key="3">Çaşamba</Option>
-            <Option key="4">Perşembe</Option>
-            <Option key="5">Cuma</Option>
-            <Option key="6">Cumartesi</Option>
-            <Option key="0">Pazar</Option>
+            <Option value="1" key="1">
+              Pazartesi
+            </Option>
+            <Option value="2" key="2">
+              Salı
+            </Option>
+            <Option value="3" key="3">
+              Çaşamba
+            </Option>
+            <Option value="4" key="4">
+              Perşembe
+            </Option>
+            <Option value="5" key="5">
+              Cuma
+            </Option>
+            <Option value="6" key="6">
+              Cumartesi
+            </Option>
+            <Option value="0" key="0">
+              Pazar
+            </Option>
           </Select>
         </Form.Item>
 
@@ -239,12 +303,6 @@ const AppointmentPlan = () => {
             name="emptyTimeRange"
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 18 }}
-            rules={[
-              {
-                required: true,
-                message: "Lütfen Saat Giriniz!",
-              },
-            ]}
           >
             <RangePicker
               format={format}
