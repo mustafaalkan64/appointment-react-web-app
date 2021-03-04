@@ -82,6 +82,9 @@ const SideNav = () => {
   const handleMyPreviousAppointments = () => {
     history.push("/myPreviousAppointments");
   };
+  const handleShopServices = () => {
+    history.push("/shopServices");
+  };
   const handleMyOncomingAppointments = () => {
     history.push("/myOncomingAppointments");
   };
@@ -156,6 +159,9 @@ const SideNav = () => {
               Mağaza Bilgilerim
             </Menu.Item>
           )}
+          <Menu.Item key="13" onClick={handleShopServices}>
+            Mağaza Servisleri
+          </Menu.Item>
           <Menu.Item key="12" onClick={handleChangeMyPassword}>
             Şifre Değiştir
           </Menu.Item>

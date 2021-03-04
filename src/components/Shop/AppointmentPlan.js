@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router";
-import UserContext from "../../contexts/UserContext";
 import BreadCrumbContext from "../../contexts/BreadcrumbContext";
 import {
   Form,
@@ -85,7 +84,6 @@ const AppointmentPlan = () => {
         .then((res) => {
           setLoading(false);
           if (res.data != "") {
-            debugger;
             form.setFieldsValue({
               weekdays: res.data.weekDays,
               appointmentPeriod: parseInt(res.data.appointmentPeriod),
@@ -110,7 +108,6 @@ const AppointmentPlan = () => {
           }
         })
         .catch((error) => {
-          debugger;
           if (error.response.status === 401) {
             history.push("/login");
             message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
@@ -150,7 +147,6 @@ const AppointmentPlan = () => {
   }
 
   const onFinish = (values) => {
-    debugger;
     const createAppointmentPlanForm = {
       weekDays: values.weekdays,
       appointmentPeriod: parseInt(values.appointmentPeriod),
