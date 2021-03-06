@@ -160,7 +160,7 @@ const SideNav = () => {
             </Menu.Item>
           )}
           <Menu.Item key="13" onClick={handleShopServices}>
-            Mağaza Servisleri
+            Verdiğim Hizmetler
           </Menu.Item>
           <Menu.Item key="12" onClick={handleChangeMyPassword}>
             Şifre Değiştir
