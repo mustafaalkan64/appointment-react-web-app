@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { TreeSelect, message, Row, Button, Col } from "antd";
+import { TreeSelect, message, Row, Button, Col, Space, Spin } from "antd";
 import { useHistory } from "react-router";
 import API from "../../api";
 import "moment/locale/tr";
@@ -7,10 +7,10 @@ import BreadCrumbContext from "../../contexts/BreadcrumbContext";
 
 const ShopServices = () => {
   const history = useHistory();
-  const { SHOW_PARENT, SHOW_ALL } = TreeSelect;
   const [serviceIds, setServiceIds] = useState(undefined);
   const [treeData, setTreeData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [saveLoading, setSaveLoading] = useState(false);
   const token = localStorage.getItem("auth_token");
   const {
     setFirstBreadcrumb,
@@ -28,18 +28,37 @@ const ShopServices = () => {
         },
       })
         .then((res) => {
-          setLoading(false);
           setTreeData(res.data);
+          getShopServices();
         })
         .catch((error) => {
           if (error.response.status === 401) {
             history.push("/login");
-            message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
           } else {
-            message.error(
-              "Kişisel Bilgileri Getirme Esnasında Hata ile Karşılaşıldı!"
-            );
+            message.error(error.response.data);
           }
+          setLoading(false);
+        });
+    };
+
+    const getShopServices = async () => {
+      await API.get(`shop/getShopServices`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          setServiceIds(res.data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          if (error.response.status === 401) {
+            history.push("/login");
+          } else {
+            message.error(error.response.data);
+          }
+          setLoading(false);
         });
     };
     getServicesTree();
@@ -49,7 +68,7 @@ const ShopServices = () => {
   }, []);
 
   const submitChangins = async () => {
-    debugger;
+    setSaveLoading(true);
     await API.put(`shop/updateShopServices`, serviceIds, {
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +76,7 @@ const ShopServices = () => {
       },
     })
       .then((res) => {
-        setLoading(false);
+        setSaveLoading(false);
         message.success(res.data.response);
       })
       .catch((error) => {
@@ -65,10 +84,9 @@ const ShopServices = () => {
           history.push("/login");
           message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
         } else {
-          message.error(
-            "Kişisel Bilgileri Getirme Esnasında Hata ile Karşılaşıldı!"
-          );
+          message.error(error.response.data);
         }
+        setSaveLoading(false);
       });
   };
 
@@ -83,9 +101,8 @@ const ShopServices = () => {
     value: serviceIds,
     onChange,
     treeCheckable: true,
-    showCheckedStrategy: SHOW_ALL,
     treeIcon: true,
-    placeholder: "Please select",
+    placeholder: "Lütfen Seçiniz",
     style: {
       width: "100%",
     },
@@ -93,24 +110,34 @@ const ShopServices = () => {
 
   return (
     <div>
-      <Row
-        style={{ marginBottom: 10 }}
-        gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-      >
-        <TreeSelect {...tProps} />
-      </Row>
-      <Row style={{ marginLeft: 0 }}>
-        <Col>
-          <Button
-            type="primary"
-            loading={loading}
-            onClick={() => submitChangins()}
-            htmlType="button"
+      {loading ? (
+        <div className="spinClass">
+          <Space size="middle">
+            <Spin size="large" />
+          </Space>
+        </div>
+      ) : (
+        <div>
+          <Row
+            style={{ marginBottom: 10 }}
+            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
           >
-            Kaydet
-          </Button>
-        </Col>
-      </Row>
+            <TreeSelect {...tProps} />
+          </Row>
+          <Row style={{ marginLeft: 0 }}>
+            <Col>
+              <Button
+                type="primary"
+                loading={saveLoading}
+                onClick={() => submitChangins()}
+                htmlType="button"
+              >
+                Kaydet
+              </Button>
+            </Col>
+          </Row>
+        </div>
+      )}
     </div>
   );
 };
