@@ -1,5 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
-import { TreeSelect, message, Row, Button, Col, Space, Spin } from "antd";
+import {
+  TreeSelect,
+  message,
+  Row,
+  Button,
+  Col,
+  Space,
+  Spin,
+  Typography,
+  Title,
+} from "antd";
 import { useHistory } from "react-router";
 import API from "../../api";
 import "moment/locale/tr";
@@ -7,6 +17,7 @@ import BreadCrumbContext from "../../contexts/BreadcrumbContext";
 
 const ShopServices = () => {
   const history = useHistory();
+  const { Title } = Typography;
   const [serviceIds, setServiceIds] = useState(undefined);
   const [treeData, setTreeData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -21,7 +32,7 @@ const ShopServices = () => {
   useEffect(() => {
     const getServicesTree = async () => {
       setLoading(true);
-      await API.get(`categories/getServicesTree`, {
+      await API.get(`shop/getServicesTree`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -110,34 +121,31 @@ const ShopServices = () => {
 
   return (
     <div>
-      {loading ? (
-        <div className="spinClass">
-          <Space size="middle">
-            <Spin size="large" />
-          </Space>
-        </div>
-      ) : (
-        <div>
-          <Row
-            style={{ marginBottom: 10 }}
-            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          >
-            <TreeSelect {...tProps} />
-          </Row>
-          <Row style={{ marginLeft: 0 }}>
-            <Col>
-              <Button
-                type="primary"
-                loading={saveLoading}
-                onClick={() => submitChangins()}
-                htmlType="button"
-              >
-                Kaydet
-              </Button>
-            </Col>
-          </Row>
-        </div>
-      )}
+      <Row gutter={[40, 0]}>
+        <Col span={18}>
+          <Title level={2}>Verdiğim Hizmetler</Title>
+        </Col>
+      </Row>
+      <Spin spinning={loading} delay={500}>
+        <Row
+          style={{ marginBottom: 10 }}
+          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+        >
+          <TreeSelect {...tProps} />
+        </Row>
+        <Row style={{ marginLeft: 0 }}>
+          <Col>
+            <Button
+              type="primary"
+              loading={saveLoading}
+              onClick={() => submitChangins()}
+              htmlType="button"
+            >
+              Kaydet
+            </Button>
+          </Col>
+        </Row>
+      </Spin>
     </div>
   );
 };

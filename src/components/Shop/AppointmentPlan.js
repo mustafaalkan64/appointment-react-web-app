@@ -172,7 +172,7 @@ const AppointmentPlan = () => {
       <Row>
         <Col span={23}>
           <Title style={{ textAlign: "center" }} level={2}>
-            Randevu Oluştur
+            Randevu Planı Oluştur
           </Title>
         </Col>
       </Row>

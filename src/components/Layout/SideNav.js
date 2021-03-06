@@ -20,8 +20,8 @@ const SideNav = () => {
     userRole,
     setUserRole,
     setUserNameSurname,
+    token,
   } = useContext(UserContext);
-  const token = localStorage.getItem("auth_token");
 
   useEffect(() => {
     const getCurrentUserRole = async () => {
@@ -155,18 +155,21 @@ const SideNav = () => {
               Profilim
             </Menu.Item>
           ) : (
-            <Menu.Item key="11" onClick={handleShopProfile}>
-              Mağaza Bilgilerim
-            </Menu.Item>
+            <>
+              <Menu.Item key="11" onClick={handleShopProfile}>
+                Mağaza Bilgilerim
+              </Menu.Item>
+              <Menu.Item key="13" onClick={handleShopServices}>
+                Verdiğim Hizmetler
+              </Menu.Item>
+            </>
           )}
-          <Menu.Item key="13" onClick={handleShopServices}>
-            Verdiğim Hizmetler
-          </Menu.Item>
+
           <Menu.Item key="12" onClick={handleChangeMyPassword}>
             Şifre Değiştir
           </Menu.Item>
         </SubMenu>
-        <Menu.Item icon={<LogoutOutlined />} key="10" onClick={handleLogout}>
+        <Menu.Item icon={<LogoutOutlined />} key="14" onClick={handleLogout}>
           <span>Çıkış</span>
         </Menu.Item>
       </Menu>
