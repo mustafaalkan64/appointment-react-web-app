@@ -8,6 +8,7 @@ import MyPreviousAppointments from "../../components/User/MyPreviousAppointments
 import MyOncomingAppointments from "../../components/User/MyOncomingAppointments";
 import AppointmentPlan from "../Shop/AppointmentPlan";
 import ShopServices from "../Shop/ShopServices";
+import ShopCategories from "../Shop/ShopCategories";
 import UserProfile from "../../components/User/UserProfile";
 import ForgotPassword from "../LoginPages/ForgotPassword";
 import ResetPassword from "../LoginPages/ResetPassword";
@@ -105,6 +106,10 @@ export default function UserLayout() {
                         component={MyOncomingAppointments}
                       />
                       <Route path="/shopServices" component={ShopServices} />
+                      <Route
+                        path="/shopCategories"
+                        component={ShopCategories}
+                      />
                       <Route
                         path="/changeMyPassword"
                         component={ChangeMyPassword}
