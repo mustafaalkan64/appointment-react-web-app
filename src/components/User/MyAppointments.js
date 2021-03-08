@@ -1,4 +1,3 @@
-//src/components/pages/list.tsx
 import React, { useEffect, useState, useCallback, useContext } from "react";
 import { Table, Row, Col, Button, Typography, Input, Modal } from "antd";
 import { useHistory } from "react-router";

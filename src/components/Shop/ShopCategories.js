@@ -65,7 +65,7 @@ const ShopCategories = () => {
     getCategoriesTree();
     setFirstBreadcrumb("Anasayfa");
     setSecondBreadcrumb("Ayarlar");
-    setLastBreadcrumb("Hizmetler");
+    setLastBreadcrumb("Kategorilerim");
   }, []);
 
   const submitChangins = async () => {
@@ -98,7 +98,7 @@ const ShopCategories = () => {
   const tProps = {
     treeData,
     showSearch: true,
-    value: serviceIds,
+    value: categoryIds,
     onChange,
     treeCheckable: true,
     treeIcon: true,
