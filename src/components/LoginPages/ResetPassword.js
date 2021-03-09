@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useParams } from "react-router";
 import { Row, Col, Input, Form, Button, message, Card } from "antd";
 import { useHistory } from "react-router";
-import background from "../../assets/img/login-background-image.png";
 import API from "../../api";
+import { loginStyle } from "../../assets/styles/styles";
 
 const ResetPassword = () => {
   const [form] = Form.useForm();
@@ -44,17 +44,7 @@ const ResetPassword = () => {
   };
 
   return (
-    <div
-      style={{
-        paddingTop: 150,
-        backgroundImage: `url(${background})`,
-        backgroundPosition: "center",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        width: "100vw",
-        height: "100vh",
-      }}
-    >
+    <div style={loginStyle}>
       <Row>
         <Col span={12} offset={6}>
           <Card

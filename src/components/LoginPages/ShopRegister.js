@@ -12,10 +12,10 @@ import {
   AutoComplete,
 } from "antd";
 import { useHistory } from "react-router";
-import background from "../../assets/img/login-background-image.png";
 import { Link } from "react-router-dom";
 import UserContext from "../../contexts/UserContext";
 import API from "../../api";
+import { registerStyle, headStyle } from "../../assets/styles/styles";
 
 const ShopRegister = () => {
   const [loading, setLoading] = useState(false);
@@ -195,17 +195,7 @@ const ShopRegister = () => {
   }, []);
 
   return (
-    <div
-      style={{
-        paddingTop: 0,
-        backgroundImage: `url(${background})`,
-        backgroundPosition: "center",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        width: "100vw",
-        height: "120vh",
-      }}
-    >
+    <div style={registerStyle}>
       <Row>
         <Col span={12} offset={6}>
           <Card
@@ -213,10 +203,7 @@ const ShopRegister = () => {
             hoverable
             bordered={true}
             style={{ width: "100%" }}
-            headStyle={{
-              textAlign: "center",
-              fontSize: "19px",
-            }}
+            headStyle={headStyle}
           >
             <Form
               {...layout}

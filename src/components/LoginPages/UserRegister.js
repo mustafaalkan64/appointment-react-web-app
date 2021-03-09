@@ -11,10 +11,10 @@ import {
   Card,
 } from "antd";
 import { useHistory } from "react-router";
-import background from "../../assets/img/login-background-image.png";
 import { Link } from "react-router-dom";
 import UserContext from "../../contexts/UserContext";
 import API from "../../api";
+import { loginStyle, headStyle } from "../../assets/styles/styles";
 
 const UserRegister = () => {
   const [loading, setLoading] = useState(false);
@@ -63,17 +63,7 @@ const UserRegister = () => {
   };
 
   return (
-    <div
-      style={{
-        paddingTop: 120,
-        backgroundImage: `url(${background})`,
-        backgroundPosition: "center",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        width: "100vw",
-        height: "100vh",
-      }}
-    >
+    <div style={loginStyle}>
       <Row>
         <Col span={12} offset={6}>
           <Card
@@ -81,10 +71,7 @@ const UserRegister = () => {
             hoverable
             bordered={true}
             style={{ width: "100%" }}
-            headStyle={{
-              textAlign: "center",
-              fontSize: "19px",
-            }}
+            headStyle={headStyle}
           >
             <Form
               {...layout}
