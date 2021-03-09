@@ -1,11 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Form, Input, Row, Col, Button, Typography, message } from "antd";
+import { Form, Input, Row, Col, Button, message, Card } from "antd";
 import { useHistory } from "react-router";
 import UserContext from "../../contexts/UserContext";
 import BreadCrumbContext from "../../contexts/BreadcrumbContext";
 import API from "../../api";
-
-const { Title } = Typography;
+import { cardStyle, headStyle } from "../../assets/styles/styles";
 
 const formItemLayout = {
   labelCol: {
@@ -82,86 +81,99 @@ export default function ChangeMyPassword() {
 
   return (
     <div>
-      <Row style={{ marginBottom: 10 }}>
-        <Col span={23}>
-          <Title style={{ textAlign: "center" }} level={2}>
-            Şifre Değiştir
-          </Title>
+      <Row>
+        <Col span={16} offset={4}>
+          <Card
+            title="Şifre Değiştir"
+            hoverable
+            bordered={true}
+            style={cardStyle}
+            headStyle={headStyle}
+          >
+            <Form
+              {...formItemLayout}
+              form={form}
+              name="changePassword"
+              onFinish={onFinish}
+              scrollToFirstError
+            >
+              <Form.Item
+                name="currentPassword"
+                label="Mevcut Şifreniz"
+                rules={[
+                  {
+                    required: true,
+                    message: "Lütfen Geçerli Olan Şifrenizi Giriniz",
+                  },
+                ]}
+                hasFeedback
+              >
+                <Input.Password />
+              </Form.Item>
+              <Form.Item
+                name="newPassword"
+                label="Yeni Şifreniz"
+                dependencies={["currentPassword"]}
+                rules={[
+                  {
+                    required: true,
+                    message: "Lütfen Yeni Şifrenizi Giriniz",
+                  },
+                  {
+                    min: 8,
+                    message: "Şifreniz En Az 8 Karakterden Oluşmalıdır",
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (
+                        !value ||
+                        getFieldValue("currentPassword") !== value
+                      ) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        "Yeni Şifreniz Eskisiyle Aynı Olamaz!"
+                      );
+                    },
+                  }),
+                ]}
+                hasFeedback
+              >
+                <Input.Password />
+              </Form.Item>
+
+              <Form.Item
+                name="newPasswordConfirmation"
+                label="Yeni Şifrenizi Onaylayınız"
+                dependencies={["newPassword"]}
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: "Lütfen Yeni Şifrenizi Onaylayınız",
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("newPassword") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject("Şifreleriniz Uyuşmuyor!");
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password />
+              </Form.Item>
+
+              <Form.Item {...tailFormItemLayout}>
+                <Button type="primary" loading={loading} htmlType="submit">
+                  Güncelle
+                </Button>
+              </Form.Item>
+            </Form>
+          </Card>
         </Col>
       </Row>
-      <Form
-        {...formItemLayout}
-        form={form}
-        name="changePassword"
-        onFinish={onFinish}
-        scrollToFirstError
-      >
-        <Form.Item
-          name="currentPassword"
-          label="Mevcut Şifreniz"
-          rules={[
-            {
-              required: true,
-              message: "Lütfen Geçerli Olan Şifrenizi Giriniz",
-            },
-          ]}
-          hasFeedback
-        >
-          <Input.Password />
-        </Form.Item>
-        <Form.Item
-          name="newPassword"
-          label="Yeni Şifreniz"
-          dependencies={["currentPassword"]}
-          rules={[
-            {
-              required: true,
-              message: "Lütfen Yeni Şifrenizi Giriniz",
-            },
-            { min: 8, message: "Şifreniz En Az 8 Karakterden Oluşmalıdır" },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("currentPassword") !== value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject("Yeni Şifreniz Eskisiyle Aynı Olamaz!");
-              },
-            }),
-          ]}
-          hasFeedback
-        >
-          <Input.Password />
-        </Form.Item>
-
-        <Form.Item
-          name="newPasswordConfirmation"
-          label="Yeni Şifrenizi Onaylayınız"
-          dependencies={["newPassword"]}
-          hasFeedback
-          rules={[
-            {
-              required: true,
-              message: "Lütfen Yeni Şifrenizi Onaylayınız",
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("newPassword") === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject("Şifreleriniz Uyuşmuyor!");
-              },
-            }),
-          ]}
-        >
-          <Input.Password />
-        </Form.Item>
-
-        <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" loading={loading} htmlType="submit">
-            Güncelle
-          </Button>
-        </Form.Item>
-      </Form>
     </div>
   );
 }

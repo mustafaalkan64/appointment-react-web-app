@@ -8,6 +8,7 @@ import MyPreviousAppointments from "../../components/User/MyPreviousAppointments
 import MyOncomingAppointments from "../../components/User/MyOncomingAppointments";
 import AppointmentPlan from "../Shop/AppointmentPlan";
 import ShopServices from "../Shop/ShopServices";
+import ShopProfile from "../Shop/ShopProfile";
 import ShopCategories from "../Shop/ShopCategories";
 import UserProfile from "../../components/User/UserProfile";
 import ForgotPassword from "../LoginPages/ForgotPassword";
@@ -69,7 +70,7 @@ export default function UserLayout() {
                       margin: "24px 16px",
                       padding: 24,
                       minHeight: "calc(100vh - 114px)",
-                      background: "#fff",
+                      background: "background: rgb(230 230 230)",
                     }}
                   >
                     <Breadcrumb style={{ margin: "16px 0" }}>
@@ -101,6 +102,7 @@ export default function UserLayout() {
                         component={AppointmentPlan}
                       />
                       <Route path="/userProfile" component={UserProfile} />
+                      <Route path="/shopProfile" component={ShopProfile} />
                       <Route
                         path="/myOncomingAppointments"
                         component={MyOncomingAppointments}

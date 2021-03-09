@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
-import { TreeSelect, message, Row, Button, Col, Spin, Typography } from "antd";
+import { TreeSelect, message, Row, Button, Col, Spin, Card } from "antd";
 import { useHistory } from "react-router";
 import API from "../../api";
 import "moment/locale/tr";
 import BreadCrumbContext from "../../contexts/BreadcrumbContext";
+import { cardStyle, headStyle } from "../../assets/styles/styles";
 
 const ShopCategories = () => {
   const history = useHistory();
-  const { Title } = Typography;
   const [categoryIds, setCategoryIds] = useState(undefined);
   const [treeData, setTreeData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -110,31 +110,38 @@ const ShopCategories = () => {
 
   return (
     <div>
-      <Row gutter={[40, 0]}>
-        <Col span={18}>
-          <Title level={2}>Kategorilerim</Title>
+      <Row>
+        <Col span={20} offset={2}>
+          <Card
+            title="Mağaza Kategorilerim"
+            hoverable
+            bordered={true}
+            style={cardStyle}
+            headStyle={headStyle}
+          >
+            <Spin spinning={loading} delay={500}>
+              <Row
+                style={{ marginBottom: 10 }}
+                gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+              >
+                <TreeSelect {...tProps} />
+              </Row>
+              <Row style={{ marginLeft: 0 }}>
+                <Col>
+                  <Button
+                    type="primary"
+                    loading={saveLoading}
+                    onClick={() => submitChangins()}
+                    htmlType="button"
+                  >
+                    Kaydet
+                  </Button>
+                </Col>
+              </Row>
+            </Spin>
+          </Card>
         </Col>
       </Row>
-      <Spin spinning={loading} delay={500}>
-        <Row
-          style={{ marginBottom: 10 }}
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-        >
-          <TreeSelect {...tProps} />
-        </Row>
-        <Row style={{ marginLeft: 0 }}>
-          <Col>
-            <Button
-              type="primary"
-              loading={saveLoading}
-              onClick={() => submitChangins()}
-              htmlType="button"
-            >
-              Kaydet
-            </Button>
-          </Col>
-        </Row>
-      </Spin>
     </div>
   );
 };
