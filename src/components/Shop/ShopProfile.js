@@ -13,6 +13,7 @@ import {
 } from "antd";
 import { useHistory } from "react-router";
 import UserContext from "../../contexts/UserContext";
+import BreadCrumbContext from "../../contexts/BreadcrumbContext";
 import API from "../../api";
 import { cardStyle, headStyle } from "../../assets/styles/styles";
 
@@ -21,16 +22,22 @@ const ShopProfile = () => {
   const [form] = Form.useForm();
   const history = useHistory();
   const [autoCompleteResult, setAutoCompleteResult] = useState([]);
-  const { setIsLoggedIn, setToken, token } = useContext(UserContext);
+  const { setUsername, token } = useContext(UserContext);
+  const {
+    setFirstBreadcrumb,
+    setSecondBreadcrumb,
+    setLastBreadcrumb,
+  } = useContext(BreadCrumbContext);
   const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [zones, setZones] = useState([]);
   const { Option } = Select;
   const { TextArea } = Input;
+  const [shopId, setShopId] = useState(null);
 
   const handleSubmit = (values) => {
-    const shopRegisterModel = {
-      Email: values.email,
+    const shopProfileModel = {
+      Id: shopId,
       ShopTitle: values.shopTitle,
       Address: values.shopAddress,
       ShopDescription: values.shopDescription,
@@ -42,17 +49,19 @@ const ShopProfile = () => {
       ZoneId: values.zone,
       TaxNumber: values.taxNumber,
       TaxAddress: values.taxAddress,
-      Categories: values.categories,
+      Email: values.email,
     };
     setLoading(true);
-    API.post(`shop/register`, shopRegisterModel)
+    API.put(`shop/updateShopProfile`, shopProfileModel, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((res) => {
-        localStorage.setItem("auth_token", res.data.response);
-        message.success("You've Registered Successfuly!");
-        setIsLoggedIn(true);
-        setToken(res.data.response);
+        message.success("Başarıyla Güncellediniz!");
+        setUsername(values.shopTitle);
         setLoading(false);
-        history.push("/");
       })
       .catch((error) => {
         if (error.response != undefined) {
@@ -169,6 +178,7 @@ const ShopProfile = () => {
         },
       })
         .then((res) => {
+          setShopId(res.data.id);
           form.setFieldsValue({
             shopTitle: res.data.shopTitle,
             shopDescription: res.data.shopDescription,
@@ -202,6 +212,9 @@ const ShopProfile = () => {
     };
     getCities();
     getShopProfile();
+    setFirstBreadcrumb("Anasayfa");
+    setSecondBreadcrumb("Hesap");
+    setLastBreadcrumb("Mağaza Profil Sayfası");
   }, []);
 
   return (
@@ -376,6 +389,10 @@ const ShopProfile = () => {
 
                 <Form.Item name="shopAddress" label="Mağaza Adresi">
                   <TextArea placeholder="Mağaza Adresi" />
+                </Form.Item>
+
+                <Form.Item name="email" label="Email">
+                  <Input placeholder="email" disabled="disabled" />
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>

@@ -4,7 +4,7 @@ const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
   const [userRole, setUserRole] = useState("User");
-  const [userNameSurname, setUserNameSurname] = useState("");
+  const [username, setUsername] = useState("");
   const [token, setToken] = useState(localStorage.getItem("auth_token"));
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -15,8 +15,8 @@ export const UserProvider = ({ children }) => {
     setUserRole,
     token,
     setToken,
-    userNameSurname,
-    setUserNameSurname,
+    username,
+    setUsername,
   };
   return <UserContext.Provider value={values}>{children}</UserContext.Provider>;
 };

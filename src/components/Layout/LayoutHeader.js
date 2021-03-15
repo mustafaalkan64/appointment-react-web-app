@@ -11,9 +11,9 @@ export default function LayoutHeader() {
   const {
     setIsLoggedIn,
     setToken,
-    userNameSurname,
+    username,
     userRole,
-    setUserNameSurname,
+    setUsername,
   } = useContext(UserContext);
   const history = useHistory();
 
@@ -30,7 +30,7 @@ export default function LayoutHeader() {
     localStorage.removeItem("auth_token");
     setIsLoggedIn(false);
     setToken("");
-    setUserNameSurname("");
+    setUsername("");
     history.push("/login");
   };
 
@@ -47,7 +47,7 @@ export default function LayoutHeader() {
           style={{ float: "right" }}
           defaultSelectedKeys={["2"]}
         >
-          <Menu.Item key="deneme">Hoşgeldiniz {userNameSurname}</Menu.Item>
+          <Menu.Item key="deneme">Hoşgeldiniz {username}</Menu.Item>
           <SubMenu key="account" icon={<SettingFilled />}>
             {userRole == "User" ? (
               <Menu.Item key="10" onClick={handleUserProfile}>

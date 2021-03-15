@@ -19,7 +19,7 @@ const SideNav = () => {
     setToken,
     userRole,
     setUserRole,
-    setUserNameSurname,
+    setUsername,
     token,
   } = useContext(UserContext);
 
@@ -46,7 +46,7 @@ const SideNav = () => {
         },
       })
         .then((res) => {
-          setUserNameSurname(res.data);
+          setUsername(res.data);
         })
         .catch((error) => {
           if (error.response.status === 401) {
