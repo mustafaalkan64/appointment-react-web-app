@@ -1,7 +1,8 @@
-import React, { useContext, useEffect } from "react";
-import { Menu, message } from "antd";
+import React, { useContext, useEffect, useState } from "react";
+import { Menu, message, notification } from "antd";
 import API from "../../api";
 import UserContext from "../../contexts/UserContext";
+import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 
 import {
   UserOutlined,
@@ -22,6 +23,31 @@ const SideNav = () => {
     setUsername,
     token,
   } = useContext(UserContext);
+
+  const [connection, setConnection] = useState(null | HubConnection);
+
+  useEffect(async () => {
+    const connect = new HubConnectionBuilder()
+      .withUrl("https://localhost:5001/appointmentHub")
+      .withAutomaticReconnect()
+      .build();
+    debugger;
+
+    try {
+      await connect.start();
+    } catch (err) {
+      console.log(err);
+    }
+    // setConnection(connect);
+
+    connect.on("broadcastMessage", (appointmentId, cancelText) => {
+      // sidenav
+      notification.open({
+        message: "Randevu İptal Bildirimi!",
+        description: ` ${appointmentId} nolu Randevu, ${cancelText} nedeniyle iptal edilmiştir!`,
+      });
+    });
+  }, []);
 
   useEffect(() => {
     const getCurrentUserRole = async () => {

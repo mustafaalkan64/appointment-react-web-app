@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useCallback, useContext } from "react";
 import { Table, Row, Col, Button, Typography, Input, Modal } from "antd";
 import { useHistory } from "react-router";
-import { Tag, Space, message, Spin, Select } from "antd";
+import { Tag, Space, message, Spin, Select, notification } from "antd";
 import API from "../../api";
 import { serialize } from "../../utils";
 import UserContext from "../../contexts/UserContext";
 import BreadCrumbContext from "../../contexts/BreadcrumbContext";
+import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 const { TextArea } = Input;
 
 export default function MyAppointments(props) {
@@ -18,6 +19,7 @@ export default function MyAppointments(props) {
   const status = props.status;
   const header = props.header;
   const { token } = useContext(UserContext);
+  const appointmentHubUri = "https://localhost:5001/appointmentHub";
   const {
     setFirstBreadcrumb,
     setSecondBreadcrumb,
@@ -31,6 +33,28 @@ export default function MyAppointments(props) {
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(0);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [connection, setConnection] = useState(null | HubConnection);
+
+  useEffect(async () => {
+    const connect = new HubConnectionBuilder()
+      .withUrl(appointmentHubUri)
+      .withAutomaticReconnect()
+      .build();
+
+    try {
+      await connect.start();
+    } catch (err) {
+      console.log(err);
+    }
+
+    setConnection(connect);
+  }, []);
+
+  const sendMessage = async (appointmentId, cancel) => {
+    if (connection.state == "Connected") {
+      await connection.send("SendMessage", String(appointmentId), cancel);
+    }
+  };
 
   const showModel = (obj) => {
     setIsModalVisible(true);
@@ -86,6 +110,7 @@ export default function MyAppointments(props) {
         .then((res) => {
           message.success(res.data.response);
           fetch({ pagination });
+          sendMessage(appointmentId, cancelReasonText);
         })
         .catch((error) => {
           if (error.response.status === 401) {
