@@ -21,17 +21,18 @@ const SideNav = () => {
     userRole,
     setUserRole,
     setUsername,
+    // currentShop,
+    // setCurrentShop,
     token,
   } = useContext(UserContext);
 
-  const [connection, setConnection] = useState(null | HubConnection);
+  const [currentShop, setCurrentShop] = useState(0);
 
   useEffect(async () => {
     const connect = new HubConnectionBuilder()
       .withUrl("https://localhost:5001/appointmentHub")
       .withAutomaticReconnect()
       .build();
-    debugger;
 
     try {
       await connect.start();
@@ -40,16 +41,15 @@ const SideNav = () => {
     }
     // setConnection(connect);
 
-    connect.on("broadcastMessage", (appointmentId, cancelText) => {
-      // sidenav
-      notification.open({
-        message: "Randevu İptal Bildirimi!",
-        description: ` ${appointmentId} nolu Randevu, ${cancelText} nedeniyle iptal edilmiştir!`,
-      });
+    connect.on("broadcastMessage", (appointmentId, cancelText, shopId) => {
+      if (String(currentShop) === shopId) {
+        notification.open({
+          message: "Randevu İptal Bildirimi!",
+          description: ` ${appointmentId} nolu Randevu, ${cancelText} nedeniyle iptal edilmiştir!`,
+        });
+      }
     });
-  }, []);
 
-  useEffect(() => {
     const getCurrentUserRole = async () => {
       await API.get(`user/currentUserRole`, {
         headers: {
@@ -64,6 +64,24 @@ const SideNav = () => {
           console.log(error);
         });
     };
+
+    const getCurrentShop = async () => {
+      await API.get(`user/currentShop`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          debugger;
+          setCurrentShop(res.data);
+          console.log(currentShop);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
     const getCurrentUser = async () => {
       await API.get(`user/getCurrentUserName`, {
         headers: {
@@ -85,7 +103,8 @@ const SideNav = () => {
     };
     getCurrentUser();
     getCurrentUserRole();
-  }, []);
+    getCurrentShop();
+  }, [currentShop]);
 
   const handleMyActiveAppointments = () => {
     history.push("/myActiveAppointments");

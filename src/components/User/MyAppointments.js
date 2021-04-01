@@ -31,6 +31,7 @@ export default function MyAppointments(props) {
   });
   const [appointmentCancelReason, setAppointmentCancelReason] = useState("");
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(0);
+  const [selectedShopId, setSelectedShopId] = useState(0);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [connection, setConnection] = useState(null | HubConnection);
@@ -50,20 +51,31 @@ export default function MyAppointments(props) {
     setConnection(connect);
   }, []);
 
-  const sendMessage = async (appointmentId, cancel) => {
+  const sendMessage = async (appointmentId, cancel, shopId) => {
     if (connection.state == "Connected") {
-      await connection.send("SendMessage", String(appointmentId), cancel);
+      await connection.send(
+        "SendMessage",
+        String(appointmentId),
+        cancel,
+        String(shopId)
+      );
     }
   };
 
   const showModel = (obj) => {
+    debugger;
     setIsModalVisible(true);
     setSelectedAppointmentId(obj.id);
+    setSelectedShopId(obj.shopId);
     setAppointmentCancelReason("");
   };
 
   const handleOk = () => {
-    cancelAppointment(selectedAppointmentId, appointmentCancelReason);
+    cancelAppointment(
+      selectedAppointmentId,
+      appointmentCancelReason,
+      selectedShopId
+    );
     setIsModalVisible(false);
   };
 
@@ -92,7 +104,7 @@ export default function MyAppointments(props) {
     setLastBreadcrumb(header);
   }, [sortValue, searchText]);
 
-  const cancelAppointment = async (appointmentId, cancelReasonText) => {
+  const cancelAppointment = async (appointmentId, cancelReasonText, shopId) => {
     if (window.confirm("Randevuyu İptal Etmek İstediğinize Emin misiniz?")) {
       const cancelReason = {
         CancelReason: cancelReasonText,
@@ -110,7 +122,7 @@ export default function MyAppointments(props) {
         .then((res) => {
           message.success(res.data.response);
           fetch({ pagination });
-          sendMessage(appointmentId, cancelReasonText);
+          sendMessage(appointmentId, cancelReasonText, shopId);
         })
         .catch((error) => {
           if (error.response.status === 401) {
