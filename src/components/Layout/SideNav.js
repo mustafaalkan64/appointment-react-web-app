@@ -21,12 +21,10 @@ const SideNav = () => {
     userRole,
     setUserRole,
     setUsername,
-    // currentShop,
-    // setCurrentShop,
+    currentShop,
+    setCurrentShop,
     token,
   } = useContext(UserContext);
-
-  const [currentShop, setCurrentShop] = useState(0);
 
   useEffect(async () => {
     const connect = new HubConnectionBuilder()
