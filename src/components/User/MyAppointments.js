@@ -63,7 +63,6 @@ export default function MyAppointments(props) {
   };
 
   const showModel = (obj) => {
-    debugger;
     setIsModalVisible(true);
     setSelectedAppointmentId(obj.id);
     setSelectedShopId(obj.shopId);

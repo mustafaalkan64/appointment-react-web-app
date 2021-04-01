@@ -72,7 +72,6 @@ const SideNav = () => {
         },
       })
         .then((res) => {
-          debugger;
           setCurrentShop(res.data);
           console.log(currentShop);
         })

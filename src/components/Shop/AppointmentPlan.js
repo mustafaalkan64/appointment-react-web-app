@@ -44,7 +44,6 @@ const AppointmentPlan = () => {
   };
 
   const createAppointmentPlan = (createAppointmentPlanForm) => {
-    debugger;
     setLoading(true);
     API.post(`shop/createOrUpdateAppointment`, createAppointmentPlanForm, {
       headers: {
