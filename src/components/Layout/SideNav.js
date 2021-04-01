@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { Menu, message, notification } from "antd";
 import API from "../../api";
 import UserContext from "../../contexts/UserContext";
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import { HubConnectionBuilder } from "@microsoft/signalr";
+import appointmentHub from "../../hubUrl";
 
 import {
   UserOutlined,
@@ -28,7 +29,7 @@ const SideNav = () => {
 
   useEffect(async () => {
     const connect = new HubConnectionBuilder()
-      .withUrl("https://localhost:5001/appointmentHub")
+      .withUrl(appointmentHub)
       .withAutomaticReconnect()
       .build();
 

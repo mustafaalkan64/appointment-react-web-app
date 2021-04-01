@@ -3,6 +3,7 @@ import { Table, Row, Col, Button, Typography, Input, Modal } from "antd";
 import { useHistory } from "react-router";
 import { Tag, Space, message, Spin, Select, notification } from "antd";
 import API from "../../api";
+import appointmentHub from "../../hubUrl";
 import { serialize } from "../../utils";
 import UserContext from "../../contexts/UserContext";
 import BreadCrumbContext from "../../contexts/BreadcrumbContext";
@@ -19,7 +20,6 @@ export default function MyAppointments(props) {
   const status = props.status;
   const header = props.header;
   const { token } = useContext(UserContext);
-  const appointmentHubUri = "https://localhost:5001/appointmentHub";
   const {
     setFirstBreadcrumb,
     setSecondBreadcrumb,
@@ -38,7 +38,7 @@ export default function MyAppointments(props) {
 
   useEffect(async () => {
     const connect = new HubConnectionBuilder()
-      .withUrl(appointmentHubUri)
+      .withUrl(appointmentHub)
       .withAutomaticReconnect()
       .build();
 
