@@ -95,7 +95,53 @@ export default function MyAppointments(props) {
     setFirstBreadcrumb("Anasayfa");
     setSecondBreadcrumb("Randevu Bilgilerim");
     setLastBreadcrumb(header);
-  }, [sortValue, searchText]);
+  }, [
+    searchText,
+    sortValue,
+    setFirstBreadcrumb,
+    setLastBreadcrumb,
+    setSecondBreadcrumb,
+    header,
+    //pagination,
+  ]);
+
+  const fetch = async (params) => {
+    setLoading(true);
+    var filterAppointmentDto = serialize({
+      Current: params.pagination.current,
+      PageSize: params.pagination.pageSize,
+      Status: status,
+      SearchText: searchText,
+      SortValue: sortValue,
+    });
+    await API.get(`appointment/filter?${filterAppointmentDto}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        setAppointmentData(res.data.item1);
+        setLoading(false);
+        setPagination({
+          ...params.pagination,
+          total: res.data.item2,
+        });
+      })
+      .catch((error) => {
+        setLoading(false);
+        if (error.response.status === 403) {
+          message.error("Bu Sayfayı Görmeye Yetkili Değilsiniz!");
+          return;
+        }
+        if (error.response.status === 401) {
+          history.push("/login");
+        } else {
+          message.error("Randevuları Getirme Esnasında Hata ile Karşılaşıldı!");
+          return;
+        }
+      });
+  };
 
   const cancelAppointment = async (appointmentId, cancelReasonText, shopId) => {
     if (window.confirm("Randevuyu İptal Etmek İstediğinize Emin misiniz?")) {
@@ -155,44 +201,6 @@ export default function MyAppointments(props) {
       current: 1,
       pageSize: 10,
     });
-  };
-
-  const fetch = async (params) => {
-    setLoading(true);
-    var filterAppointmentDto = serialize({
-      Current: params.pagination.current,
-      PageSize: params.pagination.pageSize,
-      Status: status,
-      SearchText: searchText,
-      SortValue: sortValue,
-    });
-    await API.get(`appointment/filter?${filterAppointmentDto}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => {
-        setAppointmentData(res.data.item1);
-        setLoading(false);
-        setPagination({
-          ...params.pagination,
-          total: res.data.item2,
-        });
-      })
-      .catch((error) => {
-        setLoading(false);
-        if (error.response.status === 403) {
-          message.error("Bu Sayfayı Görmeye Yetkili Değilsiniz!");
-          return;
-        }
-        if (error.response.status === 401) {
-          history.push("/login");
-        } else {
-          message.error("Randevuları Getirme Esnasında Hata ile Karşılaşıldı!");
-          return;
-        }
-      });
   };
 
   const columns = [

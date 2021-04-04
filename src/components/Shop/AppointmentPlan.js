@@ -101,6 +101,7 @@ const AppointmentPlan = () => {
               if (item !== undefined) {
                 times.push(item);
               }
+              return times;
             });
             setTimeRanges(times);
           }
@@ -147,6 +148,7 @@ const AppointmentPlan = () => {
       if (item !== undefined) {
         times.push(item.format("HH:mm"));
       }
+      return times;
     });
     setTimeRanges(times);
   }
