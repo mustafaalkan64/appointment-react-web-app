@@ -81,7 +81,7 @@ const AppointmentPlan = () => {
       })
         .then((res) => {
           setLoading(false);
-          if (res.data != "") {
+          if (res.data !== "") {
             form.setFieldsValue({
               weekdays: res.data.weekDays,
               appointmentPeriod: parseInt(res.data.appointmentPeriod),
@@ -98,7 +98,7 @@ const AppointmentPlan = () => {
 
             let times = [];
             res.data.emptyTimeRange.map((item) => {
-              if (item != undefined) {
+              if (item !== undefined) {
                 times.push(item);
               }
             });
@@ -120,7 +120,14 @@ const AppointmentPlan = () => {
     setFirstBreadcrumb("Anasayfa");
     setSecondBreadcrumb("Randevular");
     setLastBreadcrumb("Randevu Planı Yönetimi");
-  }, []);
+  }, [
+    form,
+    history,
+    setFirstBreadcrumb,
+    setLastBreadcrumb,
+    setSecondBreadcrumb,
+    token,
+  ]);
 
   function handleChange(value) {
     console.log(`Selected: ${value}`);
@@ -137,7 +144,7 @@ const AppointmentPlan = () => {
   function onTimeRangeChange(time, timeString) {
     var times = [];
     time.map((item) => {
-      if (item != undefined) {
+      if (item !== undefined) {
         times.push(item.format("HH:mm"));
       }
     });

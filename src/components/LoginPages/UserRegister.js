@@ -42,7 +42,7 @@ const UserRegister = () => {
         history.push("/");
       })
       .catch((error) => {
-        if (error.response != undefined) {
+        if (error.response !== undefined) {
           message.error(error.response.data);
         } else {
           message.error(

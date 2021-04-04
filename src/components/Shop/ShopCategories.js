@@ -66,7 +66,13 @@ const ShopCategories = () => {
     setFirstBreadcrumb("Anasayfa");
     setSecondBreadcrumb("Ayarlar");
     setLastBreadcrumb("Kategorilerim");
-  }, []);
+  }, [
+    history,
+    setFirstBreadcrumb,
+    setSecondBreadcrumb,
+    setLastBreadcrumb,
+    token,
+  ]);
 
   const submitChangins = async () => {
     setSaveLoading(true);

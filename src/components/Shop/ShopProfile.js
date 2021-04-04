@@ -64,7 +64,7 @@ const ShopProfile = () => {
         setLoading(false);
       })
       .catch((error) => {
-        if (error.response != undefined) {
+        if (error.response !== undefined) {
           message.error(error.response.data);
         } else {
           message.error(
@@ -178,6 +178,7 @@ const ShopProfile = () => {
         },
       })
         .then((res) => {
+          debugger;
           setShopId(res.data.id);
           form.setFieldsValue({
             shopTitle: res.data.shopTitle,
@@ -187,14 +188,12 @@ const ShopProfile = () => {
             district: res.data.districtId,
             zone: res.data.zoneId,
             Email: res.data.email,
-            shopAddress: res.data.shopAddress,
+            shopAddress: res.data.address,
             ownerName: res.data.ownerName,
-            phone: res.data.phone,
             website: res.data.webSite,
             taxNumber: res.data.taxNumber,
             taxAddress: res.data.taxAddress,
             phone: res.data.phoneNumber,
-            shopAddress: res.data.address,
           });
           getDistricts(res.data.cityId);
           getZones(res.data.districtId);
@@ -215,7 +214,14 @@ const ShopProfile = () => {
     setFirstBreadcrumb("Anasayfa");
     setSecondBreadcrumb("Hesap");
     setLastBreadcrumb("Mağaza Profil Sayfası");
-  }, []);
+  }, [
+    form,
+    history,
+    setFirstBreadcrumb,
+    setLastBreadcrumb,
+    setSecondBreadcrumb,
+    token,
+  ]);
 
   return (
     <div>

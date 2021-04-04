@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useCallback, useContext } from "react";
 import { Table, Row, Col, Button, Typography, Input, Modal } from "antd";
 import { useHistory } from "react-router";
-import { Tag, Space, message, Spin, Select, notification } from "antd";
+import { Tag, Space, message, Spin, Select } from "antd";
 import API from "../../api";
 import appointmentHub from "../../hubUrl";
 import { serialize } from "../../utils";
 import UserContext from "../../contexts/UserContext";
 import BreadCrumbContext from "../../contexts/BreadcrumbContext";
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import { HubConnectionBuilder } from "@microsoft/signalr";
 const { TextArea } = Input;
 
 export default function MyAppointments(props) {
@@ -34,33 +34,30 @@ export default function MyAppointments(props) {
   const [selectedShopId, setSelectedShopId] = useState(0);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [connection, setConnection] = useState(null | HubConnection);
 
-  useEffect(async () => {
+  useEffect(() => {
     const connect = new HubConnectionBuilder()
       .withUrl(appointmentHub)
       .withAutomaticReconnect()
       .build();
 
     try {
-      await connect.start();
+      connect.start();
     } catch (err) {
       console.log(err);
     }
-
-    setConnection(connect);
   }, []);
 
-  const sendMessage = async (appointmentId, cancel, shopId) => {
-    if (connection.state == "Connected") {
-      await connection.send(
-        "SendMessage",
-        String(appointmentId),
-        cancel,
-        String(shopId)
-      );
-    }
-  };
+  // const sendMessage = async (appointmentId, cancel, shopId) => {
+  //   if (connection.state == "Connected") {
+  //     await connection.send(
+  //       "SendMessage",
+  //       String(appointmentId),
+  //       cancel,
+  //       String(shopId)
+  //     );
+  //   }
+  // };
 
   const showModel = (obj) => {
     setIsModalVisible(true);
@@ -89,12 +86,9 @@ export default function MyAppointments(props) {
     history.push("/form");
   };
 
-  const handleSortChange = useCallback(
-    (value) => {
-      setSortValue(value);
-    },
-    [sortValue]
-  );
+  const handleSortChange = useCallback((value) => {
+    setSortValue(value);
+  }, []);
 
   useEffect(() => {
     fetch({ pagination });
@@ -121,7 +115,7 @@ export default function MyAppointments(props) {
         .then((res) => {
           message.success(res.data.response);
           fetch({ pagination });
-          sendMessage(appointmentId, cancelReasonText, shopId);
+          //sendMessage(appointmentId, cancelReasonText, shopId);
         })
         .catch((error) => {
           if (error.response.status === 401) {

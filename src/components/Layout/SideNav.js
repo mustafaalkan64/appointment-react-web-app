@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Menu, message, notification } from "antd";
 import API from "../../api";
 import UserContext from "../../contexts/UserContext";
@@ -27,18 +27,17 @@ const SideNav = () => {
     token,
   } = useContext(UserContext);
 
-  useEffect(async () => {
+  useEffect(() => {
     const connect = new HubConnectionBuilder()
       .withUrl(appointmentHub)
       .withAutomaticReconnect()
       .build();
 
     try {
-      await connect.start();
+      connect.start();
     } catch (err) {
       console.log(err);
     }
-    // setConnection(connect);
 
     connect.on("broadcastMessage", (appointmentId, cancelText, shopId) => {
       if (String(currentShop) === shopId) {
@@ -102,7 +101,7 @@ const SideNav = () => {
     getCurrentUser();
     getCurrentUserRole();
     getCurrentShop();
-  }, [currentShop]);
+  }, [currentShop, history, setCurrentShop, setUserRole, setUsername, token]);
 
   const handleMyActiveAppointments = () => {
     history.push("/myActiveAppointments");
@@ -158,7 +157,7 @@ const SideNav = () => {
           <span>Ana Sayfa</span>
         </Menu.Item>
 
-        {userRole == "User" ? (
+        {userRole === "User" ? (
           <SubMenu
             key="subAppointments"
             icon={<CheckSquareOutlined />}
@@ -196,7 +195,7 @@ const SideNav = () => {
           icon={<UserOutlined />}
           title={<span>Hesap Ayarları</span>}
         >
-          {userRole == "User" ? (
+          {userRole === "User" ? (
             <Menu.Item key="10" onClick={handleUserProfile}>
               Profilim
             </Menu.Item>

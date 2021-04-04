@@ -49,7 +49,7 @@ export default function LayoutHeader() {
         >
           <Menu.Item key="deneme">Hoşgeldiniz {username}</Menu.Item>
           <SubMenu key="account" icon={<SettingFilled />}>
-            {userRole == "User" ? (
+            {userRole === "User" ? (
               <Menu.Item key="10" onClick={handleUserProfile}>
                 Profilim
               </Menu.Item>

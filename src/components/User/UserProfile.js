@@ -109,53 +109,62 @@ const UserProfile = () => {
       });
   };
 
-  const getCurrentUser = async () => {
-    setLoading(true);
-    await API.get(`user/currentUser?`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => {
-        var d = new Date(res.data.birthday);
-        var birthdaystring = d.toLocaleString("tr-TR").substring(0, 10);
-        setUserBirthday(birthdaystring);
-        form.setFieldsValue({
-          name: res.data.firstName,
-          surname: res.data.lastName,
-          email: res.data.email,
-          birthDay: birthdaystring,
-          city: res.data.cityId,
-          district: res.data.districtId,
-          zone: res.data.zoneId,
-          username: res.data.username,
-        });
-        getDistricts(res.data.cityId);
-        getZones(res.data.districtId);
-        console.log(userBirthday);
-        setLoading(false);
-      })
-      .catch((error) => {
-        if (error.response.status === 401) {
-          history.push("/login");
-          message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
-        } else {
-          message.error(error.response.data);
-        }
-        setLoading(false);
-      });
-  };
-
   useEffect(() => {
     forceUpdate({});
+
+    const getCurrentUser = async () => {
+      setLoading(true);
+      await API.get(`user/currentUser?`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          var d = new Date(res.data.birthday);
+          var birthdaystring = d.toLocaleString("tr-TR").substring(0, 10);
+          setUserBirthday(birthdaystring);
+          form.setFieldsValue({
+            name: res.data.firstName,
+            surname: res.data.lastName,
+            email: res.data.email,
+            birthDay: birthdaystring,
+            city: res.data.cityId,
+            district: res.data.districtId,
+            zone: res.data.zoneId,
+            username: res.data.username,
+          });
+          getDistricts(res.data.cityId);
+          getZones(res.data.districtId);
+          console.log(userBirthday);
+          setLoading(false);
+        })
+        .catch((error) => {
+          if (error.response.status === 401) {
+            history.push("/login");
+            message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
+          } else {
+            message.error(error.response.data);
+          }
+          setLoading(false);
+        });
+    };
 
     getCities();
     getCurrentUser();
     setFirstBreadcrumb("Anasayfa");
     setSecondBreadcrumb("Hesap");
     setLastBreadcrumb("Profilim");
-  }, []);
+  }, [
+    // getCurrentUser,
+    setFirstBreadcrumb,
+    setLastBreadcrumb,
+    setSecondBreadcrumb,
+    form,
+    history,
+    token,
+    userBirthday,
+  ]);
 
   const handleCityChange = (value) => {
     setDistricts([]);

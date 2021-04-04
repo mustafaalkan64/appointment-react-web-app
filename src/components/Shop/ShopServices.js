@@ -66,7 +66,13 @@ const ShopServices = () => {
     setFirstBreadcrumb("Anasayfa");
     setSecondBreadcrumb("Ayarlar");
     setLastBreadcrumb("Hizmetler");
-  }, []);
+  }, [
+    history,
+    setFirstBreadcrumb,
+    setLastBreadcrumb,
+    setSecondBreadcrumb,
+    token,
+  ]);
 
   const submitChangins = async () => {
     setSaveLoading(true);
