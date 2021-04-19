@@ -3,7 +3,7 @@ import { Menu, message, notification } from "antd";
 import API from "../../api";
 import UserContext from "../../contexts/UserContext";
 import { HubConnectionBuilder } from "@microsoft/signalr";
-import appointmentHub from "../../hubUrl";
+import { appointmentHub } from "../../constUrls";
 
 import {
   UserOutlined,
@@ -130,6 +130,9 @@ const SideNav = () => {
   const handleShopCategories = () => {
     history.push("/shopCategories");
   };
+  const handleShopImages = () => {
+    history.push("/shopImages");
+  };
   const handleMyOncomingAppointments = () => {
     history.push("/myOncomingAppointments");
   };
@@ -210,14 +213,17 @@ const SideNav = () => {
               <Menu.Item key="13" onClick={handleShopCategories}>
                 Kategorilerim
               </Menu.Item>
+              <Menu.Item key="14" onClick={handleShopImages}>
+                Fotoğraflarım
+              </Menu.Item>
             </>
           )}
 
-          <Menu.Item key="14" onClick={handleChangeMyPassword}>
+          <Menu.Item key="15" onClick={handleChangeMyPassword}>
             Şifre Değiştir
           </Menu.Item>
         </SubMenu>
-        <Menu.Item icon={<LogoutOutlined />} key="15" onClick={handleLogout}>
+        <Menu.Item icon={<LogoutOutlined />} key="16" onClick={handleLogout}>
           <span>Çıkış</span>
         </Menu.Item>
       </Menu>

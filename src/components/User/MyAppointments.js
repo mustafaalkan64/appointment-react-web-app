@@ -3,7 +3,7 @@ import { Table, Row, Col, Button, Typography, Input, Modal } from "antd";
 import { useHistory } from "react-router";
 import { Tag, Space, message, Spin, Select } from "antd";
 import API from "../../api";
-import appointmentHub from "../../hubUrl";
+import { appointmentHub } from "../../constUrls";
 import { serialize } from "../../utils";
 import UserContext from "../../contexts/UserContext";
 import BreadCrumbContext from "../../contexts/BreadcrumbContext";
