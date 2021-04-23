@@ -57,13 +57,12 @@ const AppointmentPlan = () => {
       })
       .catch((error) => {
         setLoading(false);
+        debugger;
         if (error.response.status === 401) {
           history.push("/login");
           message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
         } else {
-          message.error(
-            "Kişisel Bilgileri Güncelleme Sırasında Hata ile Karşılaşıldı!"
-          );
+          message.error(error.response.data);
         }
       });
   };

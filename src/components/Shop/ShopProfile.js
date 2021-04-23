@@ -202,7 +202,9 @@ const ShopProfile = () => {
         .catch((error) => {
           if (error.response.status === 401) {
             history.push("/login");
-            message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
+          }
+          else if (error.response.status === 403) {
+            history.push("/userProfile");
           } else {
             message.error(error.response.data);
           }

@@ -91,7 +91,7 @@ const UserProfile = () => {
         setDistricts(res.data);
       })
       .catch((error) => {
-        message.error("İlçeleri Getirme Sırasında Hata ile Karşılaşıldı");
+        console.log("İlçeleri Getirme Sırasında Hata ile Karşılaşıldı");
       });
   };
 
@@ -105,7 +105,7 @@ const UserProfile = () => {
         setZones(res.data);
       })
       .catch((error) => {
-        message.error("Bölgeleri Getirme Sırasında Hata ile Karşılaşıldı");
+        console.log("Bölgeleri Getirme Sırasında Hata ile Karşılaşıldı");
       });
   };
 
@@ -136,14 +136,16 @@ const UserProfile = () => {
           });
           getDistricts(res.data.cityId);
           getZones(res.data.districtId);
-          console.log(userBirthday);
           setLoading(false);
         })
         .catch((error) => {
           if (error.response.status === 401) {
             history.push("/login");
-            message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
-          } else {
+          }
+          else if (error.response.status === 403) {
+            history.push("/shopProfile");
+          } 
+          else {
             message.error(error.response.data);
           }
           setLoading(false);
@@ -163,7 +165,6 @@ const UserProfile = () => {
     form,
     history,
     token,
-    userBirthday,
   ]);
 
   const handleCityChange = (value) => {
@@ -186,9 +187,10 @@ const UserProfile = () => {
   const handleZoneChange = (value) => {};
 
   const onBirthdayChange = (date, dateString) => {
-    form.setFieldsValue({
-      birthDay: dateString,
-    });
+    debugger;
+    // form.setFieldsValue({
+    //   birthDay: dateString,
+    // });
     setUserBirthday(dateString);
   };
 
