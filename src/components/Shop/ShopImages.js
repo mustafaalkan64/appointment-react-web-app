@@ -12,7 +12,7 @@ export const ShopImages = () => {
   const [fileName, setFileName] = useState();
   const token = localStorage.getItem("auth_token");
   const [loading, setLoading] = useState(false);
-  const [saveLoading, setSaveLoading] = useState(false);
+  const [saveLoading] = useState(false);
   const [logo, setLogo] = useState("");
 
   const {

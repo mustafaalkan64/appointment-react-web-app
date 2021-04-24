@@ -10,19 +10,27 @@ import {
   Card,
   AutoComplete,
   Spin,
+  Image,
 } from "antd";
 import { useHistory } from "react-router";
 import UserContext from "../../contexts/UserContext";
 import BreadCrumbContext from "../../contexts/BreadcrumbContext";
 import API from "../../api";
 import { cardStyle, headStyle } from "../../assets/styles/styles";
+import { imageUrlDirectory } from "../../constUrls";
+import { UploadOutlined } from "@ant-design/icons";
 
 const ShopProfile = () => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const history = useHistory();
+  const [file, setFile] = useState();
+  const [fileName, setFileName] = useState();
+  const token = localStorage.getItem("auth_token");
+  const [saveLoading] = useState(false);
+  const [logo, setLogo] = useState("");
   const [autoCompleteResult, setAutoCompleteResult] = useState([]);
-  const { setUsername, token } = useContext(UserContext);
+  const { setUsername } = useContext(UserContext);
   const {
     setFirstBreadcrumb,
     setSecondBreadcrumb,
@@ -116,6 +124,40 @@ const ShopProfile = () => {
       });
   };
 
+  const uploadFile = async (e) => {
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("formFile", file);
+    formData.append("fileName", fileName);
+    try {
+      await API.post("file/uploadFile", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          setLogo(imageUrlDirectory + res.data.response);
+          setLoading(false);
+          message.success("Logo Başarıyla Yüklendi");
+        })
+        .catch((error) => {
+          if (error.response.status === 401) {
+            history.push("/login");
+          } else {
+            message.error(error.response.data);
+          }
+          setLoading(false);
+        });
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
+
+  const saveFile = (e) => {
+    setFile(e.target.files[0]);
+    setFileName(e.target.files[0].name);
+  };
+
   const getDistricts = async (cityId) => {
     await API.get(`place/getDistrictsByCityId?cityId=${cityId}`, {
       headers: {
@@ -161,7 +203,7 @@ const ShopProfile = () => {
     getZones(value);
   };
 
-  const handleZoneChange = (value) => {};
+  const handleZoneChange = (value) => { };
 
   const websiteOptions = autoCompleteResult.map((website) => ({
     label: website,
@@ -178,8 +220,8 @@ const ShopProfile = () => {
         },
       })
         .then((res) => {
-          debugger;
           setShopId(res.data.id);
+          setLogo(imageUrlDirectory + res.data.logoUrl);
           form.setFieldsValue({
             shopTitle: res.data.shopTitle,
             shopDescription: res.data.shopDescription,
@@ -202,8 +244,7 @@ const ShopProfile = () => {
         .catch((error) => {
           if (error.response.status === 401) {
             history.push("/login");
-          }
-          else if (error.response.status === 403) {
+          } else if (error.response.status === 403) {
             history.push("/userProfile");
           } else {
             message.error(error.response.data);
@@ -231,7 +272,7 @@ const ShopProfile = () => {
         <Row>
           <Col span={16} offset={4}>
             <Card
-              title="Mağaza Düzenleme"
+              title="Mağaza Profili"
               hoverable
               bordered={true}
               style={cardStyle}
@@ -401,6 +442,38 @@ const ShopProfile = () => {
 
                 <Form.Item name="email" label="Email">
                   <Input placeholder="email" disabled="disabled" />
+                </Form.Item>
+
+                <Form.Item
+                  labelCol={{ span: 6 }}
+                  wrapperCol={{ span: 14 }}
+                  name="logo"
+                  label="Logo"
+                >
+                  <Row>
+                    <Col>
+                      <input type="file" onChange={saveFile} />
+                    </Col>
+                    <Col>
+                      <Button
+                        type="primary"
+                        icon={<UploadOutlined />}
+                        loading={saveLoading}
+                        onClick={() => uploadFile()}
+                        htmlType="button"
+                      >
+                        Yükle
+                          </Button>
+                    </Col>
+                  </Row>
+
+                  <Row style={{ marginTop: 10, marginLeft: 0 }}>
+                    <Col>
+                      <Image.PreviewGroup>
+                        <Image width={150} src={logo} />
+                      </Image.PreviewGroup>
+                    </Col>
+                  </Row>
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>

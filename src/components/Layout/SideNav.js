@@ -196,7 +196,7 @@ const SideNav = () => {
         <SubMenu
           key="subAccount"
           icon={<UserOutlined />}
-          title={<span>Hesap Ayarları</span>}
+          title={userRole === "User" ? (<span>Kullanıcı Bilgilerim</span>) : (<span>Mağaza Bilgilerim</span>)}
         >
           {userRole === "User" ? (
             <Menu.Item key="10" onClick={handleUserProfile}>
@@ -205,7 +205,7 @@ const SideNav = () => {
           ) : (
             <>
               <Menu.Item key="11" onClick={handleShopProfile}>
-                Mağaza Bilgilerim
+                Mağaza Profilim
               </Menu.Item>
               <Menu.Item key="12" onClick={handleShopServices}>
                 Verdiğim Hizmetler
