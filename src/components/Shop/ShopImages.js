@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import API from "../../api";
 import BreadCrumbContext from "../../contexts/BreadcrumbContext";
-import { Row, Button, Col, Spin, Card, message, Image } from "antd";
+import { Row, Button, Col, Spin, Card, message, Image, Popconfirm } from "antd";
 import { useHistory } from "react-router";
 import { cardStyle, headStyle } from "../../assets/styles/styles";
 import { imageUrlDirectory } from "../../constUrls";
@@ -15,7 +15,6 @@ export const ShopImages = () => {
   const token = localStorage.getItem("auth_token");
   const [loading, setLoading] = useState(false);
   const [saveLoading] = useState(false);
-  const { Meta } = Card;
 
 
   const {
@@ -68,29 +67,32 @@ export const ShopImages = () => {
 
 
   const deleteFile = async (fileId) => {
-    try {
-      setLoading(true);
-      debugger;
-      await API.post("shop/removeShopImage?imageId=" + fileId, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => {
-          message.success(res.data.response);
-          setLoading(false);
+
+    if (window.confirm("Silmek istediğinize emin misiniz?")) {
+      try {
+        setLoading(true);
+        let imageId = fileId;
+        await API.post("shop/removeShopImage", imageId, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         })
-        .catch((error) => {
-          if (error.response.status === 401) {
-            history.push("/login");
-          } else {
-            message.error(error.response.data);
-          }
-          setLoading(false);
-        });
-    } catch (ex) {
-      console.log(ex);
+          .then((res) => {
+            message.success(res.data.response);
+            setLoading(false);
+          })
+          .catch((error) => {
+            if (error.response.status === 401) {
+              history.push("/login");
+            } else {
+              message.error(error.response.data);
+            }
+            setLoading(false);
+          });
+      } catch (ex) {
+        console.log(ex);
+      }
     }
   }
   const uploadFile = async (e) => {
@@ -173,7 +175,7 @@ export const ShopImages = () => {
                             htmlType="button"
                           >
                             Sil
-                          </Button>
+                          </Button>,
                         </Card>
                       </Col>))}
                   </Row>
