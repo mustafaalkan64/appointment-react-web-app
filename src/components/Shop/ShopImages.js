@@ -35,7 +35,7 @@ export const ShopImages = () => {
 
   useEffect(() => {
     getShopImages();
-  }, [setModifiedCollection]);
+  }, []);
 
   const getShopImages = async () => {
     setLoading(true);
@@ -79,17 +79,9 @@ export const ShopImages = () => {
           },
         })
           .then((res) => {
-            message.success(res.data.response);
+            getShopImages();
             setLoading(false);
-            let filteredArray = modifiedCollection;
-            for (var i = 0; i < filteredArray.length; i++) {
-              for (var j = 0; j < filteredArray[i].length; j++) {
-                if (filteredArray[i][j].id == fileId) {
-                  filteredArray[i].splice(j, 1);
-                }
-              }
-            }
-            setModifiedCollection(filteredArray);
+            message.success(res.data.response);
           })
           .catch((error) => {
             if (error.response.status === 401) {
@@ -153,13 +145,13 @@ export const ShopImages = () => {
                 style={{ marginBottom: 10, marginLeft: 0 }}
                 gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
               >
-                <input type="file"
-                  multiple
-                  accept="image/png, image/jpeg, image/jpg"
-                  className="form-control"
-                  onChange={saveFile} />
-              </Row>
-              <Row style={{ marginLeft: 0 }}>
+                <Col>
+                  <input type="file"
+                    multiple
+                    accept="image/png, image/jpeg, image/jpg"
+                    className="form-control"
+                    onChange={saveFile} />
+                </Col>
                 <Col>
                   <Button
                     type="primary"
@@ -171,6 +163,7 @@ export const ShopImages = () => {
                     Yükle
                   </Button>
                 </Col>
+
               </Row>
               {
                 modifiedCollection.map((row) =>
