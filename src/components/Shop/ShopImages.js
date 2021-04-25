@@ -34,36 +34,36 @@ export const ShopImages = () => {
   }, [setFirstBreadcrumb, setSecondBreadcrumb, setLastBreadcrumb]);
 
   useEffect(() => {
-    const getShopImages = async () => {
-      setLoading(true);
-      await API.get(`shop/getShopImages`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then(async (res) => {
-          setLoading(false);
-          if (res.data.length > 0) {
-            let modifiedCollections = res.data.reduce((rows, key, index) => {
-              return (index % 3 === 0 ? rows.push([key])
-                : rows[rows.length - 1].push(key)) && rows;
-            }, []);
-            setModifiedCollection(modifiedCollections);
-          }
-        })
-        .catch((error) => {
-          if (error.response.status === 401 || error.response.status === 403) {
-            history.push("/login");
-          } else {
-            message.error(error.response.data);
-          }
-          setLoading(false);
-        });
-    };
     getShopImages();
-  }, [
-  ]);
+  }, [setModifiedCollection]);
+
+  const getShopImages = async () => {
+    setLoading(true);
+    await API.get(`shop/getShopImages`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(async (res) => {
+        setLoading(false);
+        if (res.data.length > 0) {
+          let modifiedCollections = res.data.reduce((rows, key, index) => {
+            return (index % 3 === 0 ? rows.push([key])
+              : rows[rows.length - 1].push(key)) && rows;
+          }, []);
+          setModifiedCollection(modifiedCollections);
+        }
+      })
+      .catch((error) => {
+        if (error.response.status === 401 || error.response.status === 403) {
+          history.push("/login");
+        } else {
+          message.error(error.response.data);
+        }
+        setLoading(false);
+      });
+  };
 
 
   const deleteFile = async (fileId) => {
@@ -81,6 +81,15 @@ export const ShopImages = () => {
           .then((res) => {
             message.success(res.data.response);
             setLoading(false);
+            let filteredArray = modifiedCollection;
+            for (var i = 0; i < filteredArray.length; i++) {
+              for (var j = 0; j < filteredArray[i].length; j++) {
+                if (filteredArray[i][j].id == fileId) {
+                  filteredArray[i].splice(j, 1);
+                }
+              }
+            }
+            setModifiedCollection(filteredArray);
           })
           .catch((error) => {
             if (error.response.status === 401) {
@@ -93,9 +102,12 @@ export const ShopImages = () => {
       } catch (ex) {
         console.log(ex);
       }
+
+
     }
   }
   const uploadFile = async (e) => {
+    setLoading(true);
     const formData = new FormData();
     for (let i = 0; i < files.length; i++) {
       formData.append("formFiles", files[i]);
@@ -109,6 +121,7 @@ export const ShopImages = () => {
       })
         .then((res) => {
           message.success(res.data.response);
+          getShopImages();
           setLoading(false);
         })
         .catch((error) => {
