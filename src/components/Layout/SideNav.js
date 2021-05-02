@@ -133,6 +133,9 @@ const SideNav = () => {
   const handleShopImages = () => {
     history.push("/shopImages");
   };
+  const handleShopNotifications = () => {
+    history.push("/shopNotifications");
+  };
   const handleMyOncomingAppointments = () => {
     history.push("/myOncomingAppointments");
   };
@@ -216,14 +219,17 @@ const SideNav = () => {
               <Menu.Item key="14" onClick={handleShopImages}>
                 Fotoğraflarım
               </Menu.Item>
+              <Menu.Item key="15" onClick={handleShopNotifications}>
+                Bildirimlerim
+              </Menu.Item>
             </>
           )}
 
-          <Menu.Item key="15" onClick={handleChangeMyPassword}>
+          <Menu.Item key="16" onClick={handleChangeMyPassword}>
             Şifre Değiştir
           </Menu.Item>
         </SubMenu>
-        <Menu.Item icon={<LogoutOutlined />} key="16" onClick={handleLogout}>
+        <Menu.Item icon={<LogoutOutlined />} key="17" onClick={handleLogout}>
           <span>Çıkış</span>
         </Menu.Item>
       </Menu>

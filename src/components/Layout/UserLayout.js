@@ -10,6 +10,7 @@ import AppointmentPlan from "../Shop/AppointmentPlan";
 import ShopServices from "../Shop/ShopServices";
 import ShopProfile from "../Shop/ShopProfile";
 import ShopImages from "../Shop/ShopImages";
+import ShopNotifications from "../Shop/ShopNotifications";
 import ShopCategories from "../Shop/ShopCategories";
 import UserProfile from "../../components/User/UserProfile";
 import ForgotPassword from "../LoginPages/ForgotPassword";
@@ -105,6 +106,7 @@ export default function UserLayout() {
                       <Route path="/userProfile" component={UserProfile} />
                       <Route path="/shopProfile" component={ShopProfile} />
                       <Route path="/shopImages" component={ShopImages} />
+                      <Route path="/shopNotifications" component={ShopNotifications} />
                       <Route
                         path="/myOncomingAppointments"
                         component={MyOncomingAppointments}

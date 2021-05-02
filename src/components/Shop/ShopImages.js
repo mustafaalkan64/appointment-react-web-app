@@ -181,7 +181,7 @@ export const ShopImages = () => {
                             htmlType="button"
                           >
                             Sil
-                          </Button>,
+                          </Button>
                         </Card>
                       </Col>))}
                   </Row>
