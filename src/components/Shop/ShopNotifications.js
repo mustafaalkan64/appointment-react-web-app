@@ -9,6 +9,9 @@ const ShopNotifications = () => {
 
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
+    const [page, setPage] = useState(1);
+    const pageSize = 5;
+    const [totalCount, setTotalCount] = useState([]);
     const history = useHistory();
     const token = localStorage.getItem("auth_token");
     const {
@@ -17,11 +20,39 @@ const ShopNotifications = () => {
         setLastBreadcrumb,
     } = useContext(BreadCrumbContext);
 
-    useEffect(() => {
+
+    function onChange(pageNumber) {
+        setLoading(true);
+        setPage(pageNumber);
+        API.get(`notifications/getNotifications/${pageSize}/${pageNumber}`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        })
+            .then((res) => {
+                setData(res.data.item1.map((item, i) => item.notificationText));
+                setTotalCount(res.data.item2);
+                setLoading(false);
+            })
+            .catch((error) => {
+                if (error.response.status === 401) {
+                    history.push("/login");
+                } else {
+                    message.error(error.response.data);
+                }
+                setLoading(false);
+            });
+    }
+
+    function showTotal(total) {
+        return `Total ${total} items`;
+    }
+
+
+    useEffect(async () => {
         const getShopNotifications = async () => {
             setLoading(true);
-            const pageSize = 5;
-            const page = 1
             await API.get(`notifications/getNotifications/${pageSize}/${page}`, {
                 headers: {
                     "Content-Type": "application/json",
@@ -29,7 +60,8 @@ const ShopNotifications = () => {
                 },
             })
                 .then((res) => {
-                    setData(res.data.map((item, i) => item.notificationText));
+                    setData(res.data.item1.map((item, i) => item.notificationText));
+                    setTotalCount(res.data.item2);
                     setLoading(false);
                 })
                 .catch((error) => {
@@ -41,7 +73,7 @@ const ShopNotifications = () => {
                     setLoading(false);
                 });
         };
-        getShopNotifications();
+        await getShopNotifications();
         setFirstBreadcrumb("Anasayfa");
         setSecondBreadcrumb("Profilim");
         setLastBreadcrumb("Bildirimler");
@@ -62,7 +94,7 @@ const ShopNotifications = () => {
                     size="large"
                     style={{ backgroundColor: "white", width: "100%" }}
                     header={<div><h3>Bildirimlerim</h3></div>}
-                    footer={<Pagination defaultCurrent={1} total={50} />}
+                    footer={<Pagination showQuickJumper defaultCurrent={page} defaultPageSize={pageSize} showTotal={showTotal} total={totalCount} onChange={onChange} />}
                     bordered
                     dataSource={data}
                     renderItem={item => <List.Item>{item}</List.Item>}
