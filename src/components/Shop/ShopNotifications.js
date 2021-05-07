@@ -50,7 +50,7 @@ const ShopNotifications = () => {
     }
 
 
-    useEffect(async () => {
+    useEffect(() => {
         const getShopNotifications = async () => {
             setLoading(true);
             await API.get(`notifications/getNotifications/${pageSize}/${page}`, {
@@ -73,14 +73,14 @@ const ShopNotifications = () => {
                     setLoading(false);
                 });
         };
-        await getShopNotifications();
+        getShopNotifications();
         setFirstBreadcrumb("Anasayfa");
         setSecondBreadcrumb("Profilim");
         setLastBreadcrumb("Bildirimler");
     }, [
         setFirstBreadcrumb,
         setSecondBreadcrumb,
-        setLastBreadcrumb,
+        setLastBreadcrumb, history, page, token
     ]);
 
     return (
@@ -94,7 +94,7 @@ const ShopNotifications = () => {
                     size="large"
                     style={{ backgroundColor: "white", width: "100%" }}
                     header={<div><h3>Bildirimlerim</h3></div>}
-                    footer={<Pagination showQuickJumper defaultCurrent={page} defaultPageSize={pageSize} showTotal={showTotal} total={totalCount} onChange={onChange} />}
+                    footer={<Pagination defaultCurrent={page} defaultPageSize={pageSize} showTotal={showTotal} total={totalCount} onChange={onChange} />}
                     bordered
                     dataSource={data}
                     renderItem={item => <List.Item>{item}</List.Item>}

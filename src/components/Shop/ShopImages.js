@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import API from "../../api";
 import BreadCrumbContext from "../../contexts/BreadcrumbContext";
 import { Row, Button, Col, Spin, Card, message, Image } from "antd";
@@ -27,17 +27,7 @@ export const ShopImages = () => {
     setFiles(e.target.files);
   };
 
-  useEffect(() => {
-    setFirstBreadcrumb("Anasayfa");
-    setSecondBreadcrumb("Profil Bilgilerim");
-    setLastBreadcrumb("Fotoğraflarım");
-  }, [setFirstBreadcrumb, setSecondBreadcrumb, setLastBreadcrumb]);
-
-  useEffect(() => {
-    getShopImages();
-  }, []);
-
-  const getShopImages = async () => {
+  const fetchBusinesses = useCallback(async () => {
     setLoading(true);
     await API.get(`shop/getShopImages`, {
       headers: {
@@ -63,7 +53,15 @@ export const ShopImages = () => {
         }
         setLoading(false);
       });
-  };
+  }, [history, token])
+
+
+  useEffect(() => {
+    setFirstBreadcrumb("Anasayfa");
+    setSecondBreadcrumb("Profil Bilgilerim");
+    setLastBreadcrumb("Fotoğraflarım");
+    fetchBusinesses();
+  }, [setFirstBreadcrumb, setSecondBreadcrumb, setLastBreadcrumb, fetchBusinesses]);
 
 
   const deleteFile = async (fileId) => {
@@ -79,7 +77,7 @@ export const ShopImages = () => {
           },
         })
           .then((res) => {
-            getShopImages();
+            fetchBusinesses();
             setLoading(false);
             message.success(res.data.response);
           })
@@ -113,7 +111,7 @@ export const ShopImages = () => {
       })
         .then((res) => {
           message.success(res.data.response);
-          getShopImages();
+          fetchBusinesses();
           setLoading(false);
         })
         .catch((error) => {
@@ -170,10 +168,10 @@ export const ShopImages = () => {
                   <Row gutter={16} style={{ marginTop: 10 }}>
                     {row.map(image => (
                       <Col span={8}>
-                        <Card key={image.id}
+                        <Card key={"card-image-" + image.id}
                           hoverable
                           style={{ width: '100%' }}
-                          cover={<Image.PreviewGroup><Image src={imageUrlDirectory + image.imageUrl} /></Image.PreviewGroup>}
+                          cover={<Image.PreviewGroup key={"preview-image-" + image.id}><Image key={image.id} src={imageUrlDirectory + image.imageUrl} /></Image.PreviewGroup>}
                         >
                           <Button
                             type="primary"
