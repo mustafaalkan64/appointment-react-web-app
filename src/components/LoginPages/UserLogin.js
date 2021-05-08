@@ -110,9 +110,9 @@ const UserLogin = () => {
                   <Checkbox>Beni Hatırla</Checkbox>
                 </Form.Item>
 
-                <a className="login-form-forgot" href="">
+                <div className="login-form-forgot">
                   <Link to="/forgotPassword">Şifreni mi Unuttun?</Link>
-                </a>
+                </div>
               </Form.Item>
 
               <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>

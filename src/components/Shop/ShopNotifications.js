@@ -90,7 +90,6 @@ const ShopNotifications = () => {
                     <Skeleton active />
                     <Skeleton active />
                     <Skeleton active />
-                    <Skeleton active />
                 </div>
             ) : (
                 <List

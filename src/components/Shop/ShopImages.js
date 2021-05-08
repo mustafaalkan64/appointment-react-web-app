@@ -204,7 +204,7 @@ export const ShopImages = () => {
                         <Card key={"card-image-" + image.id}
                           hoverable
                           style={{ width: '100%' }}
-                          cover={<Image.PreviewGroup key={"preview-image-" + image.id}> <Image key={image.id} src={imageUrlDirectory + image.imageUrl} /></Image.PreviewGroup>}
+                          cover={<Image.PreviewGroup key={"preview-image-" + image.id}> <Image key={"image-" + image.id} src={imageUrlDirectory + image.imageUrl} /></Image.PreviewGroup>}
                         >
                           <Button
                             type="primary"

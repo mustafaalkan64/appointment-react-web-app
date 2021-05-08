@@ -9,6 +9,7 @@ import {
   message,
   Checkbox,
   Card,
+  Modal,
   AutoComplete,
 } from "antd";
 import { useHistory } from "react-router";
@@ -27,6 +28,7 @@ const ShopRegister = () => {
   const [categories, setCategories] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [zones, setZones] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const { Option } = Select;
   const { TextArea } = Input;
 
@@ -169,7 +171,15 @@ const ShopRegister = () => {
     getZones(value);
   };
 
-  const handleZoneChange = (value) => {};
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleZoneChange = (value) => { };
 
   const websiteOptions = autoCompleteResult.map((website) => ({
     label: website,
@@ -187,6 +197,10 @@ const ShopRegister = () => {
         offset: 6,
       },
     },
+  };
+
+  const openAgreementModal = () => {
+    setIsModalVisible(true);
   };
 
   useEffect(() => {
@@ -458,7 +472,7 @@ const ShopRegister = () => {
                 {...tailFormItemLayout}
               >
                 <Checkbox>
-                  I have read the <a href="">agreement</a>
+                  I have read the <a href="_blank" onClick={ev => { ev.preventDefault(); openAgreementModal(); }}>Agreement</a>
                 </Checkbox>
               </Form.Item>
               <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
@@ -474,9 +488,15 @@ const ShopRegister = () => {
               </Form.Item>
             </Form>
           </Card>
+          <Modal title="Sözleşme" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+            <p>Sözleşme İçeriği...</p>
+            <p>Sözleşme İçeriği...</p>
+            <p>Sözleşme İçeriği...</p>
+            <p>Sözleşme İçeriği...</p>
+          </Modal>
         </Col>
       </Row>
-    </div>
+    </div >
   );
 };
 export default ShopRegister;
