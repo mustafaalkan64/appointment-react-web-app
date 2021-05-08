@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
 import API from "../../api";
 import BreadCrumbContext from "../../contexts/BreadcrumbContext";
-import { Row, Button, Col, Spin, Card, message, Image } from "antd";
+import { Row, Button, Col, Skeleton, Card, message, Image } from "antd";
 import { useHistory } from "react-router";
 import { cardStyle, headStyle } from "../../assets/styles/styles";
 import { imageUrlDirectory } from "../../constUrls";
@@ -129,16 +129,49 @@ export const ShopImages = () => {
 
   return (
     <div>
-      <Row>
-        <Col span={20} offset={2}>
-          <Card
-            title="Fotoğraflarım"
-            hoverable
-            bordered={true}
-            style={cardStyle}
-            headStyle={headStyle}
+
+      {loading ? (<Row>
+        <Col span={20} offset={2}><Card
+          title="Fotoğraflarım"
+          hoverable
+          bordered={true}
+          style={cardStyle}
+          headStyle={headStyle}
+        >
+          <Row
+            style={{ marginBottom: 10, marginLeft: 0 }}
+            gutter={{ xs: 8, sm: 16, md: 20, lg: 32 }} span={20} offset={2}
           >
-            <Spin spinning={loading} delay={500}>
+            <Col><Skeleton.Image style={{ width: 400, height: 400 }}></Skeleton.Image>
+            </Col>
+            <Col><Skeleton.Image style={{ width: 400, height: 400 }}></Skeleton.Image>
+            </Col>
+            <Col><Skeleton.Image style={{ width: 400, height: 400 }}></Skeleton.Image>
+            </Col>
+
+          </Row>
+
+          <Row
+            style={{ marginBottom: 10, marginLeft: 0 }}
+            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+          >
+            <Col><Skeleton.Image style={{ width: 400, height: 400 }}></Skeleton.Image>
+            </Col>
+            <Col><Skeleton.Image style={{ width: 400, height: 400 }}></Skeleton.Image>
+            </Col>
+            <Col><Skeleton.Image style={{ width: 400, height: 400 }}></Skeleton.Image>
+            </Col>
+
+          </Row>
+        </Card></Col></Row>) : (<Row>
+          <Col span={20} offset={2}>
+            <Card
+              title="Fotoğraflarım"
+              hoverable
+              bordered={true}
+              style={cardStyle}
+              headStyle={headStyle}
+            >
               <Row
                 style={{ marginBottom: 10, marginLeft: 0 }}
                 gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
@@ -159,7 +192,7 @@ export const ShopImages = () => {
                     htmlType="button"
                   >
                     Yükle
-                  </Button>
+                        </Button>
                 </Col>
 
               </Row>
@@ -171,7 +204,7 @@ export const ShopImages = () => {
                         <Card key={"card-image-" + image.id}
                           hoverable
                           style={{ width: '100%' }}
-                          cover={<Image.PreviewGroup key={"preview-image-" + image.id}><Image key={image.id} src={imageUrlDirectory + image.imageUrl} /></Image.PreviewGroup>}
+                          cover={<Image.PreviewGroup key={"preview-image-" + image.id}> <Image key={image.id} src={imageUrlDirectory + image.imageUrl} /></Image.PreviewGroup>}
                         >
                           <Button
                             type="primary"
@@ -179,18 +212,19 @@ export const ShopImages = () => {
                             htmlType="button"
                           >
                             Sil
-                          </Button>
+                                </Button>
                         </Card>
                       </Col>))}
                   </Row>
                 )
               }
 
-            </Spin>
-          </Card>
-        </Col>
-      </Row>
-    </div>
+            </Card >
+          </Col >
+        </Row >)}
+
+
+    </div >
   );
 };
 

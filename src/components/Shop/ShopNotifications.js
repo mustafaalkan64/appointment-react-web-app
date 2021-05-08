@@ -88,6 +88,9 @@ const ShopNotifications = () => {
             {loading ? (
                 <div className="spinClass">
                     <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
+                    <Skeleton active />
                 </div>
             ) : (
                 <List
