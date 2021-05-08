@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Menu, message, notification, Image } from "antd";
+import { Menu, message, notification, Image, Skeleton } from "antd";
 import API from "../../api";
 import UserContext from "../../contexts/UserContext";
 import { HubConnectionBuilder } from "@microsoft/signalr";
@@ -29,6 +29,7 @@ const SideNav = () => {
   } = useContext(UserContext);
   // const token = localStorage.getItem("auth_token");
   const [logo, setLogo] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const connect = new HubConnectionBuilder()
@@ -107,25 +108,30 @@ const SideNav = () => {
   }, [currentShop, history, setCurrentShop, setUserRole, setUsername, token]);
 
   useEffect(() => {
-    const getShopProfile = async () => {
-      await API.get(`shop/getShopProfile`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => {
-          setLogo(imageUrlDirectory + res.data.logoUrl);
+    if (userRole === "Shop") {
+      setLoading(true);
+      const getShopLogo = async () => {
+        await API.get(`shop/getShopLogo`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         })
-        .catch((error) => {
-          if (error.response.status === 401) {
-            history.push("/login");
-          } else {
-            message.error(error.response.data);
-          }
-        });
-    };
-    getShopProfile();
+          .then((res) => {
+            setLogo(imageUrlDirectory + res.data);
+            setLoading(false);
+          })
+          .catch((error) => {
+            if (error.response.status === 401) {
+              history.push("/login");
+            } else {
+              message.error(error.response.data);
+            }
+            setLoading(false);
+          });
+      };
+      getShopLogo();
+    }
   }, [
     history,
     token,
@@ -183,7 +189,8 @@ const SideNav = () => {
           height: "32px",
           margin: "14px",
         }}
-      ><Image height="40px" src={logo} />
+      > {userRole === "Shop" ? (loading ? (<Skeleton.Image style={{ height: 40 }} />) : (<Image height="40px" src={logo} />)) : (<div></div>)}
+
       </div>
 
       <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
