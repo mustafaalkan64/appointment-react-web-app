@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { Menu, Layout } from "antd";
 import UserContext from "../../contexts/UserContext";
 import { SettingFilled } from "@ant-design/icons";
@@ -6,6 +6,7 @@ import { useHistory } from "react-router";
 
 const { SubMenu } = Menu;
 const { Header } = Layout;
+
 
 export default function LayoutHeader() {
   const {
@@ -15,6 +16,7 @@ export default function LayoutHeader() {
     userRole,
     setUsername,
   } = useContext(UserContext);
+
   const history = useHistory();
 
   const handleUserProfile = () => {
@@ -34,13 +36,10 @@ export default function LayoutHeader() {
     history.push("/login");
   };
 
-  useEffect(() => {}, []);
-
   return (
     <div>
       <Header className="header">
         <div className="logo" />
-
         <Menu
           theme="dark"
           mode="horizontal"

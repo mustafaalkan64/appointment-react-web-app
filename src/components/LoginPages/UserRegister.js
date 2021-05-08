@@ -9,6 +9,7 @@ import {
   message,
   Checkbox,
   Card,
+  Modal
 } from "antd";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
@@ -16,10 +17,12 @@ import UserContext from "../../contexts/UserContext";
 import API from "../../api";
 import { loginStyle, headStyle } from "../../assets/styles/styles";
 
+
 const UserRegister = () => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const history = useHistory();
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const { setIsLoggedIn, setToken } = useContext(UserContext);
   const handleSubmit = (values) => {
     const user = {
@@ -60,6 +63,18 @@ const UserRegister = () => {
     wrapperCol: {
       span: 14,
     },
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const openAgreementModal = () => {
+    setIsModalVisible(true);
   };
 
   return (
@@ -195,7 +210,7 @@ const UserRegister = () => {
                 wrapperCol={{ ...layout.wrapperCol, offset: 6 }}
               >
                 <Checkbox>
-                  I have read the <Link to="Agreement" value="agreement" />
+                  I have read the <a href="_blank" onClick={ev => { ev.preventDefault(); openAgreementModal(); }}>Agreement</a>
                 </Checkbox>
               </Form.Item>
               <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
@@ -213,6 +228,12 @@ const UserRegister = () => {
           </Card>
         </Col>
       </Row>
+      <Modal title="Sözleşme" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+        <p>Sözleşme İçeriği...</p>
+        <p>Sözleşme İçeriği...</p>
+        <p>Sözleşme İçeriği...</p>
+        <p>Sözleşme İçeriği...</p>
+      </Modal>
     </div>
   );
 };

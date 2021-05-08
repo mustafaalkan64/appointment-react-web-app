@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useContext } from "react";
 import { Table, Row, Col, Button, Typography, Input, Modal } from "antd";
 import { useHistory } from "react-router";
-import { Tag, Space, message, Spin, Select } from "antd";
+import { Tag, Space, message, Skeleton, Select } from "antd";
 import API from "../../api";
 import { appointmentHub } from "../../constUrls";
 import { serialize } from "../../utils";
@@ -213,19 +213,19 @@ export default function MyAppointments(props) {
       title: "Mağaza",
       dataIndex: "shopTitle",
       key: "shopTitle",
-      render: (text) => <a>{text}</a>,
+      render: (text) => <p>{text}</p>,
     },
     {
       title: "Randevu Başlangıç Tarihi",
       dataIndex: "appointmentBeginDate",
       key: "appointmentBeginDate",
-      render: (date) => <a>{convertToFullDate(date)}</a>,
+      render: (date) => <p>{convertToFullDate(date)}</p>,
     },
     {
       title: "Randevu Bitiş Tarihi",
       dataIndex: "appointmentEndDate",
       key: "appointmentEndDate",
-      render: (date) => <a>{convertToFullDate(date)}</a>,
+      render: (date) => <p>{convertToFullDate(date)}</p>,
     },
     {
       title: "Durumu",
@@ -324,11 +324,13 @@ export default function MyAppointments(props) {
       <Row gutter={[40, 0]}>
         <Col span={24}>
           {loading ? (
-            <div className="spinClass">
-              <Space size="middle">
-                <Spin size="large" />
-              </Space>
+            <div>
+              <Skeleton active />
+              <Skeleton active />
+              <Skeleton active />
+              <Skeleton active />
             </div>
+
           ) : (
             <Table
               columns={columns}

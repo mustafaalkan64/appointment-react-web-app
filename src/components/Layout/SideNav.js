@@ -1,9 +1,10 @@
-import React, { useContext, useEffect } from "react";
-import { Menu, message, notification } from "antd";
+import React, { useContext, useEffect, useState } from "react";
+import { Menu, message, notification, Image } from "antd";
 import API from "../../api";
 import UserContext from "../../contexts/UserContext";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import { appointmentHub } from "../../constUrls";
+import { imageUrlDirectory } from "../../constUrls";
 
 import {
   UserOutlined,
@@ -26,6 +27,8 @@ const SideNav = () => {
     setCurrentShop,
     token,
   } = useContext(UserContext);
+  // const token = localStorage.getItem("auth_token");
+  const [logo, setLogo] = useState("");
 
   useEffect(() => {
     const connect = new HubConnectionBuilder()
@@ -103,6 +106,31 @@ const SideNav = () => {
     getCurrentShop();
   }, [currentShop, history, setCurrentShop, setUserRole, setUsername, token]);
 
+  useEffect(() => {
+    const getShopProfile = async () => {
+      await API.get(`shop/getShopProfile`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          setLogo(imageUrlDirectory + res.data.logoUrl);
+        })
+        .catch((error) => {
+          if (error.response.status === 401) {
+            history.push("/login");
+          } else {
+            message.error(error.response.data);
+          }
+        });
+    };
+    getShopProfile();
+  }, [
+    history,
+    token,
+  ]);
+
   const handleMyActiveAppointments = () => {
     history.push("/myActiveAppointments");
   };
@@ -153,10 +181,10 @@ const SideNav = () => {
       <div
         style={{
           height: "32px",
-          background: "rgba(255, 255, 255, 0.2)",
-          margin: "16px",
+          margin: "14px",
         }}
-      ></div>
+      ><Image height="40px" src={logo} />
+      </div>
 
       <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
         <Menu.Item key="1" icon={<HomeOutlined />} onClick={redirectHomePage}>
