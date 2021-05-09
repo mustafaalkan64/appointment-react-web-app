@@ -27,7 +27,7 @@ export const ShopImages = () => {
     setFiles(e.target.files);
   };
 
-  const fetchBusinesses = useCallback(async () => {
+  const fetchShopImages = useCallback(async () => {
     setLoading(true);
     await API.get(`shop/getShopImages`, {
       headers: {
@@ -60,8 +60,8 @@ export const ShopImages = () => {
     setFirstBreadcrumb("Anasayfa");
     setSecondBreadcrumb("Profil Bilgilerim");
     setLastBreadcrumb("Fotoğraflarım");
-    fetchBusinesses();
-  }, [setFirstBreadcrumb, setSecondBreadcrumb, setLastBreadcrumb, fetchBusinesses]);
+    fetchShopImages();
+  }, [setFirstBreadcrumb, setSecondBreadcrumb, setLastBreadcrumb, fetchShopImages]);
 
 
   const deleteFile = async (fileId) => {
@@ -77,7 +77,7 @@ export const ShopImages = () => {
           },
         })
           .then((res) => {
-            fetchBusinesses();
+            fetchShopImages();
             setLoading(false);
             message.success(res.data.response);
           })
@@ -111,7 +111,7 @@ export const ShopImages = () => {
       })
         .then((res) => {
           message.success(res.data.response);
-          fetchBusinesses();
+          fetchShopImages();
           setLoading(false);
         })
         .catch((error) => {

@@ -1,8 +1,9 @@
-import React, { useContext, useState } from "react";
-import { Menu, Layout } from "antd";
+import React, { useContext, useEffect, useState } from "react";
+import { Menu, Layout, Badge, message, Dropdown } from "antd";
 import UserContext from "../../contexts/UserContext";
-import { SettingFilled } from "@ant-design/icons";
+import { SettingFilled, NotificationOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router";
+import API from "../../api";
 
 const { SubMenu } = Menu;
 const { Header } = Layout;
@@ -18,6 +19,72 @@ export default function LayoutHeader() {
   } = useContext(UserContext);
 
   const history = useHistory();
+  const [notifications, setNotifications] = useState([]);
+  const [notReadNotificationCount, setNotReadNotificationCount] = useState(0);
+  const token = localStorage.getItem("auth_token");
+
+  const onClick = ({ key }) => {
+    history.push("/shopNotifications");
+    API.put(`notifications/updateNotificationsAsRead`, {}, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        setNotReadNotificationCount(0);
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+      });
+  };
+
+  useEffect(() => {
+    const getShopNotifications = async () => {
+      await API.get(`notifications/getTop5Notifications`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          setNotifications(res.data);
+        })
+        .catch((error) => {
+          message.error(error.response.data);
+        });
+    };
+    const getNotReadShopNotificationsCount = async () => {
+      await API.get(`notifications/getNotReadShopNotificationsCount`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          setNotReadNotificationCount(res.data);
+        })
+        .catch((error) => {
+          message.error(error.response.data);
+        });
+    };
+    getShopNotifications();
+    getNotReadShopNotificationsCount();
+  }, [history, token
+  ]);
+
+  const menu = (
+    <Menu onClick={onClick}>
+      {notifications.map((notificaion, key) => {
+        return (
+          <Menu.Item key={key}>
+            {notificaion.notificationText}
+          </Menu.Item>
+        );
+      })}
+    </Menu>
+  );
+
 
   const handleUserProfile = () => {
     history.push("/userProfile");
@@ -47,6 +114,11 @@ export default function LayoutHeader() {
           defaultSelectedKeys={["2"]}
         >
           <Menu.Item key="deneme">Hoşgeldiniz {username}</Menu.Item>
+          <Dropdown overlay={menu}>
+            <Badge count={notReadNotificationCount} dot onClick={e => e.preventDefault()}>
+              <NotificationOutlined style={{ color: "white" }} />
+            </Badge>
+          </Dropdown>
           <SubMenu key="account" icon={<SettingFilled />}>
             {userRole === "User" ? (
               <Menu.Item key="10" onClick={handleUserProfile}>

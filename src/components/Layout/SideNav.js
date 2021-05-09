@@ -135,6 +135,7 @@ const SideNav = () => {
   }, [
     history,
     token,
+    userRole
   ]);
 
   const handleMyActiveAppointments = () => {
