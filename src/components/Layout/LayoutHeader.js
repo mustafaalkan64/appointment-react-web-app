@@ -78,7 +78,7 @@ export default function LayoutHeader() {
       {notifications.map((notificaion, key) => {
         return (
           <Menu.Item key={key}>
-            {notificaion.notificationText}
+            {notificaion.shortNotificationText}
           </Menu.Item>
         );
       })}
