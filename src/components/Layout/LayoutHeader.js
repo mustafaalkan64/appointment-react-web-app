@@ -3,7 +3,10 @@ import { Menu, Layout, Badge, message, Dropdown } from "antd";
 import UserContext from "../../contexts/UserContext";
 import { SettingFilled, NotificationOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router";
+import { appointmentHub } from "../../constUrls";
 import API from "../../api";
+import { HubConnectionBuilder } from "@microsoft/signalr";
+
 
 const { SubMenu } = Menu;
 const { Header } = Layout;
@@ -16,6 +19,8 @@ export default function LayoutHeader() {
     username,
     userRole,
     setUsername,
+    currentShop,
+    setCurrentShop,
   } = useContext(UserContext);
 
   const history = useHistory();
@@ -40,6 +45,25 @@ export default function LayoutHeader() {
   };
 
   useEffect(() => {
+
+    const connect = new HubConnectionBuilder()
+      .withUrl(appointmentHub)
+      .withAutomaticReconnect()
+      .build();
+
+    try {
+      connect.start();
+    } catch (err) {
+      console.log(err);
+    }
+
+    connect.on("broadcastMessage", (appointmentId, cancelText, shopId) => {
+      if (String(currentShop) === shopId) {
+        getNotReadShopNotificationsCount();
+        getShopNotifications();
+      }
+    });
+
     const getShopNotifications = async () => {
       await API.get(`notifications/getTop5Notifications`, {
         headers: {
@@ -54,6 +78,23 @@ export default function LayoutHeader() {
           message.error(error.response.data);
         });
     };
+
+    const getCurrentShop = async () => {
+      await API.get(`user/currentShop`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          setCurrentShop(res.data);
+          console.log(currentShop);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
     const getNotReadShopNotificationsCount = async () => {
       await API.get(`notifications/getNotReadShopNotificationsCount`, {
         headers: {
@@ -69,8 +110,9 @@ export default function LayoutHeader() {
         });
     };
     getShopNotifications();
+    getCurrentShop();
     getNotReadShopNotificationsCount();
-  }, [history, token
+  }, [currentShop, history, setCurrentShop, setNotifications, setNotReadNotificationCount
   ]);
 
   const menu = (

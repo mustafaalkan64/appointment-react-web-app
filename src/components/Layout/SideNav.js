@@ -47,7 +47,7 @@ const SideNav = () => {
       if (String(currentShop) === shopId) {
         notification.open({
           message: "Randevu İptal Bildirimi!",
-          description: ` ${appointmentId} nolu Randevu, ${cancelText} nedeniyle iptal edilmiştir!`,
+          description: `${cancelText} nedeniyle iptal edilmiştir!`,
         });
       }
     });
