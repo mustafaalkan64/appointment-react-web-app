@@ -144,7 +144,7 @@ const UserProfile = () => {
           }
           else if (error.response.status === 403) {
             history.push("/shopProfile");
-          } 
+          }
           else {
             message.error(error.response.data);
           }
@@ -184,13 +184,13 @@ const UserProfile = () => {
     getZones(value);
   };
 
-  const handleZoneChange = (value) => {};
+  const handleZoneChange = (value) => { };
 
   const onBirthdayChange = (date, dateString) => {
     debugger;
-    // form.setFieldsValue({
-    //   birthDay: dateString,
-    // });
+    form.setFieldsValue({
+      birthDay: date,
+    });
     setUserBirthday(dateString);
   };
 

@@ -112,7 +112,7 @@ export default function LayoutHeader() {
     getShopNotifications();
     getCurrentShop();
     getNotReadShopNotificationsCount();
-  }, [currentShop, history, setCurrentShop, setNotifications, setNotReadNotificationCount
+  }, [currentShop, history, setCurrentShop, token, setNotifications, setNotReadNotificationCount
   ]);
 
   const menu = (
