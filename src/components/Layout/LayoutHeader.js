@@ -6,6 +6,7 @@ import { useHistory } from "react-router";
 import { appointmentHub } from "../../constUrls";
 import API from "../../api";
 import { HubConnectionBuilder } from "@microsoft/signalr";
+import { useLocation } from 'react-router-dom';
 
 
 const { SubMenu } = Menu;
@@ -24,12 +25,19 @@ export default function LayoutHeader() {
   } = useContext(UserContext);
 
   const history = useHistory();
+  const location = useLocation();
   const [notifications, setNotifications] = useState([]);
   const [notReadNotificationCount, setNotReadNotificationCount] = useState(0);
   const token = localStorage.getItem("auth_token");
 
   const onClick = ({ key }) => {
-    history.push("/shopNotifications");
+    if (location.pathname === "/shopNotifications") {
+      window.location.reload();
+    }
+    else {
+      history.push("/shopNotifications");
+    }
+
     API.put(`notifications/updateNotificationsAsRead`, {}, {
       headers: {
         "Content-Type": "application/json",
@@ -38,6 +46,8 @@ export default function LayoutHeader() {
     })
       .then((res) => {
         setNotReadNotificationCount(0);
+
+
       })
       .catch((error) => {
         console.log(error.response.data);

@@ -80,7 +80,13 @@ const ShopNotifications = () => {
     }, [
         setFirstBreadcrumb,
         setSecondBreadcrumb,
-        setLastBreadcrumb, history, page, token, totalCount, setTotalCount, setData
+        setLastBreadcrumb,
+        history,
+        page,
+        token,
+        totalCount,
+        setTotalCount,
+        setData
     ]);
 
     return (
