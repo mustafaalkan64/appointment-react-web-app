@@ -174,6 +174,9 @@ const SideNav = () => {
   const handleMyOncomingAppointments = () => {
     history.push("/myOncomingAppointments");
   };
+  const handleAppointmentCalender = () => {
+    history.push("/shopAppointmentCalender");
+  }
   const redirectHomePage = () => {
     history.push("/");
   };
@@ -229,6 +232,9 @@ const SideNav = () => {
             </Menu.Item>
             <Menu.Item key="9" onClick={handleAppointmentPlan}>
               Randevu Defterim
+            </Menu.Item>
+            <Menu.Item key="18" onClick={handleAppointmentCalender}>
+              Randevu Takvimim
             </Menu.Item>
           </SubMenu>
         )}

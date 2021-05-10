@@ -25,6 +25,7 @@ import LayoutHeader from "./LayoutHeader";
 import ChangeMyPassword from "../Common/ChangeMyPassword";
 import UserSettings from "../User/UserSettings";
 import { Layout, Breadcrumb } from "antd";
+import ShopAppointmentCalender from "../Shop/ShopAppointmentCalender";
 
 const { Sider, Content } = Layout;
 
@@ -121,6 +122,7 @@ export default function UserLayout() {
                         component={ChangeMyPassword}
                       />
                       <Route path="/userSettings" component={UserSettings} />
+                      <Route path="/shopAppointmentCalender" component={ShopAppointmentCalender} />
                       <Route path="*">
                         <NoMatch />
                       </Route>

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Menu, Layout, Badge, message, Dropdown } from "antd";
+import { Menu, Layout, Badge, message, Dropdown, Typography } from "antd";
 import UserContext from "../../contexts/UserContext";
 import { SettingFilled, NotificationOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router";
@@ -7,10 +7,14 @@ import { appointmentHub } from "../../constUrls";
 import API from "../../api";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import { useLocation } from 'react-router-dom';
+import { Link } from "react-router-dom";
+
 
 
 const { SubMenu } = Menu;
 const { Header } = Layout;
+const { Text } = Typography;
+
 
 
 export default function LayoutHeader() {
@@ -129,12 +133,15 @@ export default function LayoutHeader() {
     <Menu onClick={onClick}>
       {notifications.map((notificaion, key) => {
         return (
-          <Menu.Item key={key}>
-            {notificaion.shortNotificationText}
+          <Menu.Item key={key} icon={<NotificationOutlined />}>
+            <Text >{notificaion.shortNotificationText}</Text>
           </Menu.Item>
         );
       })}
-    </Menu>
+      <Menu.Item key={"allNotications"}>
+        <Link style={{ color: "#1890ff" }} to="/shopNotifications">Tüm Bildirimler</Link>
+      </Menu.Item>
+    </Menu >
   );
 
 
