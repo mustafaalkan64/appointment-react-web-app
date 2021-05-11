@@ -193,7 +193,7 @@ const SideNav = () => {
           height: "32px",
           margin: "14px",
         }}
-      > {userRole === "Shop" ? (loading ? (<Skeleton.Image style={{ height: 40 }} />) : (<Image height="40px" src={logo} />)) : (<div></div>)}
+      > {userRole === "Shop" ? (loading ? (<Skeleton.Image style={{ height: 40 }} />) : (<Image height="40px" src={logo} />)) : (<div><Image height="40px" src={imageUrlDirectory + "empty-img.png"} /></div>)}
 
       </div>
 
@@ -230,10 +230,7 @@ const SideNav = () => {
             <Menu.Item key="8" onClick={handleAppointmentPlan}>
               Randevu Planı Yönetme
             </Menu.Item>
-            <Menu.Item key="9" onClick={handleAppointmentPlan}>
-              Randevu Defterim
-            </Menu.Item>
-            <Menu.Item key="18" onClick={handleAppointmentCalender}>
+            <Menu.Item key="9" onClick={handleAppointmentCalender}>
               Randevu Takvimim
             </Menu.Item>
           </SubMenu>

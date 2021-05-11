@@ -48,17 +48,6 @@ export default function MyAppointments(props) {
     }
   }, []);
 
-  // const sendMessage = async (appointmentId, cancel, shopId) => {
-  //   if (connection.state == "Connected") {
-  //     await connection.send(
-  //       "SendMessage",
-  //       String(appointmentId),
-  //       cancel,
-  //       String(shopId)
-  //     );
-  //   }
-  // };
-
   const showModel = (obj) => {
     setIsModalVisible(true);
     setSelectedAppointmentId(obj.id);

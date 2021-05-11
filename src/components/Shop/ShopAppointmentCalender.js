@@ -1,8 +1,18 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Calendar, Badge } from 'antd';
+import {
+    Calendar, Badge, message, ConfigProvider,
+} from 'antd';
 import BreadCrumbContext from "../../contexts/BreadcrumbContext";
+import { useHistory } from "react-router";
+import API from "../../api";
+import "moment/locale/tr";
+import locale from "antd/lib/locale/tr_TR";
 
 function ShopAppointmentCalender() {
+
+    const [appointments, setAppointments] = useState([]);
+    const token = localStorage.getItem("auth_token");
+    const history = useHistory();
 
     const {
         setFirstBreadcrumb,
@@ -12,6 +22,26 @@ function ShopAppointmentCalender() {
 
     useEffect(() => {
 
+        const getAppointmentsByShopId = async () => {
+            await API.get(`appointment/getAppointmentsByShopId`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+                .then((res) => {
+                    setAppointments(res.data);
+                })
+                .catch((error) => {
+                    if (error.response.status === 401) {
+                        history.push("/login");
+                    } else {
+                        message.error(error.response.data);
+                    }
+                });
+        };
+
+        getAppointmentsByShopId();
         setFirstBreadcrumb("Anasayfa");
         setSecondBreadcrumb("Randevular");
         setLastBreadcrumb("Takvim");
@@ -19,36 +49,17 @@ function ShopAppointmentCalender() {
         setFirstBreadcrumb,
         setSecondBreadcrumb,
         setLastBreadcrumb,
+        setAppointments,
+        token,
+        history
     ]);
 
     function getListData(value) {
         let listData;
-        switch (value.date()) {
-            case 8:
-                listData = [
-                    { type: 'warning', content: 'This is warning event.' },
-                    { type: 'success', content: 'This is usual event.' },
-                ];
-                break;
-            case 10:
-                listData = [
-                    { type: 'warning', content: 'This is warning event.' },
-                    { type: 'success', content: 'This is usual event.' },
-                    { type: 'error', content: 'This is error event.' },
-                ];
-                break;
-            case 15:
-                listData = [
-                    { type: 'warning', content: 'This is warning event' },
-                    { type: 'success', content: 'This is very long usual event。。....' },
-                    { type: 'error', content: 'This is error event 1.' },
-                    { type: 'error', content: 'This is error event 2.' },
-                    { type: 'error', content: 'This is error event 3.' },
-                    { type: 'error', content: 'This is error event 4.' },
-                ];
-                break;
-            default:
-        }
+        var date = parseInt(value.format('D'));
+        var month = parseInt(value.format('M'));
+        var year = parseInt(value.format('YYYY'));
+        listData = appointments.filter((a) => parseInt(a.startDate.substr(0, 4)) === year && parseInt(a.startDate.substr(5, 2)) === month && parseInt(a.startDate.substr(8, 2)) === date);
         return listData || [];
     }
 
@@ -58,7 +69,7 @@ function ShopAppointmentCalender() {
             <ul className="events">
                 {listData.map(item => (
                     <li key={item.content}>
-                        <Badge status={item.type} text={item.content} />
+                        <Badge status='success' text={item.content} />
                     </li>
                 ))}
             </ul>
@@ -82,7 +93,9 @@ function ShopAppointmentCalender() {
     }
     return (
         <div>
-            <Calendar dateCellRender={dateCellRender} monthCellRender={monthCellRender} />
+            <ConfigProvider locale={locale}>
+                <Calendar dateCellRender={dateCellRender} monthCellRender={monthCellRender} />
+            </ConfigProvider>
         </div>
     );
 }
