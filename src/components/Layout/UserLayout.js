@@ -30,7 +30,7 @@ import ShopAppointmentCalender from "../Shop/ShopAppointmentCalender";
 const { Sider, Content } = Layout;
 
 export default function UserLayout() {
-  const { isLoggedIn, token } = useContext(UserContext);
+  const { isLoggedIn, token, userRole } = useContext(UserContext);
   const { firstBreadcrumb, secondBreadcrumb, lastBreadcrumb } = useContext(
     BreadCrumbContext
   );
@@ -82,7 +82,7 @@ export default function UserLayout() {
                       <Breadcrumb.Item>{lastBreadcrumb}</Breadcrumb.Item>
                     </Breadcrumb>
                     <Switch>
-                      <Route path="/" exact component={Home} />
+                      {userRole === "User" ? (<Route path="/" exact component={MyActiveAppointments} />) : (<Route path="/" exact component={ShopAppointmentCalender} />)}
                       <Route
                         path="/myPersonelInformations"
                         component={UserProfile}

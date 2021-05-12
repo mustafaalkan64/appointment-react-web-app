@@ -1,12 +1,15 @@
-import React, { Component } from 'react'
+import React, { useContext } from 'react'
+import UserContext from "../../contexts/UserContext";
+import ShopAppointmentCalender from '../Shop/ShopAppointmentCalender';
+import MyAppointments from './MyAppointments';
 
-export default class UserHome extends Component {
+export default function UserHome() {
+    const { userRole } = useContext(UserContext);
+    return (
+        <div>
+            {userRole === "Shop" ? (<ShopAppointmentCalender></ShopAppointmentCalender>) : (<MyAppointments status={1} header={"Aktif Randevularım"}></MyAppointments>
 
-    render() {
-        return (
-            <div>
-                    User Dashboard
-            </div>
-        )
-    }
+            )}
+        </div>
+    )
 }

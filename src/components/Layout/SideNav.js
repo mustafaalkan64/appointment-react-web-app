@@ -97,9 +97,8 @@ const SideNav = () => {
           if (error.response.status === 401) {
             history.push("/login");
             message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
-          } else {
-            message.error(error.response.data);
           }
+          console.log(error);
         });
     };
     getCurrentUser();

@@ -11,7 +11,7 @@ const UserLogin = () => {
   const [form] = Form.useForm();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
-  const { setIsLoggedIn, setToken } = useContext(UserContext);
+  const { setIsLoggedIn, setToken, setUserRole } = useContext(UserContext);
   const handleSubmit = async (values) => {
     setLoading(true);
     const user = {
@@ -26,6 +26,7 @@ const UserLogin = () => {
           setToken(token);
           message.success("Hoşgeldiniz!");
           setIsLoggedIn(true);
+          setUserRole(res.data.role)
           setLoading(false);
           history.push("/");
         } else {

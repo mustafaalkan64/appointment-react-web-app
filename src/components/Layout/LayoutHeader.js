@@ -89,7 +89,7 @@ export default function LayoutHeader() {
           setNotifications(res.data);
         })
         .catch((error) => {
-          message.error(error.response.data);
+          message.error("Bildirimleri Getirme Esnasında Hata ile Karşılaşıldı");
         });
     };
 
@@ -120,7 +120,7 @@ export default function LayoutHeader() {
           setNotReadNotificationCount(res.data);
         })
         .catch((error) => {
-          message.error(error.response.data);
+          console.log(error);
         });
     };
     getShopNotifications();
