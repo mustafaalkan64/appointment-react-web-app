@@ -19,7 +19,7 @@ import UserRegister from "../LoginPages/UserRegister";
 import ShopRegister from "../LoginPages/ShopRegister";
 import UserLogin from "../LoginPages/UserLogin";
 import NoMatch from "../../components/Common/NoMatch";
-import Home from "../../components/User/UserHome";
+import Home from "../../components/Common/Home";
 import SideNav from "./SideNav";
 import LayoutHeader from "./LayoutHeader";
 import ChangeMyPassword from "../Common/ChangeMyPassword";
@@ -44,6 +44,7 @@ export default function UserLayout() {
   return (
     <div>
       <Switch>
+        <Route exact path="/home" component={Home} />
         <Route exact path="/login" component={UserLogin} />
         <Route exact path="/signup" component={UserRegister} />
         <Route exact path="/shopSignup" component={ShopRegister} />
@@ -131,7 +132,7 @@ export default function UserLayout() {
                 </Layout>
               </Layout>
             ) : (
-              <UserLogin />
+              <Home />
             )
           }
         />

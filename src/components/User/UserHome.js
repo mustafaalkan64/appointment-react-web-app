@@ -7,9 +7,7 @@ export default function UserHome() {
     const { userRole } = useContext(UserContext);
     return (
         <div>
-            {userRole === "Shop" ? (<ShopAppointmentCalender></ShopAppointmentCalender>) : (<MyAppointments status={1} header={"Aktif Randevularım"}></MyAppointments>
-
-            )}
+            {userRole === "Shop" ? (<ShopAppointmentCalender></ShopAppointmentCalender>) : (<div></div>)}
         </div>
     )
 }

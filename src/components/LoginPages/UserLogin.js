@@ -78,6 +78,7 @@ const UserLogin = () => {
                 rules={[
                   {
                     required: true,
+                    type: "email",
                     message: "Lütfen Email Adresi Giriniz",
                   },
                   {
