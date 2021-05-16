@@ -131,7 +131,10 @@ const ShopServices = () => {
                 style={{ marginBottom: 10 }}
                 gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
               >
-                <TreeSelect {...tProps} />
+                <TreeSelect {...tProps}
+                  filterTreeNode={(search, item) => {
+                    return item.title.toLowerCase().indexOf(search.toLowerCase()) >= 0;
+                  }} />
               </Row>
               <Row style={{ marginLeft: 0 }}>
                 <Col>

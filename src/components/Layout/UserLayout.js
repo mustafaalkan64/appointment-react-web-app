@@ -26,6 +26,9 @@ import ChangeMyPassword from "../Common/ChangeMyPassword";
 import UserSettings from "../User/UserSettings";
 import { Layout, Breadcrumb } from "antd";
 import ShopAppointmentCalender from "../Shop/ShopAppointmentCalender";
+import SaloonPersonels from "../Shop/SaloonPersonels";
+import AddOrUpdateSaloonPersons from "../Shop/SaveSaloonPerson";
+import SaveSaloonPersons from "../Shop/SaveSaloonPerson";
 
 const { Sider, Content } = Layout;
 
@@ -108,6 +111,8 @@ export default function UserLayout() {
                       <Route path="/userProfile" component={UserProfile} />
                       <Route path="/shopProfile" component={ShopProfile} />
                       <Route path="/shopImages" component={ShopImages} />
+                      <Route path="/saloonPersons" component={SaloonPersonels} />
+                      <Route path="/savePersonel/:personId" component={SaveSaloonPersons} />
                       <Route path="/shopNotifications" component={ShopNotifications} />
                       <Route
                         path="/myOncomingAppointments"

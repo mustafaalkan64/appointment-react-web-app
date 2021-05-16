@@ -179,6 +179,9 @@ const SideNav = () => {
   const redirectHomePage = () => {
     history.push("/");
   };
+  const handlePersons = () => {
+    history.push("/saloonPersons");
+  }
   const handleLogout = () => {
     localStorage.removeItem("auth_token");
     setIsLoggedIn(false);
@@ -237,7 +240,7 @@ const SideNav = () => {
         <SubMenu
           key="subAccount"
           icon={<UserOutlined />}
-          title={userRole === "User" ? (<span>Kullanıcı Bilgilerim</span>) : (<span>Mağaza Bilgilerim</span>)}
+          title={userRole === "User" ? (<span>Kullanıcı Bilgilerim</span>) : (<span>Salon Bilgilerim</span>)}
         >
           {userRole === "User" ? (
             <Menu.Item key="10" onClick={handleUserProfile}>
@@ -246,7 +249,7 @@ const SideNav = () => {
           ) : (
             <>
               <Menu.Item key="11" onClick={handleShopProfile}>
-                Mağaza Profilim
+                Salon Profilim
               </Menu.Item>
               <Menu.Item key="12" onClick={handleShopServices}>
                 Verdiğim Hizmetler
@@ -260,14 +263,17 @@ const SideNav = () => {
               <Menu.Item key="15" onClick={handleShopNotifications}>
                 Bildirimlerim
               </Menu.Item>
+              <Menu.Item key="16" onClick={handlePersons}>
+                Personellerim
+              </Menu.Item>
             </>
           )}
 
-          <Menu.Item key="16" onClick={handleChangeMyPassword}>
+          <Menu.Item key="17" onClick={handleChangeMyPassword}>
             Şifre Değiştir
           </Menu.Item>
         </SubMenu>
-        <Menu.Item icon={<LogoutOutlined />} key="17" onClick={handleLogout}>
+        <Menu.Item icon={<LogoutOutlined />} key="18" onClick={handleLogout}>
           <span>Çıkış</span>
         </Menu.Item>
       </Menu>

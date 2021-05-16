@@ -132,6 +132,12 @@ export default function Home() {
         console.log(current, pageSize);
     }
 
+    const onPlaceSearch = (value, option) => {
+        debugger;
+        // you don't want the value, instead you want the key.
+        console.log(option.key);
+    };
+
     const handleSortChange = useCallback((value) => {
     }, []);
 
@@ -181,6 +187,7 @@ export default function Home() {
                                         <AutoComplete
                                             style={{ width: 300, marginRight: 10 }}
                                             onSearch={handlePlaceSearch}
+                                            onSelect={onPlaceSearch}
                                             placeholder="İl, İlçe veya Bölge Giriniz"
                                         >
                                             {filteredPlaceResult.map(({ key, value }) => (
