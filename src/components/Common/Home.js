@@ -1,10 +1,12 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useHistory } from "react-router";
-import { Card, Avatar, AutoComplete, Row, Col, Button, Layout, Pagination, Select, Rate, Breadcrumb, Divider } from 'antd';
-import { EditOutlined, EllipsisOutlined, SettingOutlined, ShopOutlined } from '@ant-design/icons';
+import { Card, Image, AutoComplete, Row, Col, Skeleton, Button, Layout, Pagination, Select, Rate, Breadcrumb, Divider } from 'antd';
+import { EditOutlined, ShopOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
 import logo from "../../assets/img/logo-t1.svg";
 import API from "../../api";
+import { imageUrlDirectory } from "../../constUrls";
+
 
 const { Meta } = Card;
 const { Header, Content, Footer } = Layout;
@@ -23,17 +25,15 @@ export default function Home() {
     // const [autoExpandParent, setAutoExpandParent] = useState(true);
     const [filteredPlaceResult, setFilteredPlaceResult] = useState([]);
     // const [treeData, setTreeData] = useState([]);
-    const [placeResults, setPlaceResults] = useState([
-        { key: "Izmir", value: "Izmir" },
-        { key: "Ankara", value: "Ankara" },
-        { key: "Konak", value: "Konak" },
-        { key: "Buca", value: "Buca" },
-        { key: "Urla", value: "Urla" }
-
-    ]);
+    const [placeResults, setPlaceResults] = useState([]);
+    const [saloonResults, setSaloonResults] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const [serviceResults, setServiceResults] = useState([]);
     const [filteredServiceResults, setFilteredServiceResults] = useState([]);
+    const [selectedPlaceId, setSelectedPlaceId] = useState(null);
+    const [selectedServiceId, setSelectedServiceId] = useState(null);
+    const [pageCount, setPageCount] = useState(10);
 
     // const onExpand = (expandedKeysValue) => {
     //     console.log('onExpand', expandedKeysValue); // if not set autoExpandParent to false, if children expanded, parent can not collapse.
@@ -117,6 +117,30 @@ export default function Home() {
         setFilteredPlaceResult(res);
     };
 
+    const search = async () => {
+        setLoading(true);
+        var searchModel = {
+            Place: selectedPlaceId,
+            Service: selectedServiceId,
+            Page: 1,
+            PageSize: 10
+        };
+        await API.get(`home/search`, { params: searchModel }, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((res) => {
+                setSaloonResults(res.data.item1);
+                setPageCount(res.data.item2);
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.log(error);
+                setLoading(false);
+            });
+    }
+
     const handleServiceSearch = (value) => {
         let res = [];
         if (!value) {
@@ -133,8 +157,11 @@ export default function Home() {
     }
 
     const onPlaceSearch = (value, option) => {
-        // you don't want the value, instead you want the key.
-        console.log(option.key);
+        setSelectedPlaceId(option.key);
+    };
+
+    const onServiceSearch = (value, option) => {
+        setSelectedServiceId(option.key);
     };
 
     const handleSortChange = useCallback((value) => {
@@ -187,10 +214,11 @@ export default function Home() {
                                         style={{ width: 300, marginRight: 10 }}
                                         onSearch={handlePlaceSearch}
                                         onSelect={onPlaceSearch}
+                                        showSearch
                                         placeholder="İl, İlçe veya Bölge Giriniz"
                                     >
                                         {filteredPlaceResult.map(({ key, value }) => (
-                                            <AutoCompleteOption key={value}>
+                                            <AutoCompleteOption key={key} value={value}>
                                                 {value}
                                             </AutoCompleteOption>
                                         ))}
@@ -201,16 +229,18 @@ export default function Home() {
                                         style={{ width: 300, marginRight: 10 }}
                                         placeholder="Almak İstediğiniz Hizmeti Giriniz"
                                         onSearch={handleServiceSearch}
+                                        onSelect={onServiceSearch}
+                                        showSearch
                                     >
                                         {filteredServiceResults.map(({ key, value }) => (
-                                            <Option key={key}>
+                                            <Option key={key} value={value}>
                                                 {value}
                                             </Option>
                                         ))}
                                     </AutoComplete>
                                 </Col>
                                 <Col>
-                                    <Button style={{ width: 100, marginRight: 10, backgroundColor: "#d46b08", color: "white" }}>Ara</Button>
+                                    <Button onClick={() => search()} style={{ width: 100, marginRight: 10, backgroundColor: "#d46b08", color: "white" }}>Ara</Button>
                                 </Col>
                                 <Select
                                     style={{ width: 300, marginRight: 10 }}
@@ -237,127 +267,80 @@ export default function Home() {
                                         </Option>
                                 </Select>
                             </Row>
-                            <Card
-                                style={{ width: '80%', marginBottom: 20, height: '600' }}
-                            >
-                                <Row>
-                                    <Col xs={24} xl={8}>
-                                        <img
-                                            alt="example"
-                                            style={{
-                                                maxWidth: '100%'
-                                            }}
-                                            src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                                        />
-                                    </Col>
-                                    <Col xs={24} xl={16} marginTop={10}>
-                                        <Row >
-                                            <Col xs={24} xl={16} style={{ float: "left" }} className="ant-card-meta-title">Card title</Col>
-                                            <Col xs={24} xl={8}><Rate allowHalf defaultValue={4} /></Col>
-                                        </Row>
-                                        <Row>
-                                            <Col><Breadcrumb>
-                                                <Breadcrumb.Item>Home</Breadcrumb.Item>
-                                                <Breadcrumb.Item>
-                                                    <a href="">Application List</a>
-                                                </Breadcrumb.Item>
-                                                <Breadcrumb.Item>An Application</Breadcrumb.Item>
-                                            </Breadcrumb></Col>
-                                        </Row>
+                            {
+                                loading ? (
+                                    <div>
+                                        <Skeleton active avatar />
+                                        <Skeleton active avatar />
+                                        <Skeleton active avatar />
+                                        <Skeleton active avatar />
+                                    </div>
 
-                                        <Row style={{ marginTop: 15 }}><Col className="ant-card-meta-description">This is the description This is the description This is the description This is the description This is the descriptionThis is the description This is the descriptionThis is the descriptionThis is the description</Col></Row>
-                                        <Row style={{ marginTop: 15 }}>
-                                            <Col>
-                                                <text style={{ fontWeight: 500 }}>Fiyat: 50 tl</text>
+                                ) : saloonResults.map((value) => (
+                                    <Card
+                                        style={{ width: '80%', marginBottom: 20, height: '600' }}
+                                    >
+                                        <Row>
+                                            <Col xs={24} xl={8} style={{ paddingRight: "10px" }}>
+                                                <Image
+                                                    alt="example"
+                                                    style={{ width: "100%", height: "130px" }}
+                                                    // src={imageUrlDirectory + "empty-img.png"}
+                                                    src={imageUrlDirectory + value.image}
+                                                />
+                                            </Col>
+                                            <Col xs={24} xl={16} marginTop={10} marginLeft={10}>
+                                                <Row >
+                                                    <Col xs={24} xl={16} style={{ float: "left" }} className="ant-card-meta-title">{value.saloonHeader}</Col>
+                                                    <Col xs={24} xl={8}><Rate allowHalf defaultValue={value.rate} /></Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col><Breadcrumb>
+                                                        <Breadcrumb.Item>{value.city}</Breadcrumb.Item>
+                                                        <Breadcrumb.Item>
+                                                            {value.district}
+                                                        </Breadcrumb.Item>
+                                                        <Breadcrumb.Item>{value.zone}</Breadcrumb.Item>
+                                                        <Breadcrumb.Item>{value.serviceName}</Breadcrumb.Item>
+                                                    </Breadcrumb></Col>
+                                                </Row>
+
+                                                <Row style={{ marginTop: 15 }}><Col className="ant-card-meta-description">{value.saloonDescription}</Col></Row>
+                                                <Row style={{ marginTop: 15 }}>
+                                                    <Col>
+                                                        <text style={{ fontWeight: 500 }}>Fiyat: {value.price} tl</text>
+                                                    </Col>
+                                                </Row>
                                             </Col>
                                         </Row>
-                                    </Col>
-                                </Row>
 
-                                <Row style={{ height: 25, borderTop: "1px solid #f0f0f0", paddingTop: 5, marginTop: 10 }}>
-                                    <Col xs={24} xl={12} style={{ textAlign: "center" }}>
-                                        <Button type="link" icon={<EditOutlined />}>
-                                            Randevu Oluştur
-                                            </Button>
-                                        <Divider type="vertical" />
-                                    </Col>
-                                    <Col xs={24} xl={12} style={{ textAlign: "center" }}>
-                                        <Button type="link" icon={<ShopOutlined />}>
-                                            Salonu Görüntüle
-                                            </Button>
-                                    </Col>
+                                        <Row style={{ height: 25, borderTop: "1px solid #f0f0f0", paddingTop: 5, marginTop: 10 }}>
+                                            <Col xs={24} xl={12} style={{ textAlign: "center" }}>
+                                                <Button type="link" icon={<EditOutlined />}>
+                                                    Randevu Oluştur
+                                                        </Button>
+                                                <Divider type="vertical" />
+                                            </Col>
+                                            <Col xs={24} xl={12} style={{ textAlign: "center" }}>
+                                                <Button type="link" icon={<ShopOutlined />}>
+                                                    Salonu Görüntüle
+                                                        </Button>
+                                            </Col>
 
-                                </Row>
+                                        </Row>
 
-                            </Card>
-                            <Card
-                                style={{ width: '80%', marginBottom: 20 }}
-                                cover={
-                                    <img
-                                        alt="example"
-                                        style={{ width: 262, height: 159 }}
-                                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                                    />
-                                }
-                                actions={[
-                                    <SettingOutlined key="setting" />,
-                                    <EditOutlined key="edit" />,
-                                    <EllipsisOutlined key="ellipsis" />,
-                                ]}
-                            >
-                                <Meta
-                                    avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-                                    title="Card title"
-                                    description="This is the description"
-                                />
-                            </Card>
-                            <Card
-                                style={{ width: '80%', marginBottom: 20 }}
-                                cover={
-                                    <img
-                                        alt="example"
-                                        style={{ width: 262, height: 159 }}
-                                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                                    />
-                                }
-                                actions={[
-                                    <SettingOutlined key="setting" />,
-                                    <EditOutlined key="edit" />,
-                                    <EllipsisOutlined key="ellipsis" />,
-                                ]}
-                            >
-                                <Meta
-                                    avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-                                    title="Card title"
-                                    description="This is the description"
-                                />
-                            </Card>
-                            <Card
-                                style={{ width: '80%', marginBottom: 20 }}
-                                cover={
-                                    <img
-                                        alt="example"
-                                        style={{ width: 262, height: 159 }}
-                                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                                    />
-                                }
-                                actions={[
-                                    <SettingOutlined key="setting" />,
-                                    <EditOutlined key="edit" />,
-                                    <EllipsisOutlined key="ellipsis" />,
-                                ]}
-                            >
-                                <Meta
-                                    avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-                                    title="Card title"
-                                    description="This is the description"
-                                />
-                            </Card>
+                                    </Card>
+                                ))
+
+                            }
+
+
+
                             <Pagination
                                 showSizeChanger
                                 onShowSizeChange={onShowSizeChange}
-                                defaultCurrent={3}
-                                total={500}
+                                defaultCurrent={1}
+                                total={pageCount}
                             />
                         </div>
                     </Content>
