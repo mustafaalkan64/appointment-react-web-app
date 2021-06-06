@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useHistory } from "react-router";
-import { Card, Image, AutoComplete, Row, Col, Skeleton, Button, Layout, Pagination, Select, Rate, Breadcrumb, Divider } from 'antd';
+import { Card, Image, AutoComplete, Row, Col, Skeleton, Button, Layout, Pagination, Select, Rate, Breadcrumb, Divider, Alert } from 'antd';
 import { EditOutlined, ShopOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
 import logo from "../../assets/img/logo-t1.svg";
@@ -8,7 +8,6 @@ import API from "../../api";
 import { imageUrlDirectory } from "../../constUrls";
 
 
-const { Meta } = Card;
 const { Header, Content, Footer } = Layout;
 // const { Text } = Typography;
 
@@ -32,8 +31,11 @@ export default function Home() {
     const [serviceResults, setServiceResults] = useState([]);
     const [filteredServiceResults, setFilteredServiceResults] = useState([]);
     const [selectedPlaceId, setSelectedPlaceId] = useState(null);
-    const [selectedServiceId, setSelectedServiceId] = useState(null);
+    const [selectedServiceId, setSelectedServiceId] = useState(0);
+    const [pageNumber, setPageNumber] = useState(1);
     const [pageCount, setPageCount] = useState(10);
+    const [sortValue, setSortValue] = useState(null);
+    const [hasSearched, setHasSearched] = useState(false);
 
     // const onExpand = (expandedKeysValue) => {
     //     console.log('onExpand', expandedKeysValue); // if not set autoExpandParent to false, if children expanded, parent can not collapse.
@@ -102,7 +104,7 @@ export default function Home() {
         getAllPlaces();
         getAllServices();
         // getServicesTree();
-    }, []);
+    }, [getAllPlaces, getAllServices]);
 
     const AutoCompleteOption = AutoComplete.Option;
 
@@ -117,15 +119,58 @@ export default function Home() {
         setFilteredPlaceResult(res);
     };
 
-    const search = async () => {
+    const search = useCallback(() => {
         setLoading(true);
         var searchModel = {
             Place: selectedPlaceId,
             Service: selectedServiceId,
-            Page: 1,
-            PageSize: 10
+            Page: pageNumber,
+            PageSize: 10,
+            SortValue: sortValue
         };
-        await API.get(`home/search`, { params: searchModel }, {
+        API.get(`home/search`, { params: searchModel }, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((res) => {
+                setSaloonResults(res.data.item1);
+                setPageCount(res.data.item2);
+                setLoading(false);
+                setHasSearched(true);
+            })
+            .catch((error) => {
+                console.log(error);
+                setLoading(false);
+            });
+    }, [pageNumber, selectedPlaceId, selectedServiceId, sortValue]);
+
+    const handleServiceSearch = (value) => {
+        let res = [];
+        if (!value) {
+            res = [];
+        } else {
+            res = serviceResults.filter((item) => item.value.toLocaleUpperCase('tr-TR').includes(value.toLocaleUpperCase('tr-TR')));
+        }
+
+        setFilteredServiceResults(res);
+    };
+
+    const onShowSizeChange = (current, pageSize) => {
+        console.log(current, pageSize);
+    }
+
+    const onPageChange = async (page) => {
+        setLoading(true);
+        setPageNumber(page);
+        var searchModel = {
+            Place: selectedPlaceId,
+            Service: selectedServiceId,
+            Page: page,
+            PageSize: 10,
+            SortValue: sortValue
+        };
+        API.get(`home/search`, { params: searchModel }, {
             headers: {
                 "Content-Type": "application/json",
             },
@@ -141,22 +186,7 @@ export default function Home() {
             });
     }
 
-    const handleServiceSearch = (value) => {
-        let res = [];
-        if (!value) {
-            res = [];
-        } else {
-            res = serviceResults.filter((item) => item.value.toLocaleUpperCase('tr-TR').includes(value.toLocaleUpperCase('tr-TR')));
-        }
-
-        setFilteredServiceResults(res);
-    };
-
-    function onShowSizeChange(current, pageSize) {
-        console.log(current, pageSize);
-    }
-
-    const onPlaceSearch = (value, option) => {
+    const onPlaceSearch = async (value, option) => {
         setSelectedPlaceId(option.key);
     };
 
@@ -165,7 +195,29 @@ export default function Home() {
     };
 
     const handleSortChange = useCallback((value) => {
-    }, []);
+        setSortValue(value);
+        var searchModel = {
+            Place: selectedPlaceId,
+            Service: selectedServiceId,
+            Page: pageNumber,
+            PageSize: 10,
+            SortValue: value
+        };
+        API.get(`home/search`, { params: searchModel }, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((res) => {
+                setSaloonResults(res.data.item1);
+                setPageCount(res.data.item2);
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.log(error);
+                setLoading(false);
+            });
+    }, [pageNumber, selectedPlaceId, selectedServiceId, sortValue]);
 
     return (
         <div>
@@ -259,7 +311,7 @@ export default function Home() {
                                     <Option key={"descByCommentCount"}>
                                         Yorum Sayısına Göre Azalan
                                         </Option>
-                                    <Option key={"descByPrice"}>
+                                    <Option key={"ascByPrice"}>
                                         Fiyatına Göre Artan
                                         </Option>
                                     <Option key={"descByPrice"}>
@@ -276,7 +328,7 @@ export default function Home() {
                                         <Skeleton active avatar />
                                     </div>
 
-                                ) : saloonResults.map((value) => (
+                                ) : ((saloonResults.length > 0) ? (saloonResults.map((value) => (
                                     <Card
                                         style={{ width: '80%', marginBottom: 20, height: '600' }}
                                     >
@@ -330,7 +382,12 @@ export default function Home() {
                                         </Row>
 
                                     </Card>
-                                ))
+                                ))) : (hasSearched ? (<Alert
+                                    message="Hata"
+                                    description="Sonuç Bulunamadı"
+                                    type="error"
+                                    showIcon
+                                />) : (<div></div>)))
 
                             }
 
@@ -338,6 +395,9 @@ export default function Home() {
 
                             <Pagination
                                 showSizeChanger
+                                onChange={onPageChange}
+                                defaultPageSize={10}
+                                style={{ marginTop: 10 }}
                                 onShowSizeChange={onShowSizeChange}
                                 defaultCurrent={1}
                                 total={pageCount}
