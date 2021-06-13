@@ -2,13 +2,12 @@ import React, { useState, useCallback, useEffect } from "react";
 import { useHistory } from "react-router";
 import { Card, Image, AutoComplete, Row, Col, Skeleton, Button, Layout, Pagination, Select, Rate, Breadcrumb, Divider, Alert } from 'antd';
 import { EditOutlined, ShopOutlined } from '@ant-design/icons';
-import { Link } from "react-router-dom";
-import logo from "../../assets/img/logo-t1.svg";
 import API from "../../api";
 import { imageUrlDirectory } from "../../constUrls";
+import MainHeader from "./MainHeader";
 
 
-const { Header, Content, Footer } = Layout;
+const { Content, Footer } = Layout;
 // const { Text } = Typography;
 
 
@@ -186,6 +185,10 @@ export default function Home() {
             });
     }
 
+    const redirectToSaloonDetailPage = (urlSaloonTitle) => {
+        history.push("/saloonDetail/" + urlSaloonTitle);
+    }
+
     const onPlaceSearch = async (value, option) => {
         setSelectedPlaceId(option.key);
     };
@@ -222,21 +225,7 @@ export default function Home() {
     return (
         <div>
             <Layout>
-                <Header className="header" style={{ backgroundColor: "#1890ff" }}>
-                    <div className="logo">
-                        <img src={logo} style={{
-                            float: "left",
-                            width: "202px",
-                            height: "75px"
-                        }} />
-                    </div>
-                    <div style={{
-                        float: "right"
-                    }}>
-                        <Link style={{ color: "white", marginRight: 10 }} to="/login">Giriş Yap</Link>
-                        <Button style={{ color: "#d46b08", borderColor: "#d46b08" }}>Üye Ol</Button>
-                    </div>
-                </Header>
+                <MainHeader></MainHeader>
                 <Content style={{ padding: '0 50px', marginTop: 10, marginLeft: '10%' }}>
                     {/* <Layout className="site-layout-background" style={{ padding: '24px 0' }}>
                         <Sider className="site-layout-background" width={200} style={{ backgroundColor: "white" }}>
@@ -257,153 +246,151 @@ export default function Home() {
                                 <Button type="primary" style={{ paddingBottom: 10, marginLeft: 5, width: '94%' }} block>Ara</Button>
                             </div>
                         </Sider> */}
-                    <Content style={{ padding: '0 24px', minHeight: 280 }}>
 
-                        <div className="site-layout-content">
-                            <Row style={{ marginBottom: 10 }}>
-                                <Col>
-                                    <AutoComplete
-                                        style={{ width: 300, marginRight: 10 }}
-                                        onSearch={handlePlaceSearch}
-                                        onSelect={onPlaceSearch}
-                                        showSearch
-                                        placeholder="İl, İlçe veya Bölge Giriniz"
-                                    >
-                                        {filteredPlaceResult.map(({ key, value }) => (
-                                            <AutoCompleteOption key={key} value={value}>
-                                                {value}
-                                            </AutoCompleteOption>
-                                        ))}
-                                    </AutoComplete>
-                                </Col>
-                                <Col>
-                                    <AutoComplete
-                                        style={{ width: 300, marginRight: 10 }}
-                                        placeholder="Almak İstediğiniz Hizmeti Giriniz"
-                                        onSearch={handleServiceSearch}
-                                        onSelect={onServiceSearch}
-                                        showSearch
-                                    >
-                                        {filteredServiceResults.map(({ key, value }) => (
-                                            <Option key={key} value={value}>
-                                                {value}
-                                            </Option>
-                                        ))}
-                                    </AutoComplete>
-                                </Col>
-                                <Col>
-                                    <Button onClick={() => search()} style={{ width: 100, marginRight: 10, backgroundColor: "#d46b08", color: "white" }}>Ara</Button>
-                                </Col>
-                                <Select
+                    <div className="site-layout-content">
+                        <Row style={{ marginBottom: 10 }}>
+                            <Col>
+                                <AutoComplete
                                     style={{ width: 300, marginRight: 10 }}
-                                    defaultValue="Seçiniz"
-                                    onChange={handleSortChange}
+                                    onSearch={handlePlaceSearch}
+                                    onSelect={onPlaceSearch}
+                                    showSearch
+                                    placeholder="İl, İlçe veya Bölge Giriniz"
                                 >
-                                    <Option key={"ascByPoint"}>
-                                        Puana Göre Artan
+                                    {filteredPlaceResult.map(({ key, value }) => (
+                                        <AutoCompleteOption key={key} value={value}>
+                                            {value}
+                                        </AutoCompleteOption>
+                                    ))}
+                                </AutoComplete>
+                            </Col>
+                            <Col>
+                                <AutoComplete
+                                    style={{ width: 300, marginRight: 10 }}
+                                    placeholder="Almak İstediğiniz Hizmeti Giriniz"
+                                    onSearch={handleServiceSearch}
+                                    onSelect={onServiceSearch}
+                                    showSearch
+                                >
+                                    {filteredServiceResults.map(({ key, value }) => (
+                                        <Option key={key} value={value}>
+                                            {value}
                                         </Option>
-                                    <Option key={"descByPoint"}>
-                                        Puana Göre Azalan
+                                    ))}
+                                </AutoComplete>
+                            </Col>
+                            <Col>
+                                <Button onClick={() => search()} style={{ width: 100, marginRight: 10, backgroundColor: "#d46b08", color: "white" }}>Ara</Button>
+                            </Col>
+                            <Select
+                                style={{ width: 300, marginRight: 10 }}
+                                defaultValue="Seçiniz"
+                                onChange={handleSortChange}
+                            >
+                                <Option key={"ascByPoint"}>
+                                    Puana Göre Artan
                                         </Option>
-                                    <Option key={"ascByCommentCount"}>
-                                        Yorum Sayısına Göre Artan
+                                <Option key={"descByPoint"}>
+                                    Puana Göre Azalan
                                         </Option>
-                                    <Option key={"descByCommentCount"}>
-                                        Yorum Sayısına Göre Azalan
+                                <Option key={"ascByCommentCount"}>
+                                    Yorum Sayısına Göre Artan
                                         </Option>
-                                    <Option key={"ascByPrice"}>
-                                        Fiyatına Göre Artan
+                                <Option key={"descByCommentCount"}>
+                                    Yorum Sayısına Göre Azalan
                                         </Option>
-                                    <Option key={"descByPrice"}>
-                                        Fiyatına Göre Azalan
+                                <Option key={"ascByPrice"}>
+                                    Fiyatına Göre Artan
                                         </Option>
-                                </Select>
-                            </Row>
-                            {
-                                loading ? (
-                                    <div>
-                                        <Skeleton active avatar />
-                                        <Skeleton active avatar />
-                                        <Skeleton active avatar />
-                                        <Skeleton active avatar />
-                                    </div>
+                                <Option key={"descByPrice"}>
+                                    Fiyatına Göre Azalan
+                                        </Option>
+                            </Select>
+                        </Row>
+                        {
+                            loading ? (
+                                <div>
+                                    <Skeleton active avatar />
+                                    <Skeleton active avatar />
+                                    <Skeleton active avatar />
+                                    <Skeleton active avatar />
+                                </div>
 
-                                ) : ((saloonResults.length > 0) ? (saloonResults.map((value) => (
-                                    <Card
-                                        style={{ width: '80%', marginBottom: 20, height: '600' }}
-                                    >
-                                        <Row>
-                                            <Col xs={24} xl={8} style={{ paddingRight: "10px" }}>
-                                                <Image
-                                                    alt="example"
-                                                    style={{ width: "100%", height: "130px" }}
-                                                    // src={imageUrlDirectory + "empty-img.png"}
-                                                    src={imageUrlDirectory + value.image}
-                                                />
-                                            </Col>
-                                            <Col xs={24} xl={16} marginTop={10} marginLeft={10}>
-                                                <Row >
-                                                    <Col xs={24} xl={16} style={{ float: "left" }} className="ant-card-meta-title">{value.saloonHeader}</Col>
-                                                    <Col xs={24} xl={8}><Rate allowHalf defaultValue={value.rate} /></Col>
-                                                </Row>
-                                                <Row>
-                                                    <Col><Breadcrumb>
-                                                        <Breadcrumb.Item>{value.city}</Breadcrumb.Item>
-                                                        <Breadcrumb.Item>
-                                                            {value.district}
-                                                        </Breadcrumb.Item>
-                                                        <Breadcrumb.Item>{value.zone}</Breadcrumb.Item>
-                                                        <Breadcrumb.Item>{value.serviceName}</Breadcrumb.Item>
-                                                    </Breadcrumb></Col>
-                                                </Row>
+                            ) : ((saloonResults.length > 0) ? (saloonResults.map((value) => (
+                                <Card
+                                    style={{ width: '80%', marginBottom: 20, height: '600' }}
+                                >
+                                    <Row>
+                                        <Col xs={24} xl={8} style={{ paddingRight: "10px" }}>
+                                            <Image
+                                                alt="example"
+                                                style={{ width: "100%", height: "130px" }}
+                                                // src={imageUrlDirectory + "empty-img.png"}
+                                                src={imageUrlDirectory + value.image}
+                                            />
+                                        </Col>
+                                        <Col xs={24} xl={16} marginTop={10} marginLeft={10}>
+                                            <Row >
+                                                <Col xs={24} xl={16} style={{ float: "left" }} className="ant-card-meta-title">{value.saloonHeader}</Col>
+                                                <Col xs={24} xl={8}><Rate allowHalf defaultValue={value.rate} /></Col>
+                                            </Row>
+                                            <Row>
+                                                <Col><Breadcrumb>
+                                                    <Breadcrumb.Item>{value.city}</Breadcrumb.Item>
+                                                    <Breadcrumb.Item>
+                                                        {value.district}
+                                                    </Breadcrumb.Item>
+                                                    <Breadcrumb.Item>{value.zone}</Breadcrumb.Item>
+                                                    <Breadcrumb.Item>{value.serviceName}</Breadcrumb.Item>
+                                                </Breadcrumb></Col>
+                                            </Row>
 
-                                                <Row style={{ marginTop: 15 }}><Col className="ant-card-meta-description">{value.saloonDescription}</Col></Row>
-                                                <Row style={{ marginTop: 15 }}>
-                                                    <Col>
-                                                        <text style={{ fontWeight: 500 }}>Fiyat: {value.price} tl</text>
-                                                    </Col>
-                                                </Row>
-                                            </Col>
-                                        </Row>
+                                            <Row style={{ marginTop: 15 }}><Col className="ant-card-meta-description">{value.saloonDescription}</Col></Row>
+                                            <Row style={{ marginTop: 15 }}>
+                                                <Col>
+                                                    <text style={{ fontWeight: 500 }}>Fiyat: {value.price} tl</text>
+                                                </Col>
+                                            </Row>
+                                        </Col>
+                                    </Row>
 
-                                        <Row style={{ height: 25, borderTop: "1px solid #f0f0f0", paddingTop: 5, marginTop: 10 }}>
-                                            <Col xs={24} xl={12} style={{ textAlign: "center" }}>
-                                                <Button type="link" icon={<EditOutlined />}>
-                                                    Randevu Oluştur
+                                    <Row style={{ height: 25, borderTop: "1px solid #f0f0f0", paddingTop: 5, marginTop: 10 }}>
+                                        <Col xs={24} xl={12} style={{ textAlign: "center" }}>
+                                            <Button type="link" icon={<EditOutlined />}>
+                                                Randevu Oluştur
                                                         </Button>
-                                                <Divider type="vertical" />
-                                            </Col>
-                                            <Col xs={24} xl={12} style={{ textAlign: "center" }}>
-                                                <Button type="link" icon={<ShopOutlined />}>
-                                                    Salonu Görüntüle
+                                            <Divider type="vertical" />
+                                        </Col>
+                                        <Col xs={24} xl={12} style={{ textAlign: "center" }}>
+                                            <Button type="link" icon={<ShopOutlined />} onClick={() => redirectToSaloonDetailPage(value.urlSaloonTitle)}>
+                                                Salonu Görüntüle
                                                         </Button>
-                                            </Col>
+                                        </Col>
 
-                                        </Row>
+                                    </Row>
 
-                                    </Card>
-                                ))) : (hasSearched ? (<Alert
-                                    message="Hata"
-                                    description="Sonuç Bulunamadı"
-                                    type="error"
-                                    showIcon
-                                />) : (<div></div>)))
+                                </Card>
+                            ))) : (hasSearched ? (<Alert
+                                message="Hata"
+                                description="Sonuç Bulunamadı"
+                                type="error"
+                                showIcon
+                            />) : (<div></div>)))
 
-                            }
+                        }
 
 
 
-                            <Pagination
-                                showSizeChanger
-                                onChange={onPageChange}
-                                defaultPageSize={10}
-                                style={{ marginTop: 10 }}
-                                onShowSizeChange={onShowSizeChange}
-                                defaultCurrent={1}
-                                total={pageCount}
-                            />
-                        </div>
-                    </Content>
+                        <Pagination
+                            showSizeChanger
+                            onChange={onPageChange}
+                            defaultPageSize={10}
+                            style={{ marginTop: 10 }}
+                            onShowSizeChange={onShowSizeChange}
+                            defaultCurrent={1}
+                            total={pageCount}
+                        />
+                    </div>
                     {/* </Layout> */}
 
                 </Content>

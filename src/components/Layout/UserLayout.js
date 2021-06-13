@@ -27,8 +27,8 @@ import UserSettings from "../User/UserSettings";
 import { Layout, Breadcrumb } from "antd";
 import ShopAppointmentCalender from "../Shop/ShopAppointmentCalender";
 import SaloonPersonels from "../Shop/SaloonPersonels";
-import AddOrUpdateSaloonPersons from "../Shop/SaveSaloonPerson";
 import SaveSaloonPersons from "../Shop/SaveSaloonPerson";
+import SaloonPage from "../Common/SaloonPage"
 
 const { Sider, Content } = Layout;
 
@@ -48,6 +48,7 @@ export default function UserLayout() {
     <div>
       <Switch>
         <Route exact path="/home" component={Home} />
+        <Route exact path="/saloonDetail/:saloonUrl" component={SaloonPage} />
         <Route exact path="/login" component={UserLogin} />
         <Route exact path="/signup" component={UserRegister} />
         <Route exact path="/shopSignup" component={ShopRegister} />
