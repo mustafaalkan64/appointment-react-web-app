@@ -16,13 +16,7 @@ export default function Home() {
     const history = useHistory();
     const { Option } = Select;
 
-
-    // const [expandedKeys, setExpandedKeys] = useState([]);
-    // const [checkedKeys, setCheckedKeys] = useState([]);
-    // const [selectedKeys, setSelectedKeys] = useState([]);
-    // const [autoExpandParent, setAutoExpandParent] = useState(true);
     const [filteredPlaceResult, setFilteredPlaceResult] = useState([]);
-    // const [treeData, setTreeData] = useState([]);
     const [placeResults, setPlaceResults] = useState([]);
     const [saloonResults, setSaloonResults] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -35,24 +29,6 @@ export default function Home() {
     const [pageCount, setPageCount] = useState(10);
     const [sortValue, setSortValue] = useState(null);
     const [hasSearched, setHasSearched] = useState(false);
-
-    // const onExpand = (expandedKeysValue) => {
-    //     console.log('onExpand', expandedKeysValue); // if not set autoExpandParent to false, if children expanded, parent can not collapse.
-    //     // or, you can remove all expanded children keys.
-
-    //     setExpandedKeys(expandedKeysValue);
-    //     setAutoExpandParent(false);
-    // };
-
-    // const onCheck = (checkedKeysValue) => {
-    //     console.log('onCheck', checkedKeysValue);
-    //     setCheckedKeys(checkedKeysValue);
-    // };
-
-    // const onSelect = (selectedKeysValue, info) => {
-    //     console.log('onSelect', info);
-    //     setSelectedKeys(selectedKeysValue);
-    // };
 
     const getAllPlaces = useCallback(async () => {
         await API.get(`place/getAllPlaces`, {
@@ -84,25 +60,9 @@ export default function Home() {
     });
 
 
-    // const getServicesTree = useCallback(async () => {
-    //     await API.get(`categories/getAllServicesTree`, {
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         },
-    //     })
-    //         .then((res) => {
-    //             setTreeData(res.data);
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
-    // });
-
-
     useEffect(async () => {
         getAllPlaces();
         getAllServices();
-        // getServicesTree();
     }, [getAllPlaces, getAllServices]);
 
     const AutoCompleteOption = AutoComplete.Option;
@@ -227,25 +187,6 @@ export default function Home() {
             <Layout>
                 <MainHeader></MainHeader>
                 <Content style={{ padding: '0 50px', marginTop: 10, marginLeft: '10%' }}>
-                    {/* <Layout className="site-layout-background" style={{ padding: '24px 0' }}>
-                        <Sider className="site-layout-background" width={200} style={{ backgroundColor: "white" }}>
-                            <div>
-                                <div style={{ textAlign: "left", padding: '0 50px', marginTop: 10 }}> <Text className="ant-card-meta-title">Hizmetler</Text></div>
-                                <Tree
-                                    checkable
-                                    onExpand={onExpand}
-                                    expandedKeys={expandedKeys}
-                                    autoExpandParent={autoExpandParent}
-                                    onCheck={onCheck}
-                                    checkedKeys={checkedKeys}
-                                    onSelect={onSelect}
-                                    selectedKeys={selectedKeys}
-                                    treeData={treeData}
-                                    style={{ marginTop: 10, marginBottom: 10 }}
-                                />
-                                <Button type="primary" style={{ paddingBottom: 10, marginLeft: 5, width: '94%' }} block>Ara</Button>
-                            </div>
-                        </Sider> */}
 
                     <div className="site-layout-content">
                         <Row style={{ marginBottom: 10 }}>
