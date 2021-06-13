@@ -8,7 +8,6 @@ import API from "../../api";
 import { useHistory } from "react-router";
 import { imageUrlDirectory } from "../../constUrls";
 import { cardStyle, headStyle } from "../../assets/styles/styles";
-import { render } from '@testing-library/react';
 
 const { Content, Footer } = Layout;
 
@@ -21,6 +20,7 @@ const SaloonPage = () => {
     const [saloonInformation, setSaloonInformation] = useState({});
     const [rate, setRate] = useState(5);
     const [modifiedCollection, setModifiedCollection] = useState([]);
+
 
     useEffect(() => {
         debugger;
@@ -38,6 +38,13 @@ const SaloonPage = () => {
                     setLogo(imageUrlDirectory + res.data.logoUrl);
                     setRate(res.data.averagePoint);
                     setLoading(false);
+                    if (res.data.shopImages.length > 0) {
+                        let modifiedCollections = res.data.shopImages.reduce((rows, key, index) => {
+                            return (index % 6 === 0 ? rows.push([key])
+                                : rows[rows.length - 1].push(key)) && rows;
+                        }, []);
+                        setModifiedCollection(modifiedCollections);
+                    }
                 })
                 .catch((error) => {
                     debugger;
@@ -93,15 +100,28 @@ const SaloonPage = () => {
                             style={cardStyle}
                             headStyle={headStyle}>
 
-                            <List
-                                grid={{ gutter: 16, column: 4 }}
+                            {
+                                modifiedCollection.map((row) =>
+                                    <Row gutter={16} style={{ marginTop: 10 }}>
+                                        {row.map(image => (
+                                            <Col span={4}>
+                                                <Image.PreviewGroup key={"preview-image-" + image.id}> <Image style={{ width: '100%', height: "140px" }}
+                                                    key={"image-" + image.id} src={imageUrlDirectory + image.imageUrl} /></Image.PreviewGroup>
+                                            </Col>))}
+                                    </Row>
+                                )
+                            }
+
+                            {/* <List
+                                itemLayout="horizontal"
+                                grid={{ gutter: 24, column: 4 }}
                                 dataSource={saloonInformation.shopImages}
                                 renderItem={image => (
                                     <List.Item>
                                         <Card><Image.PreviewGroup key={"preview-image-" + image.id}> <Image style={{ width: "100%", height: "140px" }} key={"image-" + image.id} src={imageUrlDirectory + image.imageUrl} /></Image.PreviewGroup></Card>
                                     </List.Item>
                                 )}
-                            />
+                            /> */}
                         </Card>
                         <Card title="Verdiğimiz Hizmetler"
                             hoverable
@@ -131,7 +151,7 @@ const SaloonPage = () => {
                 </Content>
                 <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
             </Layout >
-        </div>
+        </div >
     );
 };
 
