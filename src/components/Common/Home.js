@@ -60,10 +60,10 @@ export default function Home() {
     });
 
 
-    useEffect(async () => {
+    useEffect(() => {
         getAllPlaces();
         getAllServices();
-    }, [getAllPlaces, getAllServices]);
+    }, []);
 
     const AutoCompleteOption = AutoComplete.Option;
 
