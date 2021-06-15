@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Layout, message, Row, Col, Image, Rate, List, Skeleton, Breadcrumb } from 'antd';
+import { Card, Layout, message, Row, Col, Image, Rate, List, Skeleton, Breadcrumb, Pagination, Anchor } from 'antd';
 import MainHeader from "./MainHeader";
 import {
     useParams
@@ -9,31 +9,62 @@ import { useHistory } from "react-router";
 import { imageUrlDirectory } from "../../constUrls";
 import { cardStyle, headStyle } from "../../assets/styles/styles";
 
+const { Link } = Anchor;
+
 const { Content, Footer } = Layout;
 
 const SaloonPage = () => {
     let { saloonUrl } = useParams();
     const [loading, setLoading] = useState(false);
-    const history = useHistory();
+    const [commentLoading, setCommentLoading] = useState(false);
+    // const history = useHistory();
     const [logo, setLogo] = useState("");
-    const [shopId, setShopId] = useState(null);
+    const [saloonId, setSaloonId] = useState(null);
     const [saloonInformation, setSaloonInformation] = useState({});
+    const [comments, setComments] = useState([]);
     const [rate, setRate] = useState(5);
     const [modifiedCollection, setModifiedCollection] = useState([]);
+    const getCurrentAnchor = () => '#components-anchor-demo-static';
+    const [page, setPage] = useState(1);
+    const pageSize = 5;
+    const [totalCount, setTotalCount] = useState([]);
+
+    function onChange(pageNumber) {
+        setCommentLoading(true);
+        setPage(pageNumber);
+        API.get(`shop/getComments/${saloonId}/${pageSize}/${pageNumber}`, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((res) => {
+                setComments(res.data.item1.map((item, i) => item.notificationText));
+                setTotalCount(res.data.item2);
+                setCommentLoading(false);
+            })
+            .catch((error) => {
+                message.error(error.response.data);
+                setCommentLoading(false);
+            });
+    }
+
+    function showTotal(total) {
+        return `Total ${total} items`;
+    }
 
 
-    useEffect(() => {
-        debugger;
-        const getShopDetail = () => {
+    useEffect(async () => {
+        let saloonId = 0;
+        const getShopDetail = async () => {
             setLoading(true);
-            API.get(`shop/getSaloonDetails?saloonTitle=${saloonUrl}`, {
+            await API.get(`shop/getSaloonDetails?saloonTitle=${saloonUrl}`, {
                 headers: {
                     "Content-Type": "application/json",
                 },
             })
                 .then((res) => {
-                    debugger;
-                    setShopId(res.data.id);
+                    setSaloonId(res.data.id);
+                    saloonId = res.data.id;
                     setSaloonInformation(res.data);
                     setLogo(imageUrlDirectory + res.data.logoUrl);
                     setRate(res.data.averagePoint);
@@ -52,9 +83,30 @@ const SaloonPage = () => {
                     setLoading(false);
                 });
         };
-        getShopDetail();
+
+        const getComments = async () => {
+            setCommentLoading(true);
+            const pageNumber = 1;
+            setPage(pageNumber);
+            await API.get(`comments/getComments/${saloonId}/${pageSize}/${pageNumber}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((res) => {
+                    setComments(res.data.item1.map((item, i) => item));
+                    setTotalCount(res.data.item2);
+                    setCommentLoading(false);
+                })
+                .catch((error) => {
+                    message.error(error.response.data);
+                    setCommentLoading(false);
+                });
+        }
+        await getShopDetail();
+        await getComments();
     }, [
-        saloonUrl,
+
     ]);
 
     return (
@@ -98,11 +150,18 @@ const SaloonPage = () => {
                                                     </Breadcrumb.Item>
                                                     <Breadcrumb.Item>{saloonInformation.zoneName}</Breadcrumb.Item>
                                                 </Breadcrumb></Col>
-                                            <Col xs={24} xl={8}>{saloonInformation.commentCount == 0 ? (<div>Henüz Yorum Yapılmamış</div>) : (<div>Yorum Sayısı: {saloonInformation.commentCount}</div>)}</Col>
+                                            <Col xs={24} xl={8}>
+                                                <Anchor affix={false} getCurrentAnchor={getCurrentAnchor}>
+                                                    <Link href="#comments" title={saloonInformation.commentCount == 0 ? (<div>Henüz Yorum Yapılmamış</div>) : (<div>Yorum Sayısı: {saloonInformation.commentCount}</div>)} />
+                                                </Anchor></Col>
                                         </Row>
 
                                         <Row style={{ marginTop: 15 }}>
                                             <Col className="ant-card-meta-description">{saloonInformation.shopDescription}</Col>
+                                        </Row>
+                                        <Row>
+                                            <Col>
+                                            </Col>
                                         </Row>
                                     </Col>
                                 </Row>
@@ -114,7 +173,10 @@ const SaloonPage = () => {
 
                                         </Row>
                                         <Row>
-                                            <Col xs={24} xl={16} style={{ float: "left" }}><b>Cep Telefon:</b> {saloonInformation.mobilePhone}</Col>
+                                            <Col xs={24} xl={16} style={{ float: "left" }}><b>Mobil Telefon:</b> {saloonInformation.mobilePhone}</Col>
+                                        </Row>
+                                        <Row>
+                                            <Col xs={24} xl={16} style={{ float: "left" }}><b>Web Adresi:</b> <a href={saloonInformation.webSite}>{saloonInformation.webSite}</a> </Col>
                                         </Row>
                                         <Row>
                                             <Col xs={24} xl={16} style={{ float: "left" }}><b>Email:</b> {saloonInformation.email}</Col>
@@ -224,7 +286,34 @@ const SaloonPage = () => {
                             </Card>
                         )}
 
+                        <div id="comments">
+
+                            {commentLoading ? (
+                                <div className="spinClass">
+                                    <Skeleton active />
+                                    <Skeleton active />
+                                    <Skeleton active />
+                                </div>
+                            ) : (
+                                <Card title="Yorumlar"
+                                    hoverable
+                                    bordered={true}
+                                    style={cardStyle}
+                                    headStyle={headStyle}>
+                                    <List
+                                        size="large"
+                                        style={{ backgroundColor: "white", width: "100%" }}
+                                        footer={<Pagination defaultCurrent={page} defaultPageSize={pageSize} showTotal={showTotal} total={totalCount} onChange={onChange} />}
+                                        bordered
+                                        dataSource={comments}
+                                        renderItem={item => <List.Item>{item}</List.Item>}
+                                    />
+                                </Card>
+                            )}
+                        </div>
+
                     </div>
+
 
                 </Content>
                 <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
