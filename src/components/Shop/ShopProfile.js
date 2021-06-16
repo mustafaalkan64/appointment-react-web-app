@@ -76,7 +76,7 @@ const ShopProfile = () => {
           message.error(error.response.data);
         } else {
           message.error(
-            "Şüpheli karakterler tespit edildi. < > & gibi karakterleri kaldırıp lütfen tekrar deneyiniz."
+            "Güncelleme Esnasında Hata ile Karşılaşıldı!"
           );
         }
         setLoading(false);

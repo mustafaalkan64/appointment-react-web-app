@@ -174,7 +174,7 @@ export default function MyAppointments(props) {
     var minutes = d.getMinutes();
     var hour = d.getHours();
 
-    var newdate = `${day}.${month}.${year} ${hour}:${minutes}`;
+    var newdate = `${("0" + day).slice(-2)}.${("0" + month).slice(-2)}.${year} ${("0" + hour).slice(-2)}:${("0" + minutes).slice(-2)}`;
     return newdate;
   };
 

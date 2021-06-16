@@ -5,19 +5,38 @@ import {
     useParams
 } from "react-router-dom";
 import API from "../../api";
-import { useHistory } from "react-router";
 import { imageUrlDirectory } from "../../constUrls";
 import { cardStyle, headStyle } from "../../assets/styles/styles";
+import { Form, Input, Button } from 'antd';
+const layout = {
+    labelCol: {
+        span: 2,
+    },
+    wrapperCol: {
+        span: 16,
+    },
+};
 
 const { Link } = Anchor;
 
 const { Content, Footer } = Layout;
+const validateMessages = {
+    required: '${label} Alanı Zorunludur!',
+    types: {
+        email: '${label} is not a valid email!',
+        number: '${label} is not a valid number!',
+    },
+    number: {
+        range: '${label} must be between ${min} and ${max}',
+    },
+};
 
 const SaloonPage = () => {
     let { saloonUrl } = useParams();
     const [loading, setLoading] = useState(false);
     const [commentLoading, setCommentLoading] = useState(false);
     // const history = useHistory();
+    const token = localStorage.getItem("auth_token");
     const [logo, setLogo] = useState("");
     const [saloonId, setSaloonId] = useState(null);
     const [saloonInformation, setSaloonInformation] = useState({});
@@ -51,6 +70,38 @@ const SaloonPage = () => {
     function showTotal(total) {
         return `Total ${total} items`;
     }
+
+    const onFinish = async (values) => {
+        console.log(values);
+        var commentModel = {
+            Header: values.header,
+            Rate: values.rate,
+            Body: values.body,
+            SaloonId: saloonId
+        };
+
+        setCommentLoading(true);
+        await API.post(`comments/saveComment`, commentModel, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        })
+            .then((res) => {
+                message.success("Yorumunuz Kaydedildi. Onay İçin Beklemektedir!");
+                setCommentLoading(false);
+            })
+            .catch((error) => {
+                debugger;
+                if (error.response.status === 401) {
+                    message.error("Yorum Yapabilmeniz İçin Kullanıcı Girişi Yapmanız Gerekmektedir!");
+                } else {
+                    message.error(error.response.data);
+                }
+                setCommentLoading(false);
+            });
+
+    };
 
 
     useEffect(async () => {
@@ -108,6 +159,19 @@ const SaloonPage = () => {
     }, [
 
     ]);
+
+    const convertToFullDate = (datetime) => {
+        var d = new Date(datetime);
+        var month = d.getUTCMonth() + 1; //months from 1-12
+        var day = d.getDate();
+        var year = d.getUTCFullYear();
+
+        var minutes = d.getMinutes();
+        var hour = d.getHours();
+
+        var newdate = `${("0" + day).slice(-2)}.${("0" + month).slice(-2)}.${year} ${("0" + hour).slice(-2)}:${("0" + minutes).slice(-2)}`;
+        return newdate;
+    };
 
     return (
         <div>
@@ -288,6 +352,8 @@ const SaloonPage = () => {
 
                         <div id="comments">
 
+
+
                             {commentLoading ? (
                                 <div className="spinClass">
                                     <Skeleton active />
@@ -300,13 +366,58 @@ const SaloonPage = () => {
                                     bordered={true}
                                     style={cardStyle}
                                     headStyle={headStyle}>
+                                    <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
+                                        <Form.Item
+                                            wrapperCol={{ ...layout.wrapperCol, offset: 2 }}
+                                            name={'rate'}
+                                        >
+                                            <Rate allowHalf />
+                                        </Form.Item>
+                                        <Form.Item
+                                            name={'header'}
+                                            label="Başlık"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                },
+                                            ]}
+                                        >
+                                            <Input />
+                                        </Form.Item>
+
+                                        <Form.Item name={'body'} label="Açıklama" rules={[
+                                            {
+                                                required: true,
+                                            },
+                                        ]}>
+                                            <Input.TextArea />
+                                        </Form.Item>
+                                        <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 2 }}>
+                                            <Button type="primary" htmlType="submit">
+                                                Paylaş
+                                            </Button>
+                                        </Form.Item>
+                                    </Form>
                                     <List
                                         size="large"
                                         style={{ backgroundColor: "white", width: "100%" }}
                                         footer={<Pagination defaultCurrent={page} defaultPageSize={pageSize} showTotal={showTotal} total={totalCount} onChange={onChange} />}
                                         bordered
                                         dataSource={comments}
-                                        renderItem={item => <List.Item>{item}</List.Item>}
+                                        renderItem={item => (
+
+                                            <List.Item key={item.id} actions={[
+                                                <Rate allowHalf value={item.rate}></Rate>
+                                            ]}
+                                            >
+                                                <List.Item.Meta
+                                                    title={item.userFullName}
+                                                    description={item.commentHeader}
+                                                />
+                                                {item.commentBody} <br />
+                                                {convertToFullDate(item.commentDate)}
+                                            </List.Item>
+                                        )}
                                     />
                                 </Card>
                             )}
