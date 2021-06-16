@@ -115,10 +115,9 @@ const SaloonPage = () => {
             })
                 .then((res) => {
                     setSaloonId(res.data.id);
-                    saloonId = res.data.id;
+                    saloonId = res.data.id; //local saloonId
                     setSaloonInformation(res.data);
                     setLogo(imageUrlDirectory + res.data.logoUrl);
-                    setRate(res.data.averagePoint);
                     setLoading(false);
                     if (res.data.shopImages.length > 0) {
                         let modifiedCollections = res.data.shopImages.reduce((rows, key, index) => {
@@ -154,8 +153,24 @@ const SaloonPage = () => {
                     setCommentLoading(false);
                 });
         }
+
+        const getCommentsRateAverage = async () => {
+
+            await API.get(`comments/getCommentsRateAverage/${saloonId}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((res) => {
+                    setRate(res.data);
+                })
+                .catch((error) => {
+                    message.error(error.response.data);
+                });
+        }
         await getShopDetail();
         await getComments();
+        await getCommentsRateAverage();
     }, [
 
     ]);
@@ -203,7 +218,7 @@ const SaloonPage = () => {
                                     <Col xs={24} xl={18} marginTop={10} marginLeft={10}>
                                         <Row >
                                             <Col xs={24} xl={16} style={{ float: "left" }} className="ant-card-meta-title">{saloonInformation.shopTitle}</Col>
-                                            <Col xs={24} xl={8}><Rate allowHalf defaultValue={4.5} /></Col>
+                                            <Col xs={24} xl={8}><Rate allowHalf defaultValue={rate} /></Col>
                                         </Row>
                                         <Row >
                                             <Col xs={24} xl={16} style={{ float: "left" }} className="ant-card-meta-title">
@@ -216,7 +231,7 @@ const SaloonPage = () => {
                                                 </Breadcrumb></Col>
                                             <Col xs={24} xl={8}>
                                                 <Anchor affix={false} getCurrentAnchor={getCurrentAnchor}>
-                                                    <Link href="#comments" title={saloonInformation.commentCount == 0 ? (<div>Henüz Yorum Yapılmamış</div>) : (<div>Yorum Sayısı: {saloonInformation.commentCount}</div>)} />
+                                                    <Link href="#comments" title={comments.length == 0 ? (<div>Henüz Yorum Yapılmamış</div>) : (<div>Yorum Sayısı: {comments.length}</div>)} />
                                                 </Anchor></Col>
                                         </Row>
 
