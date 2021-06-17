@@ -41,7 +41,7 @@ const SaloonPage = () => {
     const [saloonId, setSaloonId] = useState(null);
     const [saloonInformation, setSaloonInformation] = useState({});
     const [comments, setComments] = useState([]);
-    const [rate, setRate] = useState(5);
+    const [rate, setRate] = useState(null);
     const [modifiedCollection, setModifiedCollection] = useState([]);
     const getCurrentAnchor = () => '#components-anchor-demo-static';
     const [page, setPage] = useState(1);
@@ -73,6 +73,10 @@ const SaloonPage = () => {
 
     const onFinish = async (values) => {
         console.log(values);
+        if (values.rate == undefined || values.rate == 0) {
+            message.error("Lütfen salonu puanlayın");
+            return false;
+        }
         var commentModel = {
             Header: values.header,
             Rate: values.rate,
@@ -88,11 +92,10 @@ const SaloonPage = () => {
             },
         })
             .then((res) => {
-                message.success("Yorumunuz Kaydedildi. Onay İçin Beklemektedir!");
+                message.success("Yorumunuz Kaydedildi. Onaylandıktan Sonra Yorumunuz Görünecektir!");
                 setCommentLoading(false);
             })
             .catch((error) => {
-                debugger;
                 if (error.response.status === 401) {
                     message.error("Yorum Yapabilmeniz İçin Kullanıcı Girişi Yapmanız Gerekmektedir!");
                 } else {
@@ -115,7 +118,7 @@ const SaloonPage = () => {
             })
                 .then((res) => {
                     setSaloonId(res.data.id);
-                    saloonId = res.data.id; //local saloonId
+                    saloonId = res.data.id; //local saloonId (let ile yukarıda tanımlanmış)
                     setSaloonInformation(res.data);
                     setLogo(imageUrlDirectory + res.data.logoUrl);
                     setLoading(false);
@@ -171,9 +174,7 @@ const SaloonPage = () => {
         await getShopDetail();
         await getComments();
         await getCommentsRateAverage();
-    }, [
-
-    ]);
+    }, [rate, totalCount]);
 
     const convertToFullDate = (datetime) => {
         var d = new Date(datetime);
@@ -231,7 +232,7 @@ const SaloonPage = () => {
                                                 </Breadcrumb></Col>
                                             <Col xs={24} xl={8}>
                                                 <Anchor affix={false} getCurrentAnchor={getCurrentAnchor}>
-                                                    <Link href="#comments" title={comments.length == 0 ? (<div>Henüz Yorum Yapılmamış</div>) : (<div>Yorum Sayısı: {comments.length}</div>)} />
+                                                    <Link href="#comments" title={totalCount == 0 ? (<div>Henüz Yorum Yapılmamış</div>) : (<div>Yorum Sayısı: {totalCount}</div>)} />
                                                 </Anchor></Col>
                                         </Row>
 
@@ -247,21 +248,26 @@ const SaloonPage = () => {
                                 <Row style={{ marginTop: "10px" }}>
                                     <Col xs={24} xl={18} marginLeft={10}>
                                         <Row >
-                                            <Col xs={24} xl={16} style={{ float: "left" }}><b>Telefon Numarmız:</b> {saloonInformation.phoneNumber}</Col>
-                                            <Col aria-colspan="3" xs={24} xl={2} style={{ float: "left" }} className="ant-card-meta-title"></Col>
+                                            <Col xs={24} xl={4} style={{ float: "left" }}><b>Telefon Numarmız:</b></Col>
+                                            <Col xs={24} xl={8} style={{ float: "left" }}>{saloonInformation.phoneNumber}</Col>
+                                            {/* <Col aria-colspan="3" xs={24} xl={2} style={{ float: "left" }} className="ant-card-meta-title"></Col> */}
 
                                         </Row>
                                         <Row>
-                                            <Col xs={24} xl={16} style={{ float: "left" }}><b>Mobil Telefon:</b> {saloonInformation.mobilePhone}</Col>
+                                            <Col xs={24} xl={4} style={{ float: "left" }}><b>Mobil Telefon:</b></Col>
+                                            <Col xs={24} xl={8} style={{ float: "left" }}>{saloonInformation.mobilePhone} </Col>
+                                        </Row>
+                                        <Row xs={24} xl={24}>
+                                            <Col xs={24} xl={4} style={{ float: "left" }}><b>Web Adresi:</b></Col>
+                                            <Col xs={24} xl={8} style={{ float: "left" }}> <a href={saloonInformation.webSite}>{saloonInformation.webSite}</a> </Col>
                                         </Row>
                                         <Row>
-                                            <Col xs={24} xl={16} style={{ float: "left" }}><b>Web Adresi:</b> <a href={saloonInformation.webSite}>{saloonInformation.webSite}</a> </Col>
+                                            <Col xs={24} xl={4} style={{ float: "left" }}><b>Email Adresimiz:</b></Col>
+                                            <Col xs={24} xl={8} style={{ float: "left" }}>{saloonInformation.email} </Col>
                                         </Row>
                                         <Row>
-                                            <Col xs={24} xl={16} style={{ float: "left" }}><b>Email:</b> {saloonInformation.email}</Col>
-                                        </Row>
-                                        <Row>
-                                            <Col xs={24} xl={16} style={{ float: "left" }}><b>Adres:</b> {saloonInformation.address}</Col>
+                                            <Col xs={24} xl={4} style={{ float: "left" }}><b>Adresimiz:</b></Col>
+                                            <Col xs={24} xl={16} style={{ float: "left" }}>{saloonInformation.address} </Col>
                                         </Row>
 
                                     </Col>
