@@ -6,6 +6,9 @@ const { Header } = Layout;
 
 const MainHeader = () => {
 
+    const register = () => {
+
+    }
     return (
         <div>
             <Header className="header" style={{ backgroundColor: "#1890ff" }}>
@@ -20,7 +23,7 @@ const MainHeader = () => {
                     float: "right"
                 }}>
                     <Link style={{ color: "white", marginRight: 10 }} to="/login">Giriş Yap</Link>
-                    <Button style={{ color: "#d46b08", borderColor: "#d46b08" }}>Üye Ol</Button>
+                    <Button style={{ color: "#d46b08", borderColor: "#d46b08" }} onClick={() => register()}>Üye Ol</Button>
                 </div>
             </Header>
         </div>

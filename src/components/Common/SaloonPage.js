@@ -51,13 +51,13 @@ const SaloonPage = () => {
     function onChange(pageNumber) {
         setCommentLoading(true);
         setPage(pageNumber);
-        API.get(`shop/getComments/${saloonId}/${pageSize}/${pageNumber}`, {
+        API.get(`comments/getComments/${saloonId}/${pageSize}/${pageNumber}`, {
             headers: {
                 "Content-Type": "application/json",
             },
         })
             .then((res) => {
-                setComments(res.data.item1.map((item, i) => item.notificationText));
+                setComments(res.data.item1.map((item, i) => item));
                 setTotalCount(res.data.item2);
                 setCommentLoading(false);
             })
@@ -131,7 +131,6 @@ const SaloonPage = () => {
                     }
                 })
                 .catch((error) => {
-                    debugger;
                     message.error(error.response.data);
                     setLoading(false);
                 });
