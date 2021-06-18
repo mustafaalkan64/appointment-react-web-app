@@ -172,7 +172,7 @@ export default function LayoutHeader() {
           style={{ float: "right" }}
           defaultSelectedKeys={["2"]}
         >
-          <Menu.Item key="deneme">Hoşgeldiniz {username}</Menu.Item>
+          <Menu.Item key="menukey">Hoşgeldiniz {username}</Menu.Item>
           <Dropdown overlay={menu}>
             <Badge count={notReadNotificationCount} dot onClick={e => e.preventDefault()}>
               <NotificationOutlined style={{ color: "white" }} />

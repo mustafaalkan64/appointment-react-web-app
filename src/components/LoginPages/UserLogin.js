@@ -34,13 +34,7 @@ const UserLogin = () => {
         }
       })
       .catch((error) => {
-        if (error.response !== undefined) {
-          message.error(error.response.data);
-        } else {
-          message.error(
-            "Şüpheli karakterler tespit edildi. < > & gibi karakterleri kaldırıp lütfen tekrar deneyiniz."
-          );
-        }
+        message.error(error.response.data);
         setLoading(false);
       });
   };

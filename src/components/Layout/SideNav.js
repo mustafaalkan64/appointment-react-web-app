@@ -96,7 +96,6 @@ const SideNav = () => {
         .catch((error) => {
           if (error.response.status === 401) {
             history.push("/login");
-            message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
           }
           console.log(error);
         });
@@ -104,7 +103,7 @@ const SideNav = () => {
     getCurrentUser();
     getCurrentUserRole();
     getCurrentShop();
-  }, [currentShop, history, setCurrentShop, setUserRole, setUsername, token]);
+  }, [currentShop, history, setCurrentShop, setUserRole, setUsername, token, logo]);
 
   useEffect(() => {
     if (userRole === "Shop") {

@@ -68,7 +68,7 @@ const SaloonPage = () => {
     }
 
     function showTotal(total) {
-        return `Total ${total} items`;
+        return `Toplam ${total} Yorum`;
     }
 
     const onFinish = async (values) => {
@@ -192,7 +192,7 @@ const SaloonPage = () => {
         <div>
             <Layout>
                 <MainHeader></MainHeader>
-                <Content style={{ padding: '0 50px', marginTop: 10, marginLeft: '10%' }}>
+                <Content style={{ padding: '0 50px', marginTop: 10, marginLeft: '3%', marginRight: '2%' }}>
 
                     <div className="site-layout-content">
                         {loading ? (
@@ -388,8 +388,14 @@ const SaloonPage = () => {
                                     headStyle={headStyle}>
                                     <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
                                         <Form.Item
-                                            wrapperCol={{ ...layout.wrapperCol, offset: 2 }}
+                                            wrapperCol={{ ...layout.wrapperCol }}
                                             name={'rate'}
+                                            label="Puan"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                }
+                                            ]}
                                         >
                                             <Rate allowHalf />
                                         </Form.Item>
@@ -400,6 +406,7 @@ const SaloonPage = () => {
                                                 {
                                                     required: true,
                                                 },
+                                                { max: 150, message: "En Fazla 150 Karakter Uzunluğunda Olabilir" }
                                             ]}
                                         >
                                             <Input />
@@ -410,7 +417,7 @@ const SaloonPage = () => {
                                                 required: true,
                                             },
                                         ]}>
-                                            <Input.TextArea />
+                                            <Input.TextArea rows={3} showCount maxLength={500} />
                                         </Form.Item>
                                         <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 2 }}>
                                             <Button type="primary" htmlType="submit">
