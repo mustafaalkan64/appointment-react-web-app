@@ -44,19 +44,24 @@ const UserLogin = () => {
       span: 6,
     },
     wrapperCol: {
-      span: 14,
+      span: 16,
     },
+  };
+
+  const tailLayout = {
+    wrapperCol: { offset: 6, span: 16 },
   };
 
   return (
     <div style={loginStyle}>
       <Row>
-        <Col span={12} offset={6}>
+        <Col span={22} offset={2}>
           <Card
             title="Giriş Yap"
             hoverable
             bordered={true}
-            style={{ width: "100%" }}
+            initialValues={{ remember: true }}
+            // style={{ width: "100%" }}
             headStyle={headStyle}
           >
             <Form
@@ -101,25 +106,26 @@ const UserLogin = () => {
                 />
               </Form.Item>
 
-              <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
+              <Form.Item {...tailLayout}>
                 <Form.Item name="remember" valuePropName="checked" noStyle>
                   <Checkbox>Beni Hatırla</Checkbox>
                 </Form.Item>
 
-                <div className="login-form-forgot">
+                <div style={{ float: "right" }}>
                   <Link to="/forgotPassword">Şifreni mi Unuttun?</Link>
                 </div>
               </Form.Item>
 
-              <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
+              <Form.Item {...tailLayout}>
                 <Button
                   type="primary"
                   loading={loading}
-                  className="login-form-button"
                   htmlType="submit"
                 >
                   Giriş Yap
                 </Button>
+              </Form.Item>
+              <Form.Item {...tailLayout}>
                 Henüz Üye Değilmisin? <Link to="/signUp">Üye Ol</Link>
               </Form.Item>
             </Form>

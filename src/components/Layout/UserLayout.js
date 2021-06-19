@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 import UserContext from "../../contexts/UserContext";
 import BreadCrumbContext from "../../contexts/BreadcrumbContext";
@@ -28,12 +28,14 @@ import { Layout, Breadcrumb } from "antd";
 import ShopAppointmentCalender from "../Shop/ShopAppointmentCalender";
 import SaloonPersonels from "../Shop/SaloonPersonels";
 import SaveSaloonPersons from "../Shop/SaveSaloonPerson";
-import SaloonPage from "../Common/SaloonPage"
+import SaloonPage from "../Common/SaloonPage";
+import API from "../../api";
+
 
 const { Sider, Content } = Layout;
 
 export default function UserLayout() {
-  const { isLoggedIn, token, userRole } = useContext(UserContext);
+  const { isLoggedIn, token, userRole, setUsername, setUserRole, setCurrentShop } = useContext(UserContext);
   const { firstBreadcrumb, secondBreadcrumb, lastBreadcrumb } = useContext(
     BreadCrumbContext
   );
@@ -43,6 +45,57 @@ export default function UserLayout() {
   const onCollapse = (collapsed) => {
     setCollapse(collapsed);
   };
+
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      await API.get(`user/getCurrentUserName`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          setUsername(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    const getCurrentUserRole = async () => {
+      await API.get(`user/currentUserRole`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          setUserRole(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    const getCurrentShop = async () => {
+      await API.get(`user/currentShop`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          setCurrentShop(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    getCurrentUser();
+    getCurrentUserRole();
+    getCurrentShop();
+  }, [setUsername, token, setUserRole, setCurrentShop]);
 
   return (
     <div>

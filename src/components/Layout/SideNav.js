@@ -52,20 +52,20 @@ const SideNav = () => {
       }
     });
 
-    const getCurrentUserRole = async () => {
-      await API.get(`user/currentUserRole`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => {
-          setUserRole(res.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
+    // const getCurrentUserRole = async () => {
+    //   await API.get(`user/currentUserRole`, {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   })
+    //     .then((res) => {
+    //       setUserRole(res.data);
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     });
+    // };
 
     const getCurrentShop = async () => {
       await API.get(`user/currentShop`, {
@@ -83,25 +83,25 @@ const SideNav = () => {
         });
     };
 
-    const getCurrentUser = async () => {
-      await API.get(`user/getCurrentUserName`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => {
-          setUsername(res.data);
-        })
-        .catch((error) => {
-          if (error.response.status === 401) {
-            history.push("/login");
-          }
-          console.log(error);
-        });
-    };
-    getCurrentUser();
-    getCurrentUserRole();
+    // const getCurrentUser = async () => {
+    //   await API.get(`user/getCurrentUserName`, {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //   })
+    //     .then((res) => {
+    //       setUsername(res.data);
+    //     })
+    //     .catch((error) => {
+    //       if (error.response.status === 401) {
+    //         history.push("/login");
+    //       }
+    //       console.log(error);
+    //     });
+    // };
+    // getCurrentUser();
+    // getCurrentUserRole();
     getCurrentShop();
   }, [currentShop, history, setCurrentShop, setUserRole, setUsername, token, logo]);
 

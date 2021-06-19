@@ -85,11 +85,15 @@ const ShopProfile = () => {
 
   const layout = {
     labelCol: {
-      span: 6,
+      span: 4,
     },
     wrapperCol: {
-      span: 14,
+      span: 16,
     },
+  };
+
+  const tailLayout = {
+    wrapperCol: { offset: 4, span: 16 },
   };
 
   const prefixSelector = (
@@ -270,7 +274,7 @@ const ShopProfile = () => {
     <div>
       <Spin spinning={loading} delay={500}>
         <Row>
-          <Col span={16} offset={4}>
+          <Col span={22} offset={2}>
             <Card
               title="Mağaza Profili"
               hoverable
@@ -358,8 +362,6 @@ const ShopProfile = () => {
                 <Form.Item
                   name="city"
                   label="İl"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 14 }}
                   rules={[
                     {
                       required: true,
@@ -385,8 +387,6 @@ const ShopProfile = () => {
                 <Form.Item
                   name="district"
                   label="İlçe"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 14 }}
                   rules={[
                     {
                       required: true,
@@ -410,8 +410,6 @@ const ShopProfile = () => {
                 </Form.Item>
 
                 <Form.Item
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 14 }}
                   name="zone"
                   label="Köy/Mahalle"
                   rules={[
@@ -445,8 +443,6 @@ const ShopProfile = () => {
                 </Form.Item>
 
                 <Form.Item
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 14 }}
                   name="logo"
                   label="Logo"
                 >
@@ -476,10 +472,10 @@ const ShopProfile = () => {
                   </Row>
                 </Form.Item>
 
-                <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
+                <Form.Item {...tailLayout}>
                   <Button
                     type="primary"
-                    className="login-form-button"
+                    style={{ width: "80%" }}
                     loading={loading}
                     htmlType="submit"
                   >
