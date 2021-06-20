@@ -20,13 +20,7 @@ const ForgotPassword = () => {
         setLoading(false);
       })
       .catch((error) => {
-        if (error.response !== undefined) {
-          message.error(error.response.data);
-        } else {
-          message.error(
-            "Şüpheli karakterler tespit edildi. < > & gibi karakterleri kaldırıp lütfen tekrar deneyiniz."
-          );
-        }
+        message.error(error.response.data);
         setLoading(false);
       });
   };
@@ -39,11 +33,14 @@ const ForgotPassword = () => {
       span: 14,
     },
   };
+  const tailLayout = {
+    wrapperCol: { offset: 6, span: 16 },
+  };
 
   return (
     <div style={loginStyle}>
       <Row>
-        <Col span={12} offset={6}>
+        <Col span={20} offset={2}>
           <Card
             title="Şifremi Unuttum"
             hoverable
@@ -82,20 +79,20 @@ const ForgotPassword = () => {
               >
                 <Input placeholder="Lütfen Email Giriniz" />
               </Form.Item>
-              <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
+              <Form.Item {...tailLayout}>
                 <Button
                   type="primary"
                   loading={loading}
-                  className="login-form-button"
                   htmlType="submit"
                 >
                   Şifre Gönder
                 </Button>
-                <Link to="/login">Login</Link> Sayfasına Geri Dön
               </Form.Item>
               <Form.Item
-                wrapperCol={{ ...layout.wrapperCol, offset: 6 }}
-              ></Form.Item>
+                {...tailLayout}
+              >
+                <Link to="/login">Login</Link> Sayfasına Geri Dön
+              </Form.Item>
             </Form>
           </Card>
         </Col>

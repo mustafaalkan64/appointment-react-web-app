@@ -49,7 +49,6 @@ const SaveSaloonPersons = () => {
 
 
     const onFinish = (values) => {
-        debugger;
         console.log("Received values of form: ", values);
         const savePersonModel = {
             PersonId: personId,
@@ -84,7 +83,7 @@ const SaveSaloonPersons = () => {
                     message.error(error.response.data);
                 }
             });
-    });
+    }, [form, history, token]);
 
     useEffect(() => {
         if (personId > 0) {
@@ -99,7 +98,7 @@ const SaveSaloonPersons = () => {
         setFirstBreadcrumb("Anasayfa");
         setSecondBreadcrumb("Profil");
         setLastBreadcrumb("Personel Kaydet");
-    }, [setFirstBreadcrumb, setSecondBreadcrumb, setLastBreadcrumb]);
+    }, [setFirstBreadcrumb, setSecondBreadcrumb, setLastBreadcrumb, form, getPersonOfSaloon, personId]);
 
     const savePerson = async (savePersonModel) => {
         setLoading(true);

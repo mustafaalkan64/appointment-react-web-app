@@ -55,7 +55,7 @@ const UserLogin = () => {
   return (
     <div style={loginStyle}>
       <Row>
-        <Col span={22} offset={2}>
+        <Col span={20} offset={2}>
           <Card
             title="Giriş Yap"
             hoverable
@@ -111,9 +111,6 @@ const UserLogin = () => {
                   <Checkbox>Beni Hatırla</Checkbox>
                 </Form.Item>
 
-                <div style={{ float: "right" }}>
-                  <Link to="/forgotPassword">Şifreni mi Unuttun?</Link>
-                </div>
               </Form.Item>
 
               <Form.Item {...tailLayout}>
@@ -127,6 +124,9 @@ const UserLogin = () => {
               </Form.Item>
               <Form.Item {...tailLayout}>
                 Henüz Üye Değilmisin? <Link to="/signUp">Üye Ol</Link>
+              </Form.Item>
+              <Form.Item {...tailLayout}>
+                <Link to="/forgotPassword">Şifreni mi Unuttun?</Link>
               </Form.Item>
             </Form>
           </Card>

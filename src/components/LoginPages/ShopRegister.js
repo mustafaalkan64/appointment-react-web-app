@@ -71,15 +71,6 @@ const ShopRegister = () => {
       });
   };
 
-  const layout = {
-    labelCol: {
-      span: 6,
-    },
-    wrapperCol: {
-      span: 14,
-    },
-  };
-
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
       <Select style={{ width: 70 }}>
@@ -186,17 +177,17 @@ const ShopRegister = () => {
     value: website,
   }));
 
-  const tailFormItemLayout = {
-    wrapperCol: {
-      xs: {
-        span: 24,
-        offset: 0,
-      },
-      sm: {
-        span: 14,
-        offset: 6,
-      },
+  const layout = {
+    labelCol: {
+      span: 6,
     },
+    wrapperCol: {
+      span: 16,
+    },
+  };
+
+  const tailLayout = {
+    wrapperCol: { offset: 6, span: 16 },
   };
 
   const openAgreementModal = () => {
@@ -211,12 +202,11 @@ const ShopRegister = () => {
   return (
     <div style={registerStyle}>
       <Row>
-        <Col span={12} offset={6}>
+        <Col span={20} offset={2}>
           <Card
             title="Yeni Mağaza Kaydı"
             hoverable
             bordered={true}
-            style={{ width: "100%" }}
             headStyle={headStyle}
           >
             <Form
@@ -323,8 +313,6 @@ const ShopRegister = () => {
               <Form.Item
                 name="district"
                 label="İlçe"
-                labelCol={{ span: 6 }}
-                wrapperCol={{ span: 14 }}
                 rules={[
                   {
                     required: true,
@@ -348,8 +336,6 @@ const ShopRegister = () => {
               </Form.Item>
 
               <Form.Item
-                labelCol={{ span: 6 }}
-                wrapperCol={{ span: 14 }}
                 name="zone"
                 label="Köy/Mahalle"
                 rules={[
@@ -362,7 +348,6 @@ const ShopRegister = () => {
                 <Select
                   size={"default"}
                   onChange={handleZoneChange}
-                  style={{ width: "100%" }}
                 >
                   {zones.map((zone, key) => {
                     return (
@@ -381,8 +366,6 @@ const ShopRegister = () => {
               <Form.Item
                 name="categories"
                 label="Kategoriler"
-                labelCol={{ span: 6 }}
-                wrapperCol={{ span: 14 }}
                 rules={[
                   {
                     required: true,
@@ -469,22 +452,22 @@ const ShopRegister = () => {
                         : Promise.reject("Should accept agreement"),
                   },
                 ]}
-                {...tailFormItemLayout}
+                {...tailLayout}
               >
                 <Checkbox>
                   I have read the <a href="_blank" onClick={ev => { ev.preventDefault(); openAgreementModal(); }}>Agreement</a>
                 </Checkbox>
               </Form.Item>
-              <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
+              <Form.Item {...tailLayout}>
                 <Button
                   type="primary"
-                  className="login-form-button"
                   loading={loading}
                   htmlType="submit"
                 >
                   Mağaza Aç
                 </Button>
-                Zaten Üye misin? <Link to="/login">Giriş Yap</Link>
+              </Form.Item>
+              <Form.Item {...tailLayout}>Zaten Üye misin? <Link to="/login">Giriş Yap</Link>
               </Form.Item>
             </Form>
           </Card>

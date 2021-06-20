@@ -20,16 +20,16 @@ const layout = {
 const { Link } = Anchor;
 
 const { Content, Footer } = Layout;
-const validateMessages = {
-    required: '${label} Alanı Zorunludur!',
-    types: {
-        email: '${label} is not a valid email!',
-        number: '${label} is not a valid number!',
-    },
-    number: {
-        range: '${label} must be between ${min} and ${max}',
-    },
-};
+// const validateMessages = {
+//     required: '${label} Alanı Zorunludur!',
+//     types: {
+//         email: '${label} is not a valid email!',
+//         number: '${label} is not a valid number!',
+//     },
+//     number: {
+//         range: '${label} must be between ${min} and ${max}',
+//     },
+// };
 
 const SaloonPage = () => {
     let { saloonUrl } = useParams();
@@ -73,7 +73,7 @@ const SaloonPage = () => {
 
     const onFinish = async (values) => {
         console.log(values);
-        if (values.rate == undefined || values.rate == 0) {
+        if (values.rate === undefined || values.rate === 0) {
             message.error("Lütfen salonu puanlayın");
             return false;
         }
@@ -108,39 +108,13 @@ const SaloonPage = () => {
 
 
     useEffect(async () => {
-        let saloonId = 0;
-        const getShopDetail = async () => {
-            setLoading(true);
-            await API.get(`shop/getSaloonDetails?saloonTitle=${saloonUrl}`, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-                .then((res) => {
-                    setSaloonId(res.data.id);
-                    saloonId = res.data.id; //local saloonId (let ile yukarıda tanımlanmış)
-                    setSaloonInformation(res.data);
-                    setLogo(imageUrlDirectory + res.data.logoUrl);
-                    setLoading(false);
-                    if (res.data.shopImages.length > 0) {
-                        let modifiedCollections = res.data.shopImages.reduce((rows, key, index) => {
-                            return (index % 6 === 0 ? rows.push([key])
-                                : rows[rows.length - 1].push(key)) && rows;
-                        }, []);
-                        setModifiedCollection(modifiedCollections);
-                    }
-                })
-                .catch((error) => {
-                    message.error(error.response.data);
-                    setLoading(false);
-                });
-        };
+        let localSaloonId = 0;
 
         const getComments = async () => {
             setCommentLoading(true);
             const pageNumber = 1;
             setPage(pageNumber);
-            await API.get(`comments/getComments/${saloonId}/${pageSize}/${pageNumber}`, {
+            await API.get(`comments/getComments/${localSaloonId}/${pageSize}/${pageNumber}`, {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -157,8 +131,7 @@ const SaloonPage = () => {
         }
 
         const getCommentsRateAverage = async () => {
-
-            await API.get(`comments/getCommentsRateAverage/${saloonId}`, {
+            await API.get(`comments/getCommentsRateAverage/${localSaloonId}`, {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -170,10 +143,44 @@ const SaloonPage = () => {
                     message.error(error.response.data);
                 });
         }
-        await getShopDetail();
-        await getComments();
-        await getCommentsRateAverage();
-    }, [rate, totalCount]);
+
+        const getShopDetail = async () => {
+            setLoading(true);
+            const result = await API.get(`shop/getSaloonDetails?saloonTitle=${saloonUrl}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((res) => {
+                    setSaloonId(res.data.id);
+                    localSaloonId = res.data.id; //local saloonId (let ile yukarıda tanımlanmış)
+                    setSaloonInformation(res.data);
+                    setLogo(imageUrlDirectory + res.data.logoUrl);
+                    if (res.data.shopImages.length > 0) {
+                        let modifiedCollections = res.data.shopImages.reduce((rows, key, index) => {
+                            return (index % 6 === 0 ? rows.push([key])
+                                : rows[rows.length - 1].push(key)) && rows;
+                        }, []);
+
+                        setModifiedCollection(modifiedCollections);
+                        getComments();
+                        getCommentsRateAverage();
+                    }
+                    setLoading(false);
+                    return true;
+                })
+                .catch((error) => {
+                    message.error(error.response.data);
+                    setLoading(false);
+                    return false;
+                });
+            console.log(result);
+        };
+
+
+        getShopDetail();
+
+    }, [saloonUrl, rate]);
 
     const convertToFullDate = (datetime) => {
         var d = new Date(datetime);
@@ -192,7 +199,7 @@ const SaloonPage = () => {
         <div>
             <Layout>
                 <MainHeader></MainHeader>
-                <Content style={{ padding: '0 50px', marginTop: 10, marginLeft: '3%', marginRight: '2%' }}>
+                <Content style={{ padding: '0 50px', margintop: 10, marginleft: '3%', marginRight: '2%' }}>
 
                     <div className="site-layout-content">
                         {loading ? (
@@ -215,7 +222,7 @@ const SaloonPage = () => {
                                             src={logo}
                                         />
                                     </Col>
-                                    <Col xs={24} xl={18} marginTop={10} marginLeft={10}>
+                                    <Col xs={24} xl={18} margintop={10} marginleft={10}>
                                         <Row >
                                             <Col xs={24} xl={16} style={{ float: "left" }} className="ant-card-meta-title">{saloonInformation.shopTitle}</Col>
                                             <Col xs={24} xl={8}><Rate allowHalf defaultValue={rate} /></Col>
@@ -231,7 +238,7 @@ const SaloonPage = () => {
                                                 </Breadcrumb></Col>
                                             <Col xs={24} xl={8}>
                                                 <Anchor affix={false} getCurrentAnchor={getCurrentAnchor}>
-                                                    <Link href="#comments" title={totalCount == 0 ? (<div>Henüz Yorum Yapılmamış</div>) : (<div>Yorum Sayısı: {totalCount}</div>)} />
+                                                    <Link href="#comments" title={totalCount === 0 ? (<div>Henüz Yorum Yapılmamış</div>) : (<div>Yorum Sayısı: {totalCount}</div>)} />
                                                 </Anchor></Col>
                                         </Row>
 
@@ -245,7 +252,7 @@ const SaloonPage = () => {
                                     </Col>
                                 </Row>
                                 <Row style={{ marginTop: "10px" }}>
-                                    <Col xs={24} xl={18} marginLeft={10}>
+                                    <Col xs={24} xl={18} marginleft={10}>
                                         <Row >
                                             <Col xs={24} xl={4} style={{ float: "left" }}><b>Telefon Numarmız:</b></Col>
                                             <Col xs={24} xl={8} style={{ float: "left" }}>{saloonInformation.phoneNumber}</Col>
@@ -295,7 +302,7 @@ const SaloonPage = () => {
                                     modifiedCollection.map((row) =>
                                         <Row gutter={16} style={{ marginTop: 10 }}>
                                             {row.map(image => (
-                                                <Col span={4}>
+                                                <Col span={4} key={"col_img_" + image.id}>
                                                     <Image.PreviewGroup key={"preview-image-" + image.id}> <Image style={{ width: '100%', height: "140px" }}
                                                         key={"image-" + image.id} src={imageUrlDirectory + image.imageUrl} /></Image.PreviewGroup>
                                                 </Col>))}
@@ -324,12 +331,12 @@ const SaloonPage = () => {
                                     // loadMore={loadMore}
                                     dataSource={saloonInformation.shopServices}
                                     renderItem={item => (
-                                        <List.Item>
-                                            <Skeleton avatar title={false} loading={loading} active>
-                                                <List.Item.Meta
+                                        <List.Item key={"ListItem_service_" + item.services.id}>
+                                            <Skeleton key={"skeleton_service_" + item.services.id} avatar title={false} loading={loading} active>
+                                                <List.Item.Meta key={"ListItem_Meta_Service_" + item.services.id}
                                                     description={item.services.serviceName}
                                                 />
-                                                <div>{item.price}</div>
+                                                <div>{item.price} TL</div>
                                             </Skeleton>
                                         </List.Item>
                                     )}
@@ -357,12 +364,12 @@ const SaloonPage = () => {
                                     // loadMore={loadMore}
                                     dataSource={saloonInformation.saloonPersonels}
                                     renderItem={item => (
-                                        <List.Item>
-                                            <Skeleton avatar title={false} loading={loading} active>
-                                                <List.Item.Meta
+                                        <List.Item key={"listItem_Person_" + item.id}>
+                                            <Skeleton key={"skeleton_person_" + item.id} avatar title={false} loading={loading} active>
+                                                <List.Item.Meta key={"col_person_" + item.id}
                                                     description={item.personFullName}
                                                 />
-                                                <div>{item.isActive == true ? (<div>Aktif</div>) : (<div>Pasif</div>)}</div>
+                                                <div>{item.isActive === true ? (<div>Aktif</div>) : (<div>Pasif</div>)}</div>
                                             </Skeleton>
                                         </List.Item>
                                     )}
@@ -386,7 +393,8 @@ const SaloonPage = () => {
                                     bordered={true}
                                     style={cardStyle}
                                     headStyle={headStyle}>
-                                    <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
+                                    {/* validateMessages={validateMessages} */}
+                                    <Form {...layout} name="nest-messages" onFinish={onFinish} >
                                         <Form.Item
                                             wrapperCol={{ ...layout.wrapperCol }}
                                             name={'rate'}
@@ -394,6 +402,7 @@ const SaloonPage = () => {
                                             rules={[
                                                 {
                                                     required: true,
+                                                    message: "Puan Alanı Boş Geçilemez"
                                                 }
                                             ]}
                                         >
@@ -405,6 +414,7 @@ const SaloonPage = () => {
                                             rules={[
                                                 {
                                                     required: true,
+                                                    message: "Başlık Alanı Boş Geçilemez"
                                                 },
                                                 { max: 150, message: "En Fazla 150 Karakter Uzunluğunda Olabilir" }
                                             ]}
@@ -415,6 +425,7 @@ const SaloonPage = () => {
                                         <Form.Item name={'body'} label="Açıklama" rules={[
                                             {
                                                 required: true,
+                                                message: "Açıklama Alanı Boş Geçilemez"
                                             },
                                         ]}>
                                             <Input.TextArea rows={3} showCount maxLength={500} />
@@ -433,11 +444,12 @@ const SaloonPage = () => {
                                         dataSource={comments}
                                         renderItem={item => (
 
-                                            <List.Item key={item.id} actions={[
+                                            <List.Item key={"comment_" + item.id} actions={[
                                                 <Rate allowHalf value={item.rate}></Rate>
                                             ]}
                                             >
                                                 <List.Item.Meta
+                                                    key={"comment_item_" + item.id}
                                                     title={item.userFullName}
                                                     description={item.commentHeader}
                                                 />

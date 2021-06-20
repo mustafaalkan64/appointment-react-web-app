@@ -39,19 +39,21 @@ const ResetPassword = () => {
       span: 6,
     },
     wrapperCol: {
-      span: 14,
+      span: 16,
     },
   };
 
+  const tailLayout = {
+    wrapperCol: { offset: 6, span: 16 },
+  };
   return (
     <div style={loginStyle}>
       <Row>
-        <Col span={12} offset={6}>
+        <Col span={20} offset={2}>
           <Card
             title="Şifremi Yenile"
             hoverable
             bordered={true}
-            style={{ width: "100%" }}
             headStyle={{
               textAlign: "center",
               fontSize: "19px",
@@ -103,11 +105,10 @@ const ResetPassword = () => {
                 <Input.Password placeholder="Lütfen Şifreyi Onaylayınız" />
               </Form.Item>
 
-              <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
+              <Form.Item {...tailLayout}>
                 <Button
                   type="primary"
                   loading={loading}
-                  className="login-form-button"
                   htmlType="submit"
                 >
                   Şifremi Güncelle

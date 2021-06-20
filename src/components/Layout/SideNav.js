@@ -21,10 +21,7 @@ const SideNav = () => {
     setIsLoggedIn,
     setToken,
     userRole,
-    setUserRole,
-    setUsername,
     currentShop,
-    setCurrentShop,
     token,
   } = useContext(UserContext);
   // const token = localStorage.getItem("auth_token");
@@ -52,58 +49,7 @@ const SideNav = () => {
       }
     });
 
-    // const getCurrentUserRole = async () => {
-    //   await API.get(`user/currentUserRole`, {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //   })
-    //     .then((res) => {
-    //       setUserRole(res.data);
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // };
-
-    const getCurrentShop = async () => {
-      await API.get(`user/currentShop`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => {
-          setCurrentShop(res.data);
-          console.log(currentShop);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
-
-    // const getCurrentUser = async () => {
-    //   await API.get(`user/getCurrentUserName`, {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //   })
-    //     .then((res) => {
-    //       setUsername(res.data);
-    //     })
-    //     .catch((error) => {
-    //       if (error.response.status === 401) {
-    //         history.push("/login");
-    //       }
-    //       console.log(error);
-    //     });
-    // };
-    // getCurrentUser();
-    // getCurrentUserRole();
-    getCurrentShop();
-  }, [currentShop, history, setCurrentShop, setUserRole, setUsername, token, logo]);
+  }, [currentShop]);
 
   useEffect(() => {
     if (userRole === "Shop") {

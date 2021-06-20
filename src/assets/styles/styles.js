@@ -21,12 +21,12 @@ const loginStyle = {
 };
 
 const registerStyle = {
-  paddingTop: 30,
+  paddingTop: 100,
   backgroundImage: `url(${background})`,
   backgroundPosition: "center",
   backgroundSize: "cover",
-  backgroundRepeat: "no-repeat",
-  width: "100vw",
+  backgroundRepeat: "repeat",
+  // width: "100vw",
   height: "100%",
 };
 

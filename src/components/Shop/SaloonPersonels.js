@@ -68,7 +68,7 @@ const SaloonPersonels = () => {
                 }
                 setLoading(false);
             });
-    }, []);
+    }, [history, token]);
 
     useEffect(() => {
         getSaloonPersonels();
@@ -81,12 +81,13 @@ const SaloonPersonels = () => {
         setLastBreadcrumb,
         setSecondBreadcrumb,
         token,
+        getSaloonPersonels
     ]);
 
     return (
         <div>
             <Row>
-                <Col span={20} offset={2}>
+                <Col span={23} offset={1}>
                     <Button type="primary" onClick={() => pushToCreateNewPersonPage()} style={{ marginBottom: 10 }}>Yeni Personel Ekle</Button>
                     <Card
                         title="Personellerim"
@@ -96,7 +97,7 @@ const SaloonPersonels = () => {
                         headStyle={headStyle}
                     >
                         <List
-                            className="demo-loadmore-list"
+                            // className="demo-loadmore-list"
                             loading={loading}
                             itemLayout="horizontal"
                             dataSource={saloonPersons}

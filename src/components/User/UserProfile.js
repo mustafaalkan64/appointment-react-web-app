@@ -40,8 +40,6 @@ const UserProfile = () => {
   const dateFormat = "DD.MM.YYYY";
   const { Option } = Select;
 
-  const style = { padding: "8px 0" };
-
   const setCurrenUser = (userForm) => {
     setLoading(true);
     API.put(`user/updateUser`, userForm, {

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useHistory } from "react-router";
-import { Card, Image, AutoComplete, Row, Col, Skeleton, Button, Layout, Pagination, Select, Rate, Breadcrumb, Divider, Alert } from 'antd';
+import { Card, Image, AutoComplete, Row, Col, Skeleton, Button, Layout, Pagination, Select, Rate, Breadcrumb, Divider, Alert, Form, message } from 'antd';
 import { EditOutlined, ShopOutlined } from '@ant-design/icons';
 import API from "../../api";
 import { imageUrlDirectory } from "../../constUrls";
@@ -24,11 +24,12 @@ export default function Home() {
     const [serviceResults, setServiceResults] = useState([]);
     const [filteredServiceResults, setFilteredServiceResults] = useState([]);
     const [selectedPlaceId, setSelectedPlaceId] = useState(null);
-    const [selectedServiceId, setSelectedServiceId] = useState(0);
+    const [selectedServiceId, setSelectedServiceId] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
     const [pageCount, setPageCount] = useState(10);
     const [sortValue, setSortValue] = useState(null);
     const [hasSearched, setHasSearched] = useState(false);
+    const [form] = Form.useForm();
 
     const getAllPlaces = useCallback(async () => {
         await API.get(`place/getAllPlaces`, {
@@ -42,7 +43,7 @@ export default function Home() {
             .catch((error) => {
                 console.log(error);
             });
-    });
+    }, []);
 
 
     const getAllServices = useCallback(async () => {
@@ -57,13 +58,13 @@ export default function Home() {
             .catch((error) => {
                 console.log(error);
             });
-    });
+    }, []);
 
 
     useEffect(() => {
         getAllPlaces();
         getAllServices();
-    }, []);
+    }, [getAllPlaces, getAllServices]);
 
     const AutoCompleteOption = AutoComplete.Option;
 
@@ -153,11 +154,24 @@ export default function Home() {
         setSelectedPlaceId(option.key);
     };
 
+    const clearPlaceSearch = async () => {
+        setSelectedPlaceId(null);
+    };
+
+    const clearServiceSearch = async () => {
+        setSelectedServiceId(null);
+    };
+
     const onServiceSearch = (value, option) => {
         setSelectedServiceId(option.key);
     };
 
     const handleSortChange = useCallback((value) => {
+        if (selectedPlaceId === null || selectedServiceId === null) {
+            message.error("Aradığınız Hizmeti ve Konumu Giriniz");
+            return;
+        }
+        setLoading(true);
         setSortValue(value);
         var searchModel = {
             Place: selectedPlaceId,
@@ -180,74 +194,129 @@ export default function Home() {
                 console.log(error);
                 setLoading(false);
             });
-    }, [pageNumber, selectedPlaceId, selectedServiceId, sortValue]);
+    }, [pageNumber, selectedPlaceId, selectedServiceId]);
+
+    const onFinish = () => {
+        search();
+    };
 
     return (
         <div>
             <Layout>
                 <MainHeader></MainHeader>
-                <Content style={{ padding: '0 50px', marginTop: 10, marginLeft: '10%' }}>
+                <Content style={{ padding: '0 10px', marginTop: 10, marginRight: "10%", marginLeft: '10%' }}>
 
-                    <div className="site-layout-content">
-                        <Row style={{ marginBottom: 10 }}>
-                            <Col>
-                                <AutoComplete
-                                    style={{ width: 300, marginRight: 10 }}
-                                    onSearch={handlePlaceSearch}
-                                    onSelect={onPlaceSearch}
-                                    showSearch
-                                    placeholder="İl, İlçe veya Bölge Giriniz"
+                    <div>
+                        <Form
+                            form={form}
+                            name="advanced_search"
+                            className="ant-advanced-search-form"
+                            onFinish={onFinish}
+                            layout="inline"
+                        >
+                            <Row >
+                                <Col key={"col-place"}>
+                                    <Form.Item
+                                        name={"place"}
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Konum Giriniz',
+                                            },
+                                        ]}
+                                    >
+                                        <AutoComplete
+                                            onSearch={handlePlaceSearch}
+                                            onSelect={onPlaceSearch}
+                                            showSearch
+                                            allowClear
+                                            onClear={clearPlaceSearch}
+                                            style={{ width: 300 }}
+                                            placeholder="İl, İlçe veya Bölge Giriniz"
+                                        >
+                                            {
+                                                filteredPlaceResult.map(({ key, value }) => (
+                                                    <AutoCompleteOption key={key} value={value}>
+                                                        {value}
+                                                    </AutoCompleteOption>
+                                                ))
+                                            }
+                                        </AutoComplete>
+                                    </Form.Item>
+                                </Col>
+                                <Col key={"col-service"}>
+                                    <Form.Item
+                                        name={"service"}
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Almak İstediğiniz Hizmeti Giriniz',
+                                            },
+                                        ]}
+                                    >
+                                        <AutoComplete
+                                            placeholder="Almak İstediğiniz Hizmeti Giriniz"
+                                            onSearch={handleServiceSearch}
+                                            onSelect={onServiceSearch}
+                                            allowClear
+                                            onClear={clearServiceSearch}
+                                            style={{ width: 300 }}
+                                            showSearch
+                                        >
+                                            {filteredServiceResults.map(({ key, value }) => (
+                                                <Option key={key} value={value}>
+                                                    {value}
+                                                </Option>
+                                            ))}
+                                        </AutoComplete>
+                                    </Form.Item>
+                                </Col>
+                                <Col key={"col-order"}>
+                                    <Form.Item
+                                        name={"order"}
+                                    >
+                                        <Select
+                                            style={{ width: 300 }}
+                                            defaultValue="Seçiniz"
+                                            onChange={handleSortChange}
+                                        >
+                                            <Option key={"ascByPoint"}>
+                                                Puana Göre Artan
+                                        </Option>
+                                            <Option key={"descByPoint"}>
+                                                Puana Göre Azalan
+                                        </Option>
+                                            <Option key={"ascByCommentCount"}>
+                                                Yorum Sayısına Göre Artan
+                                        </Option>
+                                            <Option key={"descByCommentCount"}>
+                                                Yorum Sayısına Göre Azalan
+                                        </Option>
+                                            <Option key={"ascByPrice"}>
+                                                Fiyatına Göre Artan
+                                        </Option>
+                                            <Option key={"descByPrice"}>
+                                                Fiyatına Göre Azalan
+                                        </Option>
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col
+                                    span={24}
+                                    style={{
+                                        textAlign: 'right',
+                                        marginBottom: 10
+                                    }}
                                 >
-                                    {filteredPlaceResult.map(({ key, value }) => (
-                                        <AutoCompleteOption key={key} value={value}>
-                                            {value}
-                                        </AutoCompleteOption>
-                                    ))}
-                                </AutoComplete>
-                            </Col>
-                            <Col>
-                                <AutoComplete
-                                    style={{ width: 300, marginRight: 10 }}
-                                    placeholder="Almak İstediğiniz Hizmeti Giriniz"
-                                    onSearch={handleServiceSearch}
-                                    onSelect={onServiceSearch}
-                                    showSearch
-                                >
-                                    {filteredServiceResults.map(({ key, value }) => (
-                                        <Option key={key} value={value}>
-                                            {value}
-                                        </Option>
-                                    ))}
-                                </AutoComplete>
-                            </Col>
-                            <Col>
-                                <Button onClick={() => search()} style={{ width: 100, marginRight: 10, backgroundColor: "#d46b08", color: "white" }}>Ara</Button>
-                            </Col>
-                            <Select
-                                style={{ width: 300, marginRight: 10 }}
-                                defaultValue="Seçiniz"
-                                onChange={handleSortChange}
-                            >
-                                <Option key={"ascByPoint"}>
-                                    Puana Göre Artan
-                                        </Option>
-                                <Option key={"descByPoint"}>
-                                    Puana Göre Azalan
-                                        </Option>
-                                <Option key={"ascByCommentCount"}>
-                                    Yorum Sayısına Göre Artan
-                                        </Option>
-                                <Option key={"descByCommentCount"}>
-                                    Yorum Sayısına Göre Azalan
-                                        </Option>
-                                <Option key={"ascByPrice"}>
-                                    Fiyatına Göre Artan
-                                        </Option>
-                                <Option key={"descByPrice"}>
-                                    Fiyatına Göre Azalan
-                                        </Option>
-                            </Select>
-                        </Row>
+                                    <Button type="primary" htmlType="submit">
+                                        Search
+                                    </Button>
+
+                                </Col>
+                            </Row>
+                        </Form>
                         {
                             loading ? (
                                 <div>
@@ -259,13 +328,13 @@ export default function Home() {
 
                             ) : ((saloonResults.length > 0) ? (saloonResults.map((value) => (
                                 <Card
-                                    style={{ width: '80%', marginBottom: 20, height: '600' }}
+                                    style={{ width: '100%', marginBottom: 20, height: '600' }}
                                 >
                                     <Row>
                                         <Col xs={24} xl={8} style={{ paddingRight: "10px" }}>
                                             <Image
                                                 alt="example"
-                                                style={{ width: "100%", height: "130px" }}
+                                                style={{ width: "90%", height: "130px" }}
                                                 // src={imageUrlDirectory + "empty-img.png"}
                                                 src={imageUrlDirectory + value.image}
                                             />
@@ -295,7 +364,7 @@ export default function Home() {
                                         </Col>
                                     </Row>
 
-                                    <Row style={{ height: 25, borderTop: "1px solid #f0f0f0", paddingTop: 5, marginTop: 10 }}>
+                                    <Row style={{ height: 40, borderTop: "1px solid #f0f0f0", paddingTop: 5, marginTop: 10 }}>
                                         <Col xs={24} xl={12} style={{ textAlign: "center" }}>
                                             <Button type="link" icon={<EditOutlined />}>
                                                 Randevu Oluştur

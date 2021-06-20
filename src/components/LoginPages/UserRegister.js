@@ -15,7 +15,7 @@ import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import UserContext from "../../contexts/UserContext";
 import API from "../../api";
-import { loginStyle, headStyle } from "../../assets/styles/styles";
+import { loginStyle, headStyle, registerStyle } from "../../assets/styles/styles";
 
 
 const UserRegister = () => {
@@ -61,8 +61,12 @@ const UserRegister = () => {
       span: 6,
     },
     wrapperCol: {
-      span: 14,
+      span: 16,
     },
+  };
+
+  const tailLayout = {
+    wrapperCol: { offset: 6, span: 16 },
   };
 
   const handleOk = () => {
@@ -78,14 +82,14 @@ const UserRegister = () => {
   };
 
   return (
-    <div style={loginStyle}>
+    <div style={registerStyle}>
       <Row>
-        <Col span={12} offset={6}>
+        <Col span={20} offset={2}>
           <Card
             title="Üye Kaydı"
             hoverable
             bordered={true}
-            style={{ width: "100%" }}
+            style={{ height: "100%" }}
             headStyle={headStyle}
           >
             <Form
@@ -205,23 +209,22 @@ const UserRegister = () => {
                 </Radio.Group>
               </Form.Item>
 
-              <Form.Item
-                style={{ marginBottom: 8 }}
-                wrapperCol={{ ...layout.wrapperCol, offset: 6 }}
+              <Form.Item {...tailLayout}
               >
                 <Checkbox>
                   I have read the <a href="_blank" onClick={ev => { ev.preventDefault(); openAgreementModal(); }}>Agreement</a>
                 </Checkbox>
               </Form.Item>
-              <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
+              <Form.Item {...tailLayout}>
                 <Button
                   type="primary"
-                  className="login-form-button"
                   loading={loading}
                   htmlType="submit"
                 >
                   Üye Ol
                 </Button>
+              </Form.Item>
+              <Form.Item {...tailLayout}>
                 Zaten Üye misin? <Link to="/login">Giriş Yap</Link>
               </Form.Item>
             </Form>
