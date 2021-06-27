@@ -200,7 +200,7 @@ export default function Home() {
 
     return (
         <div>
-            <Layout>
+            <Layout style={{ minHeight: '100vh' }}>
                 <MainHeader></MainHeader>
                 <Content style={{ padding: '0 10px', marginTop: 10, marginRight: "10%", marginLeft: '10%' }}>
 
@@ -380,27 +380,26 @@ export default function Home() {
 
                                     </Row>
 
+                                    <Pagination
+                                        showSizeChanger
+                                        onChange={onPageChange}
+                                        defaultPageSize={10}
+                                        style={{ marginTop: 10 }}
+                                        onShowSizeChange={onShowSizeChange}
+                                        defaultCurrent={1}
+                                        total={pageCount}
+                                    />
+
                                 </Card>
                             ))) : (hasSearched ? (<Alert
-                                message="Hata"
-                                description="Sonuç Bulunamadı"
+                                message="Üzgünüz"
+                                description="Aradığınız Kriterlere Uygun Sonuç Bulamadık"
                                 type="error"
                                 showIcon
                             />) : (<div></div>)))
 
                         }
 
-
-
-                        <Pagination
-                            showSizeChanger
-                            onChange={onPageChange}
-                            defaultPageSize={10}
-                            style={{ marginTop: 10 }}
-                            onShowSizeChange={onShowSizeChange}
-                            defaultCurrent={1}
-                            total={pageCount}
-                        />
                     </div>
                     {/* </Layout> */}
 

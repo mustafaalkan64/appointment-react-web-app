@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Layout, message, Row, Col, Image, Rate, List, Skeleton, Breadcrumb, Pagination, Anchor } from 'antd';
+import { Card, Layout, message, Row, Col, Image, Rate, List, Skeleton, Breadcrumb, Pagination, Anchor, Alert } from 'antd';
 import MainHeader from "./MainHeader";
 import MainFooter from "./MainFooter";
 import {
@@ -26,6 +26,7 @@ const SaloonPage = () => {
     let { saloonUrl } = useParams();
     const [loading, setLoading] = useState(false);
     const [commentLoading, setCommentLoading] = useState(false);
+    const [found, setFound] = useState(true);
     // const history = useHistory();
     const token = localStorage.getItem("auth_token");
     const [logo, setLogo] = useState("");
@@ -144,6 +145,7 @@ const SaloonPage = () => {
             })
                 .then((res) => {
                     setSaloonId(res.data.id);
+                    setFound(true);
                     localSaloonId = res.data.id; //local saloonId (let ile yukarıda tanımlanmış)
                     setSaloonInformation(res.data);
                     setLogo(imageUrlDirectory + res.data.logoUrl);
@@ -161,7 +163,11 @@ const SaloonPage = () => {
                     return true;
                 })
                 .catch((error) => {
-                    message.error(error.response.data);
+                    if (error.response.status === 404) {
+                        setFound(false);
+                    } else {
+                        message.error(error.response.data);
+                    }
                     setLoading(false);
                     return false;
                 });
@@ -186,11 +192,11 @@ const SaloonPage = () => {
 
     return (
         <div>
-            <Layout>
+            <Layout style={{ minHeight: '100vh' }}>
                 <MainHeader></MainHeader>
                 <Content style={{ padding: '0 50px', margintop: 10, marginleft: '3%', marginRight: '2%' }}>
 
-                    <div className="site-layout-content">
+                    {found === true ? (<div className="site-layout-content">
                         {loading ? (
                             <div className="spinClass">
                                 <Skeleton active />
@@ -367,9 +373,6 @@ const SaloonPage = () => {
                         )}
 
                         <div id="comments">
-
-
-
                             {commentLoading ? (
                                 <div className="spinClass">
                                     <Skeleton active />
@@ -456,7 +459,15 @@ const SaloonPage = () => {
                             )}
                         </div>
 
-                    </div>
+                    </div>) : (<Alert
+                        message="Hata!"
+                        description="Üzgünüz. Aradığınız Salonu Bulamadık"
+                        type="error"
+                        closable
+                        showIcon
+                        style={{ marginTop: "3%", height: "100px" }}
+                    />)}
+
 
 
                 </Content>
