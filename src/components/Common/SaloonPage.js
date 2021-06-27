@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Layout, message, Row, Col, Image, Rate, List, Skeleton, Breadcrumb, Pagination, Anchor } from 'antd';
 import MainHeader from "./MainHeader";
+import MainFooter from "./MainFooter";
 import {
     useParams
 } from "react-router-dom";
@@ -19,17 +20,7 @@ const layout = {
 
 const { Link } = Anchor;
 
-const { Content, Footer } = Layout;
-// const validateMessages = {
-//     required: '${label} Alanı Zorunludur!',
-//     types: {
-//         email: '${label} is not a valid email!',
-//         number: '${label} is not a valid number!',
-//     },
-//     number: {
-//         range: '${label} must be between ${min} and ${max}',
-//     },
-// };
+const { Content } = Layout;
 
 const SaloonPage = () => {
     let { saloonUrl } = useParams();
@@ -107,7 +98,7 @@ const SaloonPage = () => {
     };
 
 
-    useEffect(async () => {
+    useEffect(() => {
         let localSaloonId = 0;
 
         const getComments = async () => {
@@ -146,7 +137,7 @@ const SaloonPage = () => {
 
         const getShopDetail = async () => {
             setLoading(true);
-            const result = await API.get(`shop/getSaloonDetails?saloonTitle=${saloonUrl}`, {
+            await API.get(`shop/getSaloonDetails?saloonTitle=${saloonUrl}`, {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -174,9 +165,7 @@ const SaloonPage = () => {
                     setLoading(false);
                     return false;
                 });
-            console.log(result);
         };
-
 
         getShopDetail();
 
@@ -438,15 +427,20 @@ const SaloonPage = () => {
                                     </Form>
                                     <List
                                         size="large"
-                                        style={{ backgroundColor: "white", width: "100%" }}
+                                        style={{ backgroundColor: "white" }}
                                         footer={<Pagination defaultCurrent={page} defaultPageSize={pageSize} showTotal={showTotal} total={totalCount} onChange={onChange} />}
                                         bordered
+                                        itemLayout="vertical"
                                         dataSource={comments}
                                         renderItem={item => (
 
-                                            <List.Item key={"comment_" + item.id} actions={[
-                                                <Rate allowHalf value={item.rate}></Rate>
-                                            ]}
+                                            <List.Item key={"comment_" + item.id}
+                                                // actions={[
+                                                //     <Rate allowHalf value={item.rate}></Rate>
+                                                // ]}
+                                                extra={
+                                                    <Rate allowHalf value={item.rate}></Rate>
+                                                }
                                             >
                                                 <List.Item.Meta
                                                     key={"comment_item_" + item.id}
@@ -466,7 +460,7 @@ const SaloonPage = () => {
 
 
                 </Content>
-                <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+                <MainFooter />
             </Layout >
         </div >
     );

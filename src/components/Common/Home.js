@@ -5,11 +5,9 @@ import { EditOutlined, ShopOutlined } from '@ant-design/icons';
 import API from "../../api";
 import { imageUrlDirectory } from "../../constUrls";
 import MainHeader from "./MainHeader";
+import MainFooter from "./MainFooter";
 
-
-const { Content, Footer } = Layout;
-// const { Text } = Typography;
-
+const { Content } = Layout;
 
 export default function Home() {
 
@@ -404,7 +402,7 @@ export default function Home() {
                     {/* </Layout> */}
 
                 </Content>
-                <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+                <MainFooter />
             </Layout >
         </div >
     );

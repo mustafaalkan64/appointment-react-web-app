@@ -35,7 +35,7 @@ import API from "../../api";
 const { Sider, Content } = Layout;
 
 export default function UserLayout() {
-  const { isLoggedIn, token, userRole, setUsername, setUserRole, setCurrentShop } = useContext(UserContext);
+  const { isLoggedIn, token, userRole, setUsername, setUserRole, setCurrentShop, setIsLoggedIn } = useContext(UserContext);
   const { firstBreadcrumb, secondBreadcrumb, lastBreadcrumb } = useContext(
     BreadCrumbContext
   );
@@ -47,6 +47,7 @@ export default function UserLayout() {
   };
 
   useEffect(() => {
+    setIsLoggedIn(false);
     const getCurrentUser = async () => {
       await API.get(`user/getCurrentUserName`, {
         headers: {
@@ -56,6 +57,7 @@ export default function UserLayout() {
       })
         .then((res) => {
           setUsername(res.data);
+          setIsLoggedIn(true);
         })
         .catch((error) => {
           console.log(error);
@@ -95,7 +97,7 @@ export default function UserLayout() {
     getCurrentUser();
     getCurrentUserRole();
     getCurrentShop();
-  }, [setUsername, token, setUserRole, setCurrentShop]);
+  }, [setUsername, token, setUserRole, setCurrentShop, setIsLoggedIn]);
 
   return (
     <div>

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Menu, Layout, Badge, message, Dropdown, Typography } from "antd";
+import { Menu, Layout, Badge, Dropdown, Typography } from "antd";
 import UserContext from "../../contexts/UserContext";
 import { SettingFilled, NotificationOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router";
@@ -89,7 +89,7 @@ export default function LayoutHeader() {
           setNotifications(res.data);
         })
         .catch((error) => {
-          message.error("Bildirimleri Getirme Esnasında Hata ile Karşılaşıldı");
+          console.log("Bildirimleri Getirme Esnasında Hata ile Karşılaşıldı");
         });
     };
 

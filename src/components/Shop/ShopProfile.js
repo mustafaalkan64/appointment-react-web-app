@@ -58,6 +58,7 @@ const ShopProfile = () => {
       TaxNumber: values.taxNumber,
       TaxAddress: values.taxAddress,
       Email: values.email,
+      LogoUrl: logo
     };
     setLoading(true);
     API.put(`shop/updateShopProfile`, shopProfileModel, {
@@ -140,11 +141,12 @@ const ShopProfile = () => {
         },
       })
         .then((res) => {
-          setLogo(imageUrlDirectory + res.data.response);
+          setLogo(res.data.response);
           setLoading(false);
           message.success("Logo Başarıyla Yüklendi");
         })
         .catch((error) => {
+          debugger;
           if (error.response.status === 401) {
             history.push("/login");
           } else {
@@ -225,7 +227,7 @@ const ShopProfile = () => {
       })
         .then((res) => {
           setShopId(res.data.id);
-          setLogo(imageUrlDirectory + res.data.logoUrl);
+          setLogo(res.data.logoUrl);
           form.setFieldsValue({
             shopTitle: res.data.shopTitle,
             shopDescription: res.data.shopDescription,
@@ -466,7 +468,7 @@ const ShopProfile = () => {
                   <Row style={{ marginTop: 10, marginLeft: 0 }}>
                     <Col>
                       <Image.PreviewGroup>
-                        <Image width={150} src={logo} />
+                        <Image width={150} src={imageUrlDirectory + logo} />
                       </Image.PreviewGroup>
                     </Col>
                   </Row>

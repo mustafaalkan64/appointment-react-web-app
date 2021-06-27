@@ -18,7 +18,7 @@ const MainHeader = () => {
         <div>
             <Header className="header" style={{ backgroundColor: "#1890ff" }}>
                 <div className="logo">
-                    <img src={logo} style={{
+                    <img src={logo} alt="LogoImg" style={{
                         float: "left",
                         width: "202px",
                         height: "75px"
@@ -27,7 +27,7 @@ const MainHeader = () => {
                 <div style={{
                     float: "right"
                 }}>
-                    {isLoggedIn || token != null ? (<div>Hoşgeldiniz {username} <Link style={{ color: "white", marginRight: 10 }} to="/">Yönetim Sayfası</Link> </div>) : (
+                    {isLoggedIn && token != null ? (<div>Hoşgeldiniz {username} <Link style={{ color: "white", marginRight: 10 }} to="/">Yönetim Sayfası</Link> </div>) : (
                         <div> <Link style={{ color: "white", marginRight: 10 }} to="/login">Giriş Yap</Link>
                             <Button style={{ color: "#d46b08", borderColor: "#d46b08" }} onClick={() => register()}>Üye Ol</Button>
                         </div>

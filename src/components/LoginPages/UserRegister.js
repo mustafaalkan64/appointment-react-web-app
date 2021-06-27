@@ -15,7 +15,7 @@ import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import UserContext from "../../contexts/UserContext";
 import API from "../../api";
-import { loginStyle, headStyle, registerStyle } from "../../assets/styles/styles";
+import { headStyle, registerStyle } from "../../assets/styles/styles";
 
 
 const UserRegister = () => {
