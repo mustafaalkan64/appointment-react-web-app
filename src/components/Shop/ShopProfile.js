@@ -276,7 +276,7 @@ const ShopProfile = () => {
     <div>
       <Spin spinning={loading} delay={500}>
         <Row>
-          <Col span={22} offset={2}>
+          <Col span={22} offset={1}>
             <Card
               title="Mağaza Profili"
               hoverable

@@ -197,12 +197,14 @@ export default function MyAppointments(props) {
       title: "Id",
       dataIndex: "id",
       key: "id",
+      responsive: ["xs"]
     },
     {
       title: "Mağaza",
       dataIndex: "shopTitle",
       key: "shopTitle",
       render: (text) => <p>{text}</p>,
+      responsive: ["sm"]
     },
     {
       title: "Randevu Başlangıç Tarihi",
@@ -275,21 +277,21 @@ export default function MyAppointments(props) {
 
   return (
     <div>
-      <Row gutter={[40, 0]}>
+      <Row>
         <Col span={18}>
           <Title level={2}>{pageHeader}</Title>
         </Col>
-        <Col span={6}>
+        {/* <Col span={6}>
           <Button onClick={handleClick} block type="primary">
             Yeni Randevu Talep Et
           </Button>
-        </Col>
+        </Col> */}
       </Row>
       <Row>
-        <Col span={12}>
+        <Col span={10}>
           <Input placeholder="Ara.." onChange={handleChangeSearch} />
         </Col>
-        <Col span={12}>
+        <Col span={10}>
           <Select
             defaultValue="Seçiniz"
             onChange={handleSortChange}
@@ -310,8 +312,8 @@ export default function MyAppointments(props) {
           </Select>
         </Col>
       </Row>
-      <Row gutter={[40, 0]}>
-        <Col span={24}>
+      <Row>
+        <Col span={20}>
           {loading ? (
             <div>
               <Skeleton active />
@@ -341,10 +343,10 @@ export default function MyAppointments(props) {
         }}
         onCancel={handleCancel}
       >
-        <Row gutter={[40, 0]}>
+        <Row>
           <Col span={24}>Randevu İptal Nedeni</Col>
         </Row>
-        <Row gutter={[40, 0]}>
+        <Row>
           <Col span={24}>
             <TextArea
               showCount

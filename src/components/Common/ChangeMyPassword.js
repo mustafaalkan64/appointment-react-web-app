@@ -82,7 +82,7 @@ export default function ChangeMyPassword() {
   return (
     <div>
       <Row>
-        <Col span={16} offset={4}>
+        <Col span={22} offset={1}>
           <Card
             title="Şifre Değiştir"
             hoverable

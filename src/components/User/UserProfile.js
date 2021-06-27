@@ -42,7 +42,8 @@ const UserProfile = () => {
 
   const setCurrenUser = (userForm) => {
     setLoading(true);
-    API.put(`user/updateUser`, userForm, {
+    debugger;
+    API.put("user/updateUser", userForm, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -53,6 +54,7 @@ const UserProfile = () => {
         setLoading(false);
       })
       .catch((error) => {
+        debugger;
         setLoading(false);
         if (error.response.status === 401) {
           history.push("/login");
@@ -198,7 +200,7 @@ const UserProfile = () => {
       CityId: values.city,
       DistrictId: values.district,
       ZoneId: values.zone,
-      BirthDay: values.birthDay,
+      Birthday: values.birthDay,
       Username: values.username,
     };
     setCurrenUser(userForm);
@@ -217,7 +219,7 @@ const UserProfile = () => {
     <div>
       <Spin spinning={loading} delay={500}>
         <Row>
-          <Col span={20} offset={2}>
+          <Col span={22} offset={1}>
             <Card
               title="Kullanıcı Profili"
               hoverable

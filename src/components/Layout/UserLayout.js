@@ -29,6 +29,7 @@ import ShopAppointmentCalender from "../Shop/ShopAppointmentCalender";
 import SaloonPersonels from "../Shop/SaloonPersonels";
 import SaveSaloonPersons from "../Shop/SaveSaloonPerson";
 import SaloonPage from "../Common/SaloonPage";
+import Comments from "../Admin/Comments"
 import API from "../../api";
 
 
@@ -117,7 +118,7 @@ export default function UserLayout() {
           path="/"
           render={() =>
             isLoggedIn || token != null ? (
-              <Layout>
+              <Layout style={{ minHeight: '100vh' }}>
                 <Sider
                   collapsible
                   collapsed={collapsed}
@@ -125,16 +126,17 @@ export default function UserLayout() {
                 >
                   <SideNav />
                 </Sider>
-                <Layout>
+                <Layout className="site-layout" style={{ height: "100%", }}>
                   <LayoutHeader />
 
                   <Content
-                    style={{
-                      margin: "24px 16px",
-                      padding: 24,
-                      minHeight: "calc(100vh - 114px)",
-                      background: "background: rgb(230 230 230)",
-                    }}
+                    style={{ margin: '0 16px' }}
+                  // style={{
+                  //   margin: "24px 16px",
+                  //   padding: 24,
+                  //   minHeight: "calc(100vh - 114px)",
+                  //   background: "background: rgb(230 230 230)",
+                  // }}
                   >
                     <Breadcrumb style={{ margin: "16px 0" }}>
                       <Breadcrumb.Item>{firstBreadcrumb}</Breadcrumb.Item>
@@ -165,6 +167,7 @@ export default function UserLayout() {
                         component={AppointmentPlan}
                       />
                       <Route path="/userProfile" component={UserProfile} />
+                      <Route path="/comments" component={Comments} />
                       <Route path="/shopProfile" component={ShopProfile} />
                       <Route path="/shopImages" component={ShopImages} />
                       <Route path="/saloonPersons" component={SaloonPersonels} />

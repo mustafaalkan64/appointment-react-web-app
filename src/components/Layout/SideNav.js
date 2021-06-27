@@ -121,6 +121,9 @@ const SideNav = () => {
   const handleAppointmentCalender = () => {
     history.push("/shopAppointmentCalender");
   }
+  const handleComments = () => {
+    history.push("/comments");
+  }
   const redirectHomePage = () => {
     history.push("/");
   };
@@ -169,23 +172,25 @@ const SideNav = () => {
             </Menu.Item>
           </SubMenu>
         ) : (
-          <SubMenu
-            key="subAppointments"
-            icon={<CheckSquareOutlined />}
-            title={<span>Randevu Bilgilerim</span>}
-          >
-            <Menu.Item key="8" onClick={handleAppointmentPlan}>
-              Randevu Planı Yönetme
-            </Menu.Item>
-            <Menu.Item key="9" onClick={handleAppointmentCalender}>
-              Randevu Takvimim
-            </Menu.Item>
-          </SubMenu>
+          <>
+            {userRole == "Shop" ? (
+              <SubMenu
+                key="subAppointments"
+                icon={<CheckSquareOutlined />}
+                title={<span>Randevu Bilgilerim</span>}
+              >
+                <Menu.Item key="8" onClick={handleAppointmentPlan}>
+                  Randevu Planı Yönetme
+              </Menu.Item>
+                <Menu.Item key="9" onClick={handleAppointmentCalender}>
+                  Randevu Takvimim
+              </Menu.Item>
+              </SubMenu>) : (<></>)}</>
         )}
         <SubMenu
           key="subAccount"
           icon={<UserOutlined />}
-          title={userRole === "User" ? (<span>Kullanıcı Bilgilerim</span>) : (<span>Salon Bilgilerim</span>)}
+          title={userRole === "User" ? (<span>Kullanıcı Bilgilerim</span>) : (<>{userRole === "Shop" ? (<span>Salon Bilgilerim</span>) : (<span>Admin Profil</span>)}</>)}
         >
           {userRole === "User" ? (
             <Menu.Item key="10" onClick={handleUserProfile}>
@@ -193,24 +198,37 @@ const SideNav = () => {
             </Menu.Item>
           ) : (
             <>
-              <Menu.Item key="11" onClick={handleShopProfile}>
-                Salon Profilim
-              </Menu.Item>
-              <Menu.Item key="12" onClick={handleShopServices}>
-                Verdiğim Hizmetler
-              </Menu.Item>
-              <Menu.Item key="13" onClick={handleShopCategories}>
-                Kategorilerim
-              </Menu.Item>
-              <Menu.Item key="14" onClick={handleShopImages}>
-                Fotoğraflarım
-              </Menu.Item>
-              <Menu.Item key="15" onClick={handleShopNotifications}>
-                Bildirimlerim
-              </Menu.Item>
-              <Menu.Item key="16" onClick={handlePersons}>
-                Personellerim
-              </Menu.Item>
+              {userRole == "Shop" ? (
+                <>
+                  <Menu.Item key="11" onClick={handleShopProfile}>
+                    Salon Profilim
+                  </Menu.Item>
+                  <Menu.Item key="12" onClick={handleShopServices}>
+                    Verdiğim Hizmetler
+                  </Menu.Item>
+                  <Menu.Item key="13" onClick={handleShopCategories}>
+                    Kategorilerim
+                  </Menu.Item>
+                  <Menu.Item key="14" onClick={handleShopImages}>
+                    Fotoğraflarım
+                  </Menu.Item>
+                  <Menu.Item key="15" onClick={handleShopNotifications}>
+                    Bildirimlerim
+                  </Menu.Item>
+                  <Menu.Item key="16" onClick={handlePersons}>
+                    Personellerim
+                  </Menu.Item>
+                </>
+              ) : (
+                <>
+                  <Menu.Item key="20" onClick={handleUserProfile}>
+                    Profilim
+                  </Menu.Item>
+                  <Menu.Item key="19" onClick={handleComments}>
+                    Yorumlar
+                  </Menu.Item>
+                </>)
+              }
             </>
           )}
 

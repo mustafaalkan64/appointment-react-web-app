@@ -343,7 +343,7 @@ export default function Home() {
                                                 <Col xs={24} xl={8}><Rate allowHalf defaultValue={value.rate} /></Col>
                                             </Row>
                                             <Row>
-                                                <Col><Breadcrumb>
+                                                <Col span={16}><Breadcrumb>
                                                     <Breadcrumb.Item>{value.city}</Breadcrumb.Item>
                                                     <Breadcrumb.Item>
                                                         {value.district}
@@ -351,6 +351,9 @@ export default function Home() {
                                                     <Breadcrumb.Item>{value.zone}</Breadcrumb.Item>
                                                     <Breadcrumb.Item>{value.serviceName}</Breadcrumb.Item>
                                                 </Breadcrumb></Col>
+                                                <Col span={8}>
+                                                    <span>{value.commentCount === 0 ? (<div>Henüz Yorum Yapılmamış</div>) : (<div>{value.commentCount} Yorum</div>)}</span>
+                                                </Col>
                                             </Row>
 
                                             <Row style={{ marginTop: 15 }}><Col className="ant-card-meta-description">{value.saloonDescription}</Col></Row>

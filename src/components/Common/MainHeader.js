@@ -13,12 +13,17 @@ const MainHeader = () => {
     const register = () => {
         history.push("/signUp")
     }
+
+    const redirectHomePage = () => {
+        history.push("/home")
+    }
+
     const { isLoggedIn, token, username } = useContext(UserContext);
     return (
         <div>
             <Header className="header" style={{ backgroundColor: "#1890ff" }}>
                 <div className="logo">
-                    <img src={logo} alt="LogoImg" style={{
+                    <img onClick={() => redirectHomePage()} src={logo} alt="LogoImg" style={{
                         float: "left",
                         width: "202px",
                         height: "75px"
