@@ -29,52 +29,66 @@ export default function Home() {
     const [hasSearched, setHasSearched] = useState(false);
     const [form] = Form.useForm();
 
-    const getAllPlaces = useCallback(async () => {
-        await API.get(`place/getAllPlaces`, {
+    // const getAllPlaces = useCallback(async () => {
+    //     await API.get(`place/getAllPlaces`, {
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //         },
+    //     })
+    //         .then((res) => {
+    //             setPlaceResults(res.data);
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //         });
+    // }, []);
+
+
+    // const getAllServices = useCallback(async () => {
+    //     await API.get(`categories/getAllServices`, {
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //         },
+    //     })
+    //         .then((res) => {
+    //             setServiceResults(res.data);
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //         });
+    // }, []);
+
+
+    // useEffect(() => {
+    //     getAllPlaces();
+    //     getAllServices();
+    // }, [getAllPlaces, getAllServices]);
+
+    const AutoCompleteOption = AutoComplete.Option;
+
+    const handlePlaceSearch = async (value) => {
+
+        await API.get(`place/getPlacesByQuery?query=${value}`, {
             headers: {
                 "Content-Type": "application/json",
             },
         })
             .then((res) => {
                 setPlaceResults(res.data);
+                // setFilteredPlaceResult(res);
             })
             .catch((error) => {
                 console.log(error);
             });
-    }, []);
 
+        // let res = [];
+        // if (!value) {
+        //     res = [];
+        // } else {
+        //     res = placeResults.filter((item) => item.value.toLocaleUpperCase('tr-TR').includes(value.toLocaleUpperCase('tr-TR')));
+        // }
 
-    const getAllServices = useCallback(async () => {
-        await API.get(`categories/getAllServices`, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-            .then((res) => {
-                setServiceResults(res.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, []);
-
-
-    useEffect(() => {
-        getAllPlaces();
-        getAllServices();
-    }, [getAllPlaces, getAllServices]);
-
-    const AutoCompleteOption = AutoComplete.Option;
-
-    const handlePlaceSearch = (value) => {
-        let res = [];
-        if (!value) {
-            res = [];
-        } else {
-            res = placeResults.filter((item) => item.value.toLocaleUpperCase('tr-TR').includes(value.toLocaleUpperCase('tr-TR')));
-        }
-
-        setFilteredPlaceResult(res);
+        // setFilteredPlaceResult(res);
     };
 
     const search = useCallback(() => {
@@ -103,15 +117,28 @@ export default function Home() {
             });
     }, [pageNumber, selectedPlaceId, selectedServiceId, sortValue]);
 
-    const handleServiceSearch = (value) => {
-        let res = [];
-        if (!value) {
-            res = [];
-        } else {
-            res = serviceResults.filter((item) => item.value.toLocaleUpperCase('tr-TR').includes(value.toLocaleUpperCase('tr-TR')));
-        }
+    const handleServiceSearch = async (value) => {
 
-        setFilteredServiceResults(res);
+        await API.get(`categories/getAllServicesByQuery?query=${value}`, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((res) => {
+                setServiceResults(res.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+        // let res = [];
+        // if (!value) {
+        //     res = [];
+        // } else {
+        //     res = serviceResults.filter((item) => item.value.toLocaleUpperCase('tr-TR').includes(value.toLocaleUpperCase('tr-TR')));
+        // }
+
+        // setFilteredServiceResults(res);
     };
 
     const onShowSizeChange = (current, pageSize) => {
@@ -161,7 +188,7 @@ export default function Home() {
     };
 
     const onServiceSearch = (value, option) => {
-        setSelectedServiceId(option.key);
+        setSelectedServiceId(option.value);
     };
 
     const handleSortChange = useCallback((value) => {
@@ -233,9 +260,9 @@ export default function Home() {
                                             placeholder="İl, İlçe veya Bölge Giriniz"
                                         >
                                             {
-                                                filteredPlaceResult.map(({ key, value }) => (
-                                                    <AutoCompleteOption key={key} value={value}>
-                                                        {value}
+                                                placeResults.map((element, index) => (
+                                                    <AutoCompleteOption key={element.placeCode} value={element.placeName}>
+                                                        {element.placeName}
                                                     </AutoCompleteOption>
                                                 ))
                                             }
@@ -261,9 +288,9 @@ export default function Home() {
                                             style={{ width: 300 }}
                                             showSearch
                                         >
-                                            {filteredServiceResults.map(({ key, value }) => (
-                                                <Option key={key} value={value}>
-                                                    {value}
+                                            {serviceResults.map((element, index) => (
+                                                <Option key={element.serviceId} value={element.serviceName}>
+                                                    {element.serviceName}
                                                 </Option>
                                             ))}
                                         </AutoComplete>
