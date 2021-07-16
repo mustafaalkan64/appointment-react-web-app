@@ -173,7 +173,7 @@ const SideNav = () => {
           </SubMenu>
         ) : (
           <>
-            {userRole == "Shop" ? (
+            {userRole === "Shop" ? (
               <SubMenu
                 key="subAppointments"
                 icon={<CheckSquareOutlined />}
@@ -198,7 +198,7 @@ const SideNav = () => {
             </Menu.Item>
           ) : (
             <>
-              {userRole == "Shop" ? (
+              {userRole === "Shop" ? (
                 <>
                   <Menu.Item key="11" onClick={handleShopProfile}>
                     Salon Profilim

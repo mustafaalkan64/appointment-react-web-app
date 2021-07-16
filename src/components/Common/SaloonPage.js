@@ -33,7 +33,6 @@ const SaloonPage = () => {
     const [saloonId, setSaloonId] = useState(null);
     const [saloonInformation, setSaloonInformation] = useState({});
     const [comments, setComments] = useState([]);
-    const [rate, setRate] = useState(null);
     const [modifiedCollection, setModifiedCollection] = useState([]);
     const getCurrentAnchor = () => '#components-anchor-demo-static';
     const [page, setPage] = useState(1);
@@ -88,7 +87,8 @@ const SaloonPage = () => {
                 setCommentLoading(false);
             })
             .catch((error) => {
-                if (error.response.status === 401) {
+                debugger;
+                if (error.response.status === 401 || error.response.status === 403) {
                     message.error("Yorum Yapabilmeniz İçin Kullanıcı Girişi Yapmanız Gerekmektedir!");
                 } else {
                     message.error(error.response.data);
@@ -178,7 +178,7 @@ const SaloonPage = () => {
         getShopDetail();
 
 
-    }, [saloonUrl, rate]);
+    }, [saloonUrl]);
 
     const convertToFullDate = (datetime) => {
         var d = new Date(datetime);

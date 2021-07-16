@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import { useHistory } from "react-router";
 import { Card, Image, AutoComplete, Row, Col, Skeleton, Button, Layout, Pagination, Select, Rate, Breadcrumb, Divider, Alert, Form, message } from 'antd';
 import { EditOutlined, ShopOutlined } from '@ant-design/icons';
@@ -6,6 +6,8 @@ import API from "../../api";
 import { imageUrlDirectory } from "../../constUrls";
 import MainHeader from "./MainHeader";
 import MainFooter from "./MainFooter";
+import { cardStyle, headStyle } from "../../assets/styles/styles";
+
 
 const { Content } = Layout;
 
@@ -14,13 +16,11 @@ export default function Home() {
     const history = useHistory();
     const { Option } = Select;
 
-    const [filteredPlaceResult, setFilteredPlaceResult] = useState([]);
     const [placeResults, setPlaceResults] = useState([]);
     const [saloonResults, setSaloonResults] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const [serviceResults, setServiceResults] = useState([]);
-    const [filteredServiceResults, setFilteredServiceResults] = useState([]);
     const [selectedPlaceId, setSelectedPlaceId] = useState(null);
     const [selectedServiceId, setSelectedServiceId] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
@@ -230,206 +230,210 @@ export default function Home() {
             <Layout style={{ minHeight: '100vh' }}>
                 <MainHeader></MainHeader>
                 <Content style={{ padding: '0 10px', marginTop: 10, marginRight: "10%", marginLeft: '10%' }}>
-
-                    <div>
-                        <Form
-                            form={form}
-                            name="advanced_search"
-                            className="ant-advanced-search-form"
-                            onFinish={onFinish}
-                            layout="inline"
-                        >
-                            <Row >
-                                <Col key={"col-place"}>
-                                    <Form.Item
-                                        name={"place"}
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Konum Giriniz',
-                                            },
-                                        ]}
-                                    >
-                                        <AutoComplete
-                                            onSearch={handlePlaceSearch}
-                                            onSelect={onPlaceSearch}
-                                            showSearch
-                                            allowClear
-                                            onClear={clearPlaceSearch}
-                                            style={{ width: 300 }}
-                                            placeholder="İl, İlçe veya Bölge Giriniz"
+                    <Card
+                        hoverable
+                        bordered={true}
+                        style={cardStyle}
+                        headStyle={headStyle}>
+                        <div>
+                            <Form
+                                form={form}
+                                name="advanced_search"
+                                className="ant-advanced-search-form"
+                                onFinish={onFinish}
+                                layout="inline"
+                            >
+                                <Row >
+                                    <Col key={"col-place"}>
+                                        <Form.Item
+                                            name={"place"}
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: 'Konum Giriniz',
+                                                },
+                                            ]}
                                         >
-                                            {
-                                                placeResults.map((element, index) => (
-                                                    <AutoCompleteOption key={element.placeCode} value={element.placeName}>
-                                                        {element.placeName}
-                                                    </AutoCompleteOption>
-                                                ))
-                                            }
-                                        </AutoComplete>
-                                    </Form.Item>
-                                </Col>
-                                <Col key={"col-service"}>
-                                    <Form.Item
-                                        name={"service"}
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Almak İstediğiniz Hizmeti Giriniz',
-                                            },
-                                        ]}
-                                    >
-                                        <AutoComplete
-                                            placeholder="Almak İstediğiniz Hizmeti Giriniz"
-                                            onSearch={handleServiceSearch}
-                                            onSelect={onServiceSearch}
-                                            allowClear
-                                            onClear={clearServiceSearch}
-                                            style={{ width: 300 }}
-                                            showSearch
+                                            <AutoComplete
+                                                onSearch={handlePlaceSearch}
+                                                onSelect={onPlaceSearch}
+                                                showSearch
+                                                allowClear
+                                                onClear={clearPlaceSearch}
+                                                style={{ width: 300 }}
+                                                placeholder="İl, İlçe veya Bölge Giriniz"
+                                            >
+                                                {
+                                                    placeResults.map((element, index) => (
+                                                        <AutoCompleteOption key={element.placeCode} value={element.placeName}>
+                                                            {element.placeName}
+                                                        </AutoCompleteOption>
+                                                    ))
+                                                }
+                                            </AutoComplete>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col key={"col-service"}>
+                                        <Form.Item
+                                            name={"service"}
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: 'Almak İstediğiniz Hizmeti Giriniz',
+                                                },
+                                            ]}
                                         >
-                                            {serviceResults.map((element, index) => (
-                                                <Option key={element.serviceId} value={element.serviceName}>
-                                                    {element.serviceName}
-                                                </Option>
-                                            ))}
-                                        </AutoComplete>
-                                    </Form.Item>
-                                </Col>
-                                <Col key={"col-order"}>
-                                    <Form.Item
-                                        name={"order"}
-                                    >
-                                        <Select
-                                            style={{ width: 300 }}
-                                            defaultValue="Seçiniz"
-                                            onChange={handleSortChange}
+                                            <AutoComplete
+                                                placeholder="Almak İstediğiniz Hizmeti Giriniz"
+                                                onSearch={handleServiceSearch}
+                                                onSelect={onServiceSearch}
+                                                allowClear
+                                                onClear={clearServiceSearch}
+                                                style={{ width: 300 }}
+                                                showSearch
+                                            >
+                                                {serviceResults.map((element, index) => (
+                                                    <Option key={element.serviceId} value={element.serviceName}>
+                                                        {element.serviceName}
+                                                    </Option>
+                                                ))}
+                                            </AutoComplete>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col key={"col-order"}>
+                                        <Form.Item
+                                            name={"order"}
                                         >
-                                            <Option key={"ascByPoint"}>
-                                                Puana Göre Artan
+                                            <Select
+                                                style={{ width: 300 }}
+                                                defaultValue="Seçiniz"
+                                                onChange={handleSortChange}
+                                            >
+                                                <Option key={"ascByPoint"}>
+                                                    Puana Göre Artan
                                         </Option>
-                                            <Option key={"descByPoint"}>
-                                                Puana Göre Azalan
+                                                <Option key={"descByPoint"}>
+                                                    Puana Göre Azalan
                                         </Option>
-                                            <Option key={"ascByCommentCount"}>
-                                                Yorum Sayısına Göre Artan
+                                                <Option key={"ascByCommentCount"}>
+                                                    Yorum Sayısına Göre Artan
                                         </Option>
-                                            <Option key={"descByCommentCount"}>
-                                                Yorum Sayısına Göre Azalan
+                                                <Option key={"descByCommentCount"}>
+                                                    Yorum Sayısına Göre Azalan
                                         </Option>
-                                            <Option key={"ascByPrice"}>
-                                                Fiyatına Göre Artan
+                                                <Option key={"ascByPrice"}>
+                                                    Fiyatına Göre Artan
                                         </Option>
-                                            <Option key={"descByPrice"}>
-                                                Fiyatına Göre Azalan
+                                                <Option key={"descByPrice"}>
+                                                    Fiyatına Göre Azalan
                                         </Option>
-                                        </Select>
-                                    </Form.Item>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col
-                                    span={24}
-                                    style={{
-                                        textAlign: 'right',
-                                        marginBottom: 10
-                                    }}
-                                >
-                                    <Button type="primary" htmlType="submit">
-                                        Search
+                                            </Select>
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col
+                                        span={24}
+                                        style={{
+                                            textAlign: 'right',
+                                            marginBottom: 10
+                                        }}
+                                    >
+                                        <Button type="primary" htmlType="submit">
+                                            Search
                                     </Button>
 
-                                </Col>
-                            </Row>
-                        </Form>
-                        {
-                            loading ? (
-                                <div>
-                                    <Skeleton active avatar />
-                                    <Skeleton active avatar />
-                                    <Skeleton active avatar />
-                                    <Skeleton active avatar />
-                                </div>
+                                    </Col>
+                                </Row>
+                            </Form>
+                            {
+                                loading ? (
+                                    <div>
+                                        <Skeleton active avatar />
+                                        <Skeleton active avatar />
+                                        <Skeleton active avatar />
+                                        <Skeleton active avatar />
+                                    </div>
 
-                            ) : ((saloonResults.length > 0) ? (saloonResults.map((value) => (
-                                <Card
-                                    style={{ width: '100%', marginBottom: 20, height: '600' }}
-                                >
-                                    <Row>
-                                        <Col xs={24} xl={8} style={{ paddingRight: "10px" }}>
-                                            <Image
-                                                alt="example"
-                                                style={{ width: "90%", height: "130px" }}
-                                                // src={imageUrlDirectory + "empty-img.png"}
-                                                src={imageUrlDirectory + value.image}
-                                            />
-                                        </Col>
-                                        <Col xs={24} xl={16} marginTop={10} marginLeft={10}>
-                                            <Row >
-                                                <Col xs={24} xl={16} style={{ float: "left" }} className="ant-card-meta-title">{value.saloonHeader}</Col>
-                                                <Col xs={24} xl={8}><Rate allowHalf defaultValue={value.rate} /></Col>
-                                            </Row>
-                                            <Row>
-                                                <Col span={16}><Breadcrumb>
-                                                    <Breadcrumb.Item>{value.city}</Breadcrumb.Item>
-                                                    <Breadcrumb.Item>
-                                                        {value.district}
-                                                    </Breadcrumb.Item>
-                                                    <Breadcrumb.Item>{value.zone}</Breadcrumb.Item>
-                                                    <Breadcrumb.Item>{value.serviceName}</Breadcrumb.Item>
-                                                </Breadcrumb></Col>
-                                                <Col span={8}>
-                                                    <span>{value.commentCount === 0 ? (<div>Henüz Yorum Yapılmamış</div>) : (<div>{value.commentCount} Yorum</div>)}</span>
-                                                </Col>
-                                            </Row>
+                                ) : ((saloonResults.length > 0) ? (saloonResults.map((value) => (
+                                    <Card
+                                        style={{ width: '100%', marginBottom: 20, height: '600' }}
+                                    >
+                                        <Row>
+                                            <Col xs={24} xl={8} style={{ paddingRight: "10px" }}>
+                                                <Image
+                                                    alt="example"
+                                                    style={{ width: "90%", height: "130px" }}
+                                                    // src={imageUrlDirectory + "empty-img.png"}
+                                                    src={imageUrlDirectory + value.image}
+                                                />
+                                            </Col>
+                                            <Col xs={24} xl={16} marginTop={10} marginLeft={10}>
+                                                <Row >
+                                                    <Col xs={24} xl={16} style={{ float: "left" }} className="ant-card-meta-title">{value.saloonHeader}</Col>
+                                                    <Col xs={24} xl={8}><Rate allowHalf defaultValue={value.rate} /></Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col span={16}><Breadcrumb>
+                                                        <Breadcrumb.Item>{value.city}</Breadcrumb.Item>
+                                                        <Breadcrumb.Item>
+                                                            {value.district}
+                                                        </Breadcrumb.Item>
+                                                        <Breadcrumb.Item>{value.zone}</Breadcrumb.Item>
+                                                        <Breadcrumb.Item>{value.serviceName}</Breadcrumb.Item>
+                                                    </Breadcrumb></Col>
+                                                    <Col span={8}>
+                                                        <span>{value.commentCount === 0 ? (<div>Henüz Yorum Yapılmamış</div>) : (<div>{value.commentCount} Yorum</div>)}</span>
+                                                    </Col>
+                                                </Row>
 
-                                            <Row style={{ marginTop: 15 }}><Col className="ant-card-meta-description">{value.saloonDescription}</Col></Row>
-                                            <Row style={{ marginTop: 15 }}>
-                                                <Col>
-                                                    <text style={{ fontWeight: 500 }}>Fiyat: {value.price} tl</text>
-                                                </Col>
-                                            </Row>
-                                        </Col>
-                                    </Row>
+                                                <Row style={{ marginTop: 15 }}><Col className="ant-card-meta-description">{value.saloonDescription}</Col></Row>
+                                                <Row style={{ marginTop: 15 }}>
+                                                    <Col>
+                                                        <text style={{ fontWeight: 500 }}>Fiyat: {value.price} tl</text>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+                                        </Row>
 
-                                    <Row style={{ height: 40, borderTop: "1px solid #f0f0f0", paddingTop: 5, marginTop: 10 }}>
-                                        <Col xs={24} xl={12} style={{ textAlign: "center" }}>
-                                            <Button type="link" icon={<EditOutlined />}>
-                                                Randevu Oluştur
+                                        <Row style={{ height: 40, borderTop: "1px solid #f0f0f0", paddingTop: 5, marginTop: 10 }}>
+                                            <Col xs={24} xl={12} style={{ textAlign: "center" }}>
+                                                <Button type="link" icon={<EditOutlined />}>
+                                                    Randevu Oluştur
                                                         </Button>
-                                            <Divider type="vertical" />
-                                        </Col>
-                                        <Col xs={24} xl={12} style={{ textAlign: "center" }}>
-                                            <Button type="link" icon={<ShopOutlined />} onClick={() => redirectToSaloonDetailPage(value.urlSaloonTitle)}>
-                                                Salonu Görüntüle
+                                                <Divider type="vertical" />
+                                            </Col>
+                                            <Col xs={24} xl={12} style={{ textAlign: "center" }}>
+                                                <Button type="link" icon={<ShopOutlined />} onClick={() => redirectToSaloonDetailPage(value.urlSaloonTitle)}>
+                                                    Salonu Görüntüle
                                                         </Button>
-                                        </Col>
+                                            </Col>
 
-                                    </Row>
+                                        </Row>
 
-                                    <Pagination
-                                        showSizeChanger
-                                        onChange={onPageChange}
-                                        defaultPageSize={10}
-                                        style={{ marginTop: 10 }}
-                                        onShowSizeChange={onShowSizeChange}
-                                        defaultCurrent={1}
-                                        total={pageCount}
-                                    />
+                                        <Pagination
+                                            showSizeChanger
+                                            onChange={onPageChange}
+                                            defaultPageSize={10}
+                                            style={{ marginTop: 10 }}
+                                            onShowSizeChange={onShowSizeChange}
+                                            defaultCurrent={1}
+                                            total={pageCount}
+                                        />
 
-                                </Card>
-                            ))) : (hasSearched ? (<Alert
-                                message="Üzgünüz"
-                                description="Aradığınız Kriterlere Uygun Sonuç Bulamadık"
-                                type="error"
-                                showIcon
-                            />) : (<div></div>)))
+                                    </Card>
+                                ))) : (hasSearched ? (<Alert
+                                    message="Üzgünüz"
+                                    description="Aradığınız Kriterlere Uygun Sonuç Bulamadık"
+                                    type="error"
+                                    showIcon
+                                />) : (<div></div>)))
 
-                        }
+                            }
 
-                    </div>
-                    {/* </Layout> */}
-
+                        </div>
+                        {/* </Layout> */}
+                    </Card>
                 </Content>
                 <MainFooter />
             </Layout >

@@ -71,10 +71,6 @@ export default function MyAppointments(props) {
   const pageHeader = header;
   const { Option } = Select;
 
-  const handleClick = () => {
-    history.push("/form");
-  };
-
   const handleSortChange = useCallback((value) => {
     setSortValue(value);
   }, []);

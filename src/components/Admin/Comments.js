@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { List, Pagination, message, Skeleton, Rate, Card, Button } from "antd";
 import API from "../../api";
 import "moment/locale/tr";
@@ -45,7 +45,7 @@ const Comments = () => {
         return `Toplam ${total} Yorum`;
     }
 
-    const getComments = async () => {
+    const getComments = useCallback(async () => {
         setLoading(true);
         const pageNumber = 1;
         setPage(pageNumber);
@@ -61,11 +61,10 @@ const Comments = () => {
                 setLoading(false);
             })
             .catch((error) => {
-                debugger;
                 message.error(error.response.data);
                 setLoading(false);
             });
-    }
+    }, [token]);
 
     useEffect(() => {
         // const getComments = async () => {
@@ -98,6 +97,7 @@ const Comments = () => {
         setSecondBreadcrumb,
         setLastBreadcrumb,
         token,
+        getComments,
         setTotalCount,
         setComments
     ]);
