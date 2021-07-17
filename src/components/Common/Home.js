@@ -171,8 +171,8 @@ export default function Home() {
             });
     }
 
-    const redirectToSaloonDetailPage = (urlSaloonTitle) => {
-        history.push("/saloonDetail/" + urlSaloonTitle);
+    const redirectToSaloonDetailPage = (urlSaloonTitle, id) => {
+        history.push(`/saloonDetail/${urlSaloonTitle}/${id}`);
     }
 
     const onPlaceSearch = async (value, option) => {
@@ -205,7 +205,7 @@ export default function Home() {
             PageSize: 10,
             SortValue: value
         };
-        API.get(`home/search`, { params: searchModel }, {
+        API.get(`home / search`, { params: searchModel }, {
             headers: {
                 "Content-Type": "application/json",
             },
@@ -404,7 +404,7 @@ export default function Home() {
                                                 <Divider type="vertical" />
                                             </Col>
                                             <Col xs={24} xl={12} style={{ textAlign: "center" }}>
-                                                <Button type="link" icon={<ShopOutlined />} onClick={() => redirectToSaloonDetailPage(value.urlSaloonTitle)}>
+                                                <Button type="link" icon={<ShopOutlined />} onClick={() => redirectToSaloonDetailPage(value.urlSaloonTitle, value.saloonId)}>
                                                     Salonu Görüntüle
                                                         </Button>
                                             </Col>

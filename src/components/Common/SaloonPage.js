@@ -23,17 +23,21 @@ const { Link } = Anchor;
 const { Content } = Layout;
 
 const SaloonPage = () => {
-    let { saloonUrl } = useParams();
+    let { saloonUrl, saloonId } = useParams();
     const [loading, setLoading] = useState(false);
+    const [servicesLoading, setServicesLoading] = useState(false);
+    const [imagesLoading, setImagesLoading] = useState(false);
+    const [personelsLoading, setPersonelsLoading] = useState(false);
     const [commentLoading, setCommentLoading] = useState(false);
     const [found, setFound] = useState(true);
     // const history = useHistory();
     const token = localStorage.getItem("auth_token");
     const [logo, setLogo] = useState("");
-    const [saloonId, setSaloonId] = useState(null);
     const [saloonInformation, setSaloonInformation] = useState({});
     const [comments, setComments] = useState([]);
     const [modifiedCollection, setModifiedCollection] = useState([]);
+    const [saloonPersonels, setSaloonPersonels] = useState([]);
+    const [saloonServices, setSaloonServices] = useState([]);
     const getCurrentAnchor = () => '#components-anchor-demo-static';
     const [page, setPage] = useState(1);
     const pageSize = 5;
@@ -87,7 +91,6 @@ const SaloonPage = () => {
                 setCommentLoading(false);
             })
             .catch((error) => {
-                debugger;
                 if (error.response.status === 401 || error.response.status === 403) {
                     message.error("Yorum Yapabilmeniz İçin Kullanıcı Girişi Yapmanız Gerekmektedir!");
                 } else {
@@ -100,14 +103,12 @@ const SaloonPage = () => {
 
 
     useEffect(() => {
-        let localSaloonId = 0;
 
         const getComments = async () => {
-            debugger;
             setCommentLoading(true);
             const pageNumber = 1;
             setPage(pageNumber);
-            await API.get(`comments/getComments/${localSaloonId}/${pageSize}/${pageNumber}`, {
+            await API.get(`comments/getComments/${saloonId}/${pageSize}/${pageNumber}`, {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -137,30 +138,17 @@ const SaloonPage = () => {
         //         });
         // }
 
-        const getShopDetail = async () => {
+        const getSaloonDetail = async () => {
             setLoading(true);
-            await API.get(`shop/getSaloonDetails?saloonTitle=${saloonUrl}`, {
+            await API.get(`home/getSaloonProfile?saloonId=${saloonId}`, {
                 headers: {
                     "Content-Type": "application/json",
                 },
             })
                 .then((res) => {
-                    setSaloonId(res.data.id);
                     setFound(true);
-                    localSaloonId = res.data.id; //local saloonId (let ile yukarıda tanımlanmış)
                     setSaloonInformation(res.data);
                     setLogo(imageUrlDirectory + res.data.logoUrl);
-                    if (res.data.shopImages.length > 0) {
-                        let modifiedCollections = res.data.shopImages.reduce((rows, key, index) => {
-                            return (index % 6 === 0 ? rows.push([key])
-                                : rows[rows.length - 1].push(key)) && rows;
-                        }, []);
-
-                        setModifiedCollection(modifiedCollections);
-                        getComments();
-                        // getCommentsRateAverage();
-
-                    }
                     setLoading(false);
                     return true;
                 })
@@ -175,10 +163,73 @@ const SaloonPage = () => {
                 });
         };
 
-        getShopDetail();
+        const getSaloonServices = async () => {
+            setServicesLoading(true);
+            await API.get(`home/getSaloonServices?saloonId=${saloonId}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((res) => {
+                    setSaloonServices(res.data);
+                    setServicesLoading(false);
+                })
+                .catch((error) => {
+                    console.log(error.response.data);
+                    setServicesLoading(false);
+                });
+        };
 
+        const getSaloonImages = async () => {
+            setImagesLoading(true);
+            await API.get(`home/getSaloonImages?saloonId=${saloonId}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((res) => {
+                    if (res.data.length > 0) {
+                        let modifiedCollections = res.data.reduce((rows, key, index) => {
+                            return (index % 6 === 0 ? rows.push([key])
+                                : rows[rows.length - 1].push(key)) && rows;
+                        }, []);
 
-    }, [saloonUrl]);
+                        setModifiedCollection(modifiedCollections);
+                        setImagesLoading(false);
+                        // getCommentsRateAverage();
+
+                    }
+                })
+                .catch((error) => {
+                    console.log(error.response.data);
+                    setImagesLoading(false);
+                });
+        };
+
+        const getSaloonPersonels = async () => {
+            setPersonelsLoading(true);
+            await API.get(`home/getSaloonPersonels?saloonId=${saloonId}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((res) => {
+                    setSaloonPersonels(res.data);
+                    setPersonelsLoading(false);
+                })
+                .catch((error) => {
+                    console.log(error.response.data);
+                    setPersonelsLoading(false);
+                });
+        };
+
+        getSaloonDetail();
+        getSaloonServices();
+        getSaloonImages();
+        getComments();
+        getSaloonPersonels();
+
+    }, [saloonId]);
 
     const convertToFullDate = (datetime) => {
         var d = new Date(datetime);
@@ -280,7 +331,7 @@ const SaloonPage = () => {
                         )}
 
 
-                        {loading ? (
+                        {imagesLoading ? (
                             <div className="spinClass">
                                 <Skeleton.Image style={{ width: 200 }} active={true} />
                                 <Skeleton.Image style={{ width: 200 }} active={true} />
@@ -310,7 +361,7 @@ const SaloonPage = () => {
                             </Card>
                         )}
 
-                        {loading ? (
+                        {servicesLoading ? (
                             <div className="spinClass">
                                 <Skeleton active />
                                 <Skeleton active />
@@ -327,7 +378,7 @@ const SaloonPage = () => {
                                     loading={loading}
                                     itemLayout="horizontal"
                                     // loadMore={loadMore}
-                                    dataSource={saloonInformation.shopServices}
+                                    dataSource={saloonServices}
                                     renderItem={item => (
                                         <List.Item key={"ListItem_service_" + item.services.id}>
                                             <Skeleton key={"skeleton_service_" + item.services.id} avatar title={false} loading={loading} active>
@@ -343,7 +394,7 @@ const SaloonPage = () => {
                         )}
 
 
-                        {loading ? (
+                        {personelsLoading ? (
                             <div className="spinClass">
                                 <Skeleton active />
                                 <Skeleton active />
@@ -360,7 +411,7 @@ const SaloonPage = () => {
                                     loading={loading}
                                     itemLayout="horizontal"
                                     // loadMore={loadMore}
-                                    dataSource={saloonInformation.saloonPersonels}
+                                    dataSource={saloonPersonels}
                                     renderItem={item => (
                                         <List.Item key={"listItem_Person_" + item.id}>
                                             <Skeleton key={"skeleton_person_" + item.id} avatar title={false} loading={loading} active>

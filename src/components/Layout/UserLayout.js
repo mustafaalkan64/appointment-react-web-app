@@ -104,7 +104,7 @@ export default function UserLayout() {
     <div>
       <Switch>
         <Route exact path="/home" component={Home} />
-        <Route exact path="/saloonDetail/:saloonUrl" component={SaloonPage} />
+        <Route exact path="/saloonDetail/:saloonUrl/:saloonId" component={SaloonPage} />
         <Route exact path="/login" component={UserLogin} />
         <Route exact path="/signup" component={UserRegister} />
         <Route exact path="/shopSignup" component={ShopRegister} />
