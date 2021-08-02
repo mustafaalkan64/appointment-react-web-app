@@ -31,6 +31,7 @@ import SaveSaloonPersons from "../Shop/SaveSaloonPerson";
 import SaloonPage from "../Common/SaloonPage";
 import Comments from "../Admin/Comments"
 import API from "../../api";
+import ShopServicesWithPrices from "../Shop/ShopServicesWithPrices";
 
 
 const { Sider, Content } = Layout;
@@ -178,6 +179,7 @@ export default function UserLayout() {
                         component={MyOncomingAppointments}
                       />
                       <Route path="/shopServices" component={ShopServices} />
+                      <Route path="/servicePrices" component={ShopServicesWithPrices} />
                       <Route
                         path="/shopCategories"
                         component={ShopCategories}

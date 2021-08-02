@@ -130,6 +130,9 @@ const SideNav = () => {
   const handlePersons = () => {
     history.push("/saloonPersons");
   }
+  const handleServicePrices = () => {
+    history.push("/servicePrices");
+  }
   const handleLogout = () => {
     localStorage.removeItem("auth_token");
     setIsLoggedIn(false);
@@ -205,6 +208,9 @@ const SideNav = () => {
                   </Menu.Item>
                   <Menu.Item key="12" onClick={handleShopServices}>
                     Verdiğim Hizmetler
+                  </Menu.Item>
+                  <Menu.Item key="21" onClick={handleServicePrices}>
+                    Fiyatlandırma
                   </Menu.Item>
                   <Menu.Item key="13" onClick={handleShopCategories}>
                     Kategorilerim

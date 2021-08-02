@@ -119,7 +119,7 @@ export default function Home() {
 
     const handleServiceSearch = async (value) => {
 
-        await API.get(`categories/getAllServicesByQuery?query=${value}`, {
+        await API.get(`services/getAllServicesByQuery?query=${value}`, {
             headers: {
                 "Content-Type": "application/json",
             },
