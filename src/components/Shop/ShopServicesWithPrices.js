@@ -1,12 +1,45 @@
 import React, { useState, useEffect, useContext } from "react";
-import { TreeSelect, message, Row, Button, Col, Spin, Card } from "antd";
+import { message, Row, Button, Col, Spin, Card, Table, Input, InputNumber, Popconfirm, Form, Typography } from "antd";
 import { useHistory } from "react-router";
 import API from "../../api";
 import "moment/locale/tr";
 import BreadCrumbContext from "../../contexts/BreadcrumbContext";
 import { cardStyle, headStyle } from "../../assets/styles/styles";
-import { Table, Space } from 'antd';
-const { Column } = Table;
+
+const EditableCell = ({
+    editing,
+    dataIndex,
+    title,
+    inputType,
+    record,
+    index,
+    children,
+    ...restProps
+}) => {
+    const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+    return (
+        <td {...restProps}>
+            {editing ? (
+                <Form.Item
+                    name={dataIndex}
+                    style={{
+                        margin: 0,
+                    }}
+                    rules={[
+                        {
+                            required: true,
+                            message: `Please Input ${title}!`,
+                        },
+                    ]}
+                >
+                    {inputNode}
+                </Form.Item>
+            ) : (
+                children
+            )}
+        </td>
+    );
+};
 
 const ShopServicesWithPrices = () => {
     const history = useHistory();
@@ -14,6 +47,9 @@ const ShopServicesWithPrices = () => {
     const [loading, setLoading] = useState(false);
     const [saveLoading, setSaveLoading] = useState(false);
     const token = localStorage.getItem("auth_token");
+    const [form] = Form.useForm();
+    const [data, setData] = useState([]);
+    const [editingKey, setEditingKey] = useState('');
     const {
         setFirstBreadcrumb,
         setSecondBreadcrumb,
@@ -32,6 +68,7 @@ const ShopServicesWithPrices = () => {
                 .then((res) => {
                     debugger;
                     setServices(res.data);
+                    setData(res.data);
                     setLoading(false);
                 })
                 .catch((error) => {
@@ -56,6 +93,44 @@ const ShopServicesWithPrices = () => {
         token,
     ]);
 
+    const isEditing = (record) => record.key === editingKey;
+
+    const edit = (record) => {
+        form.setFieldsValue({
+            serviceName: '',
+            price: '',
+            minPrice: '',
+            maxPrice: '',
+            ...record,
+        });
+        setEditingKey(record.key);
+    };
+
+    const cancel = () => {
+        setEditingKey('');
+    };
+
+    const save = async (key) => {
+        try {
+            const row = await form.validateFields();
+            const newData = [...data];
+            const index = newData.findIndex((item) => key === item.key);
+
+            if (index > -1) {
+                const item = newData[index];
+                newData.splice(index, 1, { ...item, ...row });
+                setData(newData);
+                setEditingKey('');
+            } else {
+                newData.push(row);
+                setData(newData);
+                setEditingKey('');
+            }
+        } catch (errInfo) {
+            console.log('Validate Failed:', errInfo);
+        }
+    };
+
     const columns = [
         {
             title: 'Id',
@@ -71,19 +146,78 @@ const ShopServicesWithPrices = () => {
             title: 'Fiyat',
             dataIndex: 'price',
             key: 'price',
+            editable: true,
+            sorter: {
+                compare: (a, b) => a.price - b.price,
+                multiple: 3,
+            },
         },
         {
             title: 'Min Fiyat',
             dataIndex: 'minPrice',
             key: 'minPrice',
+            editable: true,
+            sorter: {
+                compare: (a, b) => a.minPrice - b.minPrice,
+                multiple: 2,
+            },
         },
         {
             title: 'Max Fiyat',
             dataIndex: 'maxPrice',
             key: 'maxPrice',
+            editable: true,
+            sorter: {
+                compare: (a, b) => a.maxPrice - b.maxPrice,
+                multiple: 1,
+            },
 
         },
+        {
+            title: 'İşlemler',
+            dataIndex: 'operation',
+            render: (_, record) => {
+                const editable = isEditing(record);
+                return editable ? (
+                    <span>
+                        <a
+                            href="javascript:;"
+                            onClick={() => save(record.key)}
+                            style={{
+                                marginRight: 8,
+                            }}
+                        >
+                            Kaydet
+                  </a>
+                        <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+                            <a>İptal Et</a>
+                        </Popconfirm>
+                    </span>
+                ) : (
+                    <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+                        Düzenle
+                    </Typography.Link>
+                );
+            },
+        },
     ];
+
+    const mergedColumns = columns.map((col) => {
+        if (!col.editable) {
+            return col;
+        }
+
+        return {
+            ...col,
+            onCell: (record) => ({
+                record,
+                inputType: col.dataIndex === 'age' ? 'number' : 'text',
+                dataIndex: col.dataIndex,
+                title: col.title,
+                editing: isEditing(record),
+            }),
+        };
+    });
 
     return (
         <div>
@@ -96,22 +230,26 @@ const ShopServicesWithPrices = () => {
                         style={cardStyle}
                         headStyle={headStyle}
                     >
-                        <Spin spinning={loading} delay={500}>
+                        <Form form={form} component={false}>
+                            <Table
+                                components={{
+                                    body: {
+                                        cell: EditableCell,
+                                    },
+                                }}
+                                bordered
+                                dataSource={data}
+                                columns={mergedColumns}
+                                rowClassName="editable-row"
+                                pagination={{
+                                    onChange: cancel,
+                                }}
+                            />
+                        </Form>
+
+                        {/* <Spin spinning={loading} delay={500}>
                             <Table dataSource={services} columns={columns} />
-                            {/* <Column title="Id" dataIndex="shopServiceId" key="shopServiceId" />
-                            <Column title="Hizmet" dataIndex="serviceName" key="serviceName" />
-                            <Column title="Min Fiyat" dataIndex="minPrice" key="minPrice" />
-                            <Column title="Max Fiyat" dataIndex="maxPrice" key="maxPrice" />
-                            <Column title="Fiyat" dataIndex="price" key="price" />
-                            <Column
-                                title="Action"
-                                key="action"
-                                render={(text, record) => (
-                                    <Space size="middle">
-                                        <a>Kaydet</a>
-                                    </Space>
-                                )} */}
-                        </Spin>
+                        </Spin> */}
                     </Card>
                 </Col>
             </Row>
