@@ -115,12 +115,41 @@ const ShopServicesWithPrices = () => {
             const row = await form.validateFields();
             const newData = [...data];
             const index = newData.findIndex((item) => key === item.key);
-
+            debugger;
             if (index > -1) {
                 const item = newData[index];
                 newData.splice(index, 1, { ...item, ...row });
-                setData(newData);
-                setEditingKey('');
+                const updateServicePriceModel = {
+                    Price: row.price,
+                    MaxPrice: row.maxPrice,
+                    MinPrice: row.minPrice,
+                    SaloonServiceId: item.shopServiceId
+
+                };
+                setLoading(true);
+                API.put(`services/updateServicePrice`, updateServicePriceModel, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                    .then((res) => {
+                        message.success("Başarıyla Güncellediniz!");
+                        setData(newData);
+                        setEditingKey('');
+                        setLoading(false);
+                    })
+                    .catch((error) => {
+                        if (error.response !== undefined) {
+                            message.error(error.response.data);
+                        } else {
+                            message.error(
+                                "Güncelleme Esnasında Hata ile Karşılaşıldı!"
+                            );
+                        }
+                        setLoading(false);
+                    });
+
             } else {
                 newData.push(row);
                 setData(newData);
