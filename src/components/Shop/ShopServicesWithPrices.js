@@ -115,7 +115,6 @@ const ShopServicesWithPrices = () => {
             const row = await form.validateFields();
             const newData = [...data];
             const index = newData.findIndex((item) => key === item.key);
-            debugger;
             if (index > -1) {
                 const item = newData[index];
                 newData.splice(index, 1, { ...item, ...row });
@@ -141,7 +140,15 @@ const ShopServicesWithPrices = () => {
                     })
                     .catch((error) => {
                         if (error.response !== undefined) {
-                            message.error(error.response.data);
+                            if (error.response.status == 400) {
+                                message.error(
+                                    "Lütfen Fiyat Formatlarını Doğru Giriniz"
+                                );
+                            }
+                            else {
+                                message.error(error.response.data);
+                            }
+
                         } else {
                             message.error(
                                 "Güncelleme Esnasında Hata ile Karşılaşıldı!"
@@ -180,6 +187,7 @@ const ShopServicesWithPrices = () => {
                 compare: (a, b) => a.price - b.price,
                 multiple: 3,
             },
+
         },
         {
             title: 'Min Fiyat',
