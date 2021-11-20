@@ -35,18 +35,18 @@ export default function MyAppointments(props) {
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  useEffect(() => {
-    const connect = new HubConnectionBuilder()
-      .withUrl(appointmentHub)
-      .withAutomaticReconnect()
-      .build();
+  // useEffect(() => {
+  //   const connect = new HubConnectionBuilder()
+  //     .withUrl(appointmentHub)
+  //     .withAutomaticReconnect()
+  //     .build();
 
-    try {
-      connect.start();
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
+  //   try {
+  //     connect.start();
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }, []);
 
   const showModel = (obj) => {
     setIsModalVisible(true);

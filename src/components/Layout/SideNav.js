@@ -28,28 +28,28 @@ const SideNav = () => {
   const [logo, setLogo] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const connect = new HubConnectionBuilder()
-      .withUrl(appointmentHub)
-      .withAutomaticReconnect()
-      .build();
+  // useEffect(() => {
+  //   const connect = new HubConnectionBuilder()
+  //     .withUrl(appointmentHub)
+  //     .withAutomaticReconnect()
+  //     .build();
 
-    try {
-      connect.start();
-    } catch (err) {
-      console.log(err);
-    }
+  //   try {
+  //     connect.start();
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
 
-    connect.on("broadcastMessage", (appointmentId, cancelText, shopId) => {
-      if (String(currentShop) === shopId) {
-        notification.open({
-          message: "Randevu İptal Bildirimi!",
-          description: `${cancelText} nedeniyle iptal edilmiştir!`,
-        });
-      }
-    });
+  //   connect.on("broadcastMessage", (appointmentId, cancelText, shopId) => {
+  //     if (String(currentShop) === shopId) {
+  //       notification.open({
+  //         message: "Randevu İptal Bildirimi!",
+  //         description: `${cancelText} nedeniyle iptal edilmiştir!`,
+  //       });
+  //     }
+  //   });
 
-  }, [currentShop]);
+  // }, [currentShop]);
 
   useEffect(() => {
     if (userRole === "Shop") {

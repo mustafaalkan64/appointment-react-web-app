@@ -74,7 +74,10 @@ const ShopServicesWithPrices = () => {
                 .catch((error) => {
                     if (error.response.status === 401) {
                         history.push("/login");
-                    } else {
+                    } else if (error.response.status === 500) {
+                        message.error("Sunucu Kaynaklı Hata ile Karşılaşıldı.");
+                    }
+                    else {
                         message.error(error.response.data);
                     }
                     setLoading(false);

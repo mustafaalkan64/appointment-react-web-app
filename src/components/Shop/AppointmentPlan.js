@@ -255,7 +255,6 @@ const AppointmentPlan = () => {
                   onChange={handleChange}
                   style={{ width: "100%" }}
                 >
-                  <Option key="15">15</Option>
                   <Option key="30">30</Option>
                   <Option key="60">60</Option>
                   <Option key="90">90</Option>

@@ -60,23 +60,23 @@ export default function LayoutHeader() {
 
   useEffect(() => {
 
-    const connect = new HubConnectionBuilder()
-      .withUrl(appointmentHub)
-      .withAutomaticReconnect()
-      .build();
+    // const connect = new HubConnectionBuilder()
+    //   .withUrl(appointmentHub)
+    //   .withAutomaticReconnect()
+    //   .build();
 
-    try {
-      connect.start();
-    } catch (err) {
-      console.log(err);
-    }
+    // try {
+    //   connect.start();
+    // } catch (err) {
+    //   console.log(err);
+    // }
 
-    connect.on("broadcastMessage", (appointmentId, cancelText, shopId) => {
-      if (String(currentShop) === shopId) {
-        getNotReadShopNotificationsCount();
-        getShopNotifications();
-      }
-    });
+    // connect.on("broadcastMessage", (appointmentId, cancelText, shopId) => {
+    //   if (String(currentShop) === shopId) {
+    //     getNotReadShopNotificationsCount();
+    //     getShopNotifications();
+    //   }
+    // });
 
     const getShopNotifications = async () => {
       await API.get(`notifications/getTop5Notifications`, {
