@@ -29,6 +29,7 @@ import ShopAppointmentCalender from "../Shop/ShopAppointmentCalender";
 import SaloonPersonels from "../Shop/SaloonPersonels";
 import SaveSaloonPersons from "../Shop/SaveSaloonPerson";
 import SaloonPage from "../Common/SaloonPage";
+import NewAppointment from "../Common/NewAppointment";
 import Comments from "../Admin/Comments"
 import API from "../../api";
 import ShopServicesWithPrices from "../Shop/ShopServicesWithPrices";
@@ -106,6 +107,7 @@ export default function UserLayout() {
       <Switch>
         <Route exact path="/home" component={Home} />
         <Route exact path="/saloonDetail/:saloonUrl/:saloonId" component={SaloonPage} />
+        <Route exact path="/newAppointment/:saloonId" component={NewAppointment} />
         <Route exact path="/login" component={UserLogin} />
         <Route exact path="/signup" component={UserRegister} />
         <Route exact path="/shopSignup" component={ShopRegister} />

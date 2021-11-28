@@ -175,6 +175,10 @@ export default function Home() {
         history.push(`/saloonDetail/${urlSaloonTitle}/${id}`);
     }
 
+    const redirectToNewAppointmentPage = (urlSaloonTitle, id) => {
+        history.push(`/newAppointment/${id}`);
+    }
+
     const onPlaceSearch = async (value, option) => {
         setSelectedPlaceId(option.key);
     };
@@ -398,7 +402,7 @@ export default function Home() {
 
                                         <Row style={{ height: 40, borderTop: "1px solid #f0f0f0", paddingTop: 5, marginTop: 10 }}>
                                             <Col xs={24} xl={12} style={{ textAlign: "center" }}>
-                                                <Button type="link" icon={<EditOutlined />}>
+                                                <Button type="link" icon={<EditOutlined />} onClick={() => redirectToNewAppointmentPage(value.urlSaloonTitle, value.saloonId)}>
                                                     Randevu Oluştur
                                                         </Button>
                                                 <Divider type="vertical" />
