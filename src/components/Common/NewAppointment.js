@@ -34,6 +34,7 @@ const NewAppointment = () => {
     const [saloonInformation, setSaloonInformation] = useState({});
     const [saloonPersonels, setSaloonPersonels] = useState([]);
     const [saloonServices, setSaloonServices] = useState([]);
+    const [appointmentCalenderList, setAppointmentCalenderList] = useState([]);
     const getCurrentAnchor = () => '#components-anchor-demo-static';
 
     useEffect(() => {
@@ -60,6 +61,24 @@ const NewAppointment = () => {
                     } else {
                         message.error(error.response.data);
                     }
+                    setLoading(false);
+                    return false;
+                });
+        };
+
+        const getCurrentWeekAppointments = async () => {
+            setLoading(true);
+            await API.get(`appointment/getCurrentWeekAppointments?saloonId=${saloonId}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((res) => {
+                    setAppointmentCalenderList(res.data);
+                    setLoading(false);
+                    return true;
+                })
+                .catch((error) => {
                     setLoading(false);
                     return false;
                 });
@@ -102,6 +121,7 @@ const NewAppointment = () => {
         getSaloonDetail();
         getSaloonServices();
         getSaloonPersonels();
+        getCurrentWeekAppointments();
 
     }, [saloonId]);
 
@@ -111,10 +131,16 @@ const NewAppointment = () => {
         var day = d.getDate();
         var year = d.getUTCFullYear();
 
+        var newdate = `${("0" + day).slice(-2)}.${("0" + month).slice(-2)}.${year}`;
+        return newdate;
+    };
+
+    const getHourAndMinutes = (datetime) => {
+        var d = new Date(datetime);
         var minutes = d.getMinutes();
         var hour = d.getHours();
 
-        var newdate = `${("0" + day).slice(-2)}.${("0" + month).slice(-2)}.${year} ${("0" + hour).slice(-2)}:${("0" + minutes).slice(-2)}`;
+        var newdate = `${("0" + hour).slice(-2)}:${("0" + minutes).slice(-2)}`;
         return newdate;
     };
 
@@ -279,28 +305,20 @@ const NewAppointment = () => {
                         bordered={true}
                         style={cardStyle}
                         headStyle={headStyle}>
-                        <Row>
-                            <Col span={6}>
-                                <Row>dsf</Row>
-                                <Row>sss</Row>
-                            </Col>
-                            <Col span={6}>
-                                <Row><Button>09:00</Button></Row>
-                                <Row><Button>09:30</Button></Row>
-                                <Row><Button>10:00</Button></Row>
-                            </Col>
-                            <Col span={6}>
-                                <Row>dsf</Row>
-                                <Row>sss</Row>
-                                <Row>aaa</Row>
-                                <Row>vvvv</Row>
-                            </Col>
-                            <Col span={6}>
-                                <Row>dsf</Row>
-                                <Row>sss</Row>
-                                <Row>aaa</Row>
-                            </Col>
-                        </Row>
+                        {appointmentCalenderList.map((appointmentCalender) => (
+                            <Row>
+                                <Col flex="150px">{convertToFullDate(appointmentCalender.appointmentDate)} {appointmentCalender.dayOfWeek}</Col>
+                                <Col flex="auto">
+                                    <Row>
+                                        {
+                                            appointmentCalender.appointmentHoursList.map((appointmentHour) => (
+                                                <Col><Button disabled={!appointmentHour.isActive}>{getHourAndMinutes(appointmentHour.startDate)}</Button></Col>
+                                            ))
+                                        }
+                                    </Row>
+                                </Col>
+                            </Row>
+                        ))}
                     </Card>
 
 
