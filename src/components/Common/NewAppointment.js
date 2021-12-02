@@ -55,7 +55,8 @@ const NewAppointment = () => {
             BeginDate: beginOfAppointmentDate,
             EndDate: endOfAppointmentDate,
             ServicesId: selectedServices,
-            SaloonPersonId: selectedSaloonPersonel
+            SaloonPersonId: selectedSaloonPersonel,
+            SaloonId:saloonId
         };
 
         if(selectedServices == null || selectedServices.length == 0) {
