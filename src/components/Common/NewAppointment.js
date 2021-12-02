@@ -43,6 +43,7 @@ const NewAppointment = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [modalContent, setModalContent] = useState("");
     const [saveAppointmentLoading, setSaveAppointmentLoading] = useState(false);
+    const [appointmentCalenderIsLoading, setAppointmentCalenderIsLoading] = useState(false);
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -127,7 +128,7 @@ const NewAppointment = () => {
         };
 
         const getCurrentWeekAppointments = async () => {
-            setLoading(true);
+            setAppointmentCalenderIsLoading(true);
             await API.get(`appointment/getCurrentWeekAppointments?saloonId=${saloonId}`, {
                 headers: {
                     "Content-Type": "application/json",
@@ -135,11 +136,11 @@ const NewAppointment = () => {
             })
                 .then((res) => {
                     setAppointmentCalenderList(res.data);
-                    setLoading(false);
+                    setAppointmentCalenderIsLoading(false);
                     return true;
                 })
                 .catch((error) => {
-                    setLoading(false);
+                    setAppointmentCalenderIsLoading(false);
                     return false;
                 });
         };
@@ -254,7 +255,7 @@ const NewAppointment = () => {
                                     <Col xs={24} xl={18} margintop={10} marginleft={10}>
                                         <Row >
                                             <Col xs={24} xl={16} style={{ float: "left" }} className="ant-card-meta-title">{saloonInformation.shopTitle}</Col>
-                                            <Col xs={24} xl={8}><Rate allowHalf defaultValue={saloonInformation.averagePoint} /></Col>
+                                            <Col xs={24} xl={8}></Col>
                                         </Row>
                                         <Row >
                                             <Col xs={24} xl={16} style={{ float: "left" }} className="ant-card-meta-title">
@@ -266,9 +267,7 @@ const NewAppointment = () => {
                                                     <Breadcrumb.Item>{saloonInformation.zoneName}</Breadcrumb.Item>
                                                 </Breadcrumb></Col>
                                             <Col xs={24} xl={8}>
-                                                <Anchor affix={false} getCurrentAnchor={getCurrentAnchor}>
-                                                    <Link href="#comments" title={saloonInformation.commentCount === 0 ? (<div>Henüz Yorum Yapılmamış</div>) : (<div>Yorum Sayısı: {saloonInformation.commentCount}</div>)} />
-                                                </Anchor></Col>
+                                            </Col>
                                         </Row>
 
                                         <Row style={{ marginTop: 15 }}>
@@ -387,7 +386,14 @@ const NewAppointment = () => {
                     />)}
 
 
-                    <Card title="Randevu Saati Seçimi"
+                     {appointmentCalenderIsLoading ? (
+                            <div className="spinClass">
+                                <Skeleton active />
+                                <Skeleton active />
+                                <Skeleton active />
+                            </div>
+                        ) : (
+                     <Card title="Randevu Saati Seçimi"
                         hoverable
                         bordered={true}
                         style={cardStyle}
@@ -406,7 +412,7 @@ const NewAppointment = () => {
                                 </Col>
                             </Row>
                         ))}
-                    </Card>
+                    </Card>)}
 
                     <Modal title="Randevu Onayı" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
                         <p>{modalContent}</p>
