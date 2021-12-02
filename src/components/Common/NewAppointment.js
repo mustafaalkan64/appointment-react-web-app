@@ -35,16 +35,61 @@ const NewAppointment = () => {
     const [saloonPersonels, setSaloonPersonels] = useState([]);
     const [saloonServices, setSaloonServices] = useState([]);
     const [appointmentCalenderList, setAppointmentCalenderList] = useState([]);
+    const [selectedServices, setSelectedServices] = useState([]);
+    const [selectedSaloonPersonel, setSelectedSaloonPersonel] = useState(null);
+    const [beginOfAppointmentDate, setBeginOfAppointmentDate] = useState(null);
+    const [endOfAppointmentDate, setEndOfAppointmentDate] = useState(null);
     const getCurrentAnchor = () => '#components-anchor-demo-static';
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [modalContent, setModalContent] = useState("");
+    const [saveAppointmentLoading, setSaveAppointmentLoading] = useState(false);
 
     const showModal = () => {
         setIsModalVisible(true);
     };
 
-    const handleOk = () => {
+    const handleOk = async () => {
+        debugger;
+        setSaveAppointmentLoading(true);
+        var saveAppointmentModel = {
+            BeginDate: beginOfAppointmentDate,
+            EndDate: endOfAppointmentDate,
+            ServicesId: selectedServices,
+            SaloonPersonId: selectedSaloonPersonel
+        };
+
+        if(selectedServices == null || selectedServices.length == 0) {
+            setIsModalVisible(false);
+            message.error("En Az Bir Hizmet Seçmelisiniz");
+            return;
+        }
+
+        if(selectedSaloonPersonel == null || selectedSaloonPersonel == undefined) {
+            setIsModalVisible(false);
+            message.error("En Az Bir Personel Seçmelisiniz");
+            return;
+        }
+
+        await API.post(`appointment/saveAppointment`, saveAppointmentModel, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        })
+            .then((res) => {
+                message.success("Randevunuz Kaydedildi!");
+                setSaveAppointmentLoading(false);
+            })
+            .catch((error) => {
+                if (error.response.status === 401 || error.response.status === 403) {
+                    message.error("Randevu Almak İçin Kullanıcı Girişi Yapmanız Gerekmektedir!");
+                } else {
+                    message.error(error.response.data);
+                }
+                setSaveAppointmentLoading(false);
+            });
         setIsModalVisible(false);
+
     };
 
     const handleCancel = () => {
@@ -159,6 +204,21 @@ const NewAppointment = () => {
     };
 
     const showAppointmentModal = (beginDate, endDate, dayOfWeek) => {
+
+        if(selectedServices == null || selectedServices.length == 0) {
+            setIsModalVisible(false);
+            message.error("En Az Bir Hizmet Seçmelisiniz");
+            return;
+        }
+
+        if(selectedSaloonPersonel == null || selectedSaloonPersonel == undefined) {
+            setIsModalVisible(false);
+            message.error("En Az Bir Personel Seçmelisiniz");
+            return;
+        }
+
+        setBeginOfAppointmentDate(beginDate);
+        setEndOfAppointmentDate(endDate);
         setIsModalVisible(true);
         setModalContent(`${convertToFullDate(beginDate)} ${dayOfWeek} Günü ${getHourAndMinutes(beginDate)} ile  ${getHourAndMinutes(endDate)} Saatleri Arasında Randevu Almak İstediğinize Emin misiniz ?`);
     }
@@ -267,6 +327,9 @@ const NewAppointment = () => {
                                     <Col span={24}><Select
                                         placeholder="Aldığınız Hizmeti Seçiniz"
                                         defaultValue={[]}
+                                        onChange={(value, items) => {
+                                            setSelectedServices(items.map(x => x.key));
+                                          }} 
                                         mode="multiple"
                                         style={{ width: "100%" }}
                                     >
@@ -295,10 +358,14 @@ const NewAppointment = () => {
                                 headStyle={headStyle}>
                                 <Row>
                                     <Col span={24}><Select
+                                        onChange={(value, item) => {
+                                            setSelectedSaloonPersonel(item.key);
+                                          }} 
                                         placeholder="Personel Seçiniz"
                                         defaultValue={[]}
                                         style={{ width: "100%" }}
                                     >
+                                        <Option key={0} value={0}>Farketmez</Option>
                                         {saloonPersonels.map((element, index) => (
                                             <Option key={element.id} value={element.personFullName}>
                                                 {element.personFullName}
