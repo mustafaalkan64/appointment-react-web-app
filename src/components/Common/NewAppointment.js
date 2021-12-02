@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Layout, message, Row, Col, Image, Rate, List, Skeleton, Breadcrumb, Select, Anchor, Alert, Button } from 'antd';
+import { Card, Layout, message, Row, Col, Image, Rate, Modal, Skeleton, Breadcrumb, Select, Anchor, Alert, Button } from 'antd';
 import MainHeader from "./MainHeader";
 import MainFooter from "./MainFooter";
 import {
@@ -36,6 +36,20 @@ const NewAppointment = () => {
     const [saloonServices, setSaloonServices] = useState([]);
     const [appointmentCalenderList, setAppointmentCalenderList] = useState([]);
     const getCurrentAnchor = () => '#components-anchor-demo-static';
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState("");
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleOk = () => {
+        setIsModalVisible(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
 
     useEffect(() => {
 
@@ -143,6 +157,11 @@ const NewAppointment = () => {
         var newdate = `${("0" + hour).slice(-2)}:${("0" + minutes).slice(-2)}`;
         return newdate;
     };
+
+    const showAppointmentModal = (beginDate, endDate, dayOfWeek) => {
+        setIsModalVisible(true);
+        setModalContent(`${convertToFullDate(beginDate)} ${dayOfWeek} Günü ${getHourAndMinutes(beginDate)} ile  ${getHourAndMinutes(endDate)} Saatleri Arasında Randevu Almak İstediğinize Emin misiniz ?`);
+    }
 
     return (
         <div>
@@ -312,7 +331,7 @@ const NewAppointment = () => {
                                     <Row>
                                         {
                                             appointmentCalender.appointmentHoursList.map((appointmentHour) => (
-                                                <Col><Button disabled={!appointmentHour.isActive}>{getHourAndMinutes(appointmentHour.startDate)}</Button></Col>
+                                                <Col><Button onClick={() => showAppointmentModal(appointmentHour.startDate, appointmentHour.endDate, appointmentCalender.dayOfWeek)} disabled={!appointmentHour.isActive}>{getHourAndMinutes(appointmentHour.startDate)}</Button></Col>
                                             ))
                                         }
                                     </Row>
@@ -321,7 +340,9 @@ const NewAppointment = () => {
                         ))}
                     </Card>
 
-
+                    <Modal title="Randevu Onayı" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                        <p>{modalContent}</p>
+                    </Modal>
 
                 </Content>
                 <MainFooter />
