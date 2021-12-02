@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Layout, message, Row, Col, Image, Rate, Modal, Skeleton, Breadcrumb, Select, Anchor, Alert, Button } from 'antd';
+import { Card, Layout, message, Row, Col, Image, Spin, Modal, Skeleton, Breadcrumb, Select, Anchor, Alert, Button } from 'antd';
 import MainHeader from "./MainHeader";
 import MainFooter from "./MainFooter";
 import {
@@ -39,7 +39,6 @@ const NewAppointment = () => {
     const [selectedSaloonPersonel, setSelectedSaloonPersonel] = useState(null);
     const [beginOfAppointmentDate, setBeginOfAppointmentDate] = useState(null);
     const [endOfAppointmentDate, setEndOfAppointmentDate] = useState(null);
-    const getCurrentAnchor = () => '#components-anchor-demo-static';
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [modalContent, setModalContent] = useState("");
     const [saveAppointmentLoading, setSaveAppointmentLoading] = useState(false);
@@ -50,8 +49,6 @@ const NewAppointment = () => {
     };
 
     const handleOk = async () => {
-        debugger;
-        setSaveAppointmentLoading(true);
         var saveAppointmentModel = {
             BeginDate: beginOfAppointmentDate,
             EndDate: endOfAppointmentDate,
@@ -71,7 +68,9 @@ const NewAppointment = () => {
             message.error("En Az Bir Personel Seçmelisiniz");
             return;
         }
-
+        
+        setIsModalVisible(false);
+        setSaveAppointmentLoading(true);
         await API.post(`appointment/saveAppointment`, saveAppointmentModel, {
             headers: {
                 "Content-Type": "application/json",
@@ -90,7 +89,6 @@ const NewAppointment = () => {
                 }
                 setSaveAppointmentLoading(false);
             });
-        setIsModalVisible(false);
 
     };
 
@@ -227,6 +225,7 @@ const NewAppointment = () => {
 
     return (
         <div>
+            <Spin spinning={saveAppointmentLoading}>
             <Layout style={{ minHeight: '100vh' }}>
                 <MainHeader></MainHeader>
                 <Content style={{ padding: '0 50px', margintop: 10, marginleft: '3%', marginRight: '2%' }}>
@@ -327,13 +326,13 @@ const NewAppointment = () => {
                                     <Col span={24}><Select
                                         placeholder="Aldığınız Hizmeti Seçiniz"
                                         defaultValue={[]}
-                                        onChange={(value, items) => {
+                                        onChange={(key, items) => {
                                             setSelectedServices(items.map(x => x.key));
                                           }} 
                                         mode="multiple"
                                         style={{ width: "100%" }}
                                     >
-                                        {saloonServices.map((element, index) => (
+                                        {saloonServices.map((element) => (
                                             <Option key={element.services.id} value={element.services.serviceName}>
                                                 {element.services.serviceName}
                                             </Option>
@@ -421,6 +420,7 @@ const NewAppointment = () => {
                 </Content>
                 <MainFooter />
             </Layout >
+            </Spin>
         </div >
     );
 };
