@@ -43,6 +43,7 @@ const NewAppointment = () => {
     const [modalContent, setModalContent] = useState("");
     const [saveAppointmentLoading, setSaveAppointmentLoading] = useState(false);
     const [appointmentCalenderIsLoading, setAppointmentCalenderIsLoading] = useState(false);
+    const [week, setWeek] = useState(0);
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -54,21 +55,21 @@ const NewAppointment = () => {
             EndDate: endOfAppointmentDate,
             ServicesId: selectedServices,
             SaloonPersonId: selectedSaloonPersonel,
-            SaloonId:saloonId
+            SaloonId: saloonId
         };
 
-        if(selectedServices == null || selectedServices.length == 0) {
+        if (selectedServices == null || selectedServices.length == 0) {
             setIsModalVisible(false);
             message.error("En Az Bir Hizmet Seçmelisiniz");
             return;
         }
 
-        if(selectedSaloonPersonel == null || selectedSaloonPersonel == undefined) {
+        if (selectedSaloonPersonel == null || selectedSaloonPersonel == undefined) {
             setIsModalVisible(false);
             message.error("En Az Bir Personel Seçmelisiniz");
             return;
         }
-        
+
         setIsModalVisible(false);
         setSaveAppointmentLoading(true);
         await API.post(`appointment/saveAppointment`, saveAppointmentModel, {
@@ -77,8 +78,9 @@ const NewAppointment = () => {
                 Authorization: `Bearer ${token}`,
             },
         })
-            .then((res) => {
+            .then(async (res) => {
                 message.success("Randevunuz Kaydedildi!");
+                await getWeeklyAppointments(week);
                 setSaveAppointmentLoading(false);
             })
             .catch((error) => {
@@ -94,6 +96,24 @@ const NewAppointment = () => {
 
     const handleCancel = () => {
         setIsModalVisible(false);
+    };
+
+    const getWeeklyAppointments = async (week) => {
+        setAppointmentCalenderIsLoading(true);
+        await API.get(`appointment/getCurrentWeekAppointments?saloonId=${saloonId}&week=${week}`, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((res) => {
+                setAppointmentCalenderList(res.data);
+                setAppointmentCalenderIsLoading(false);
+                return true;
+            })
+            .catch((error) => {
+                setAppointmentCalenderIsLoading(false);
+                return false;
+            });
     };
 
     useEffect(() => {
@@ -126,21 +146,7 @@ const NewAppointment = () => {
         };
 
         const getCurrentWeekAppointments = async () => {
-            setAppointmentCalenderIsLoading(true);
-            await API.get(`appointment/getCurrentWeekAppointments?saloonId=${saloonId}`, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-                .then((res) => {
-                    setAppointmentCalenderList(res.data);
-                    setAppointmentCalenderIsLoading(false);
-                    return true;
-                })
-                .catch((error) => {
-                    setAppointmentCalenderIsLoading(false);
-                    return false;
-                });
+            await getWeeklyAppointments(0);
         };
 
         const getSaloonServices = async () => {
@@ -205,13 +211,13 @@ const NewAppointment = () => {
 
     const showAppointmentModal = (beginDate, endDate, dayOfWeek) => {
 
-        if(selectedServices == null || selectedServices.length == 0) {
+        if (selectedServices == null || selectedServices.length == 0) {
             setIsModalVisible(false);
             message.error("En Az Bir Hizmet Seçmelisiniz");
             return;
         }
 
-        if(selectedSaloonPersonel == null || selectedSaloonPersonel == undefined) {
+        if (selectedSaloonPersonel == null || selectedSaloonPersonel == undefined) {
             setIsModalVisible(false);
             message.error("En Az Bir Personel Seçmelisiniz");
             return;
@@ -223,203 +229,222 @@ const NewAppointment = () => {
         setModalContent(`${convertToFullDate(beginDate)} ${dayOfWeek} Günü ${getHourAndMinutes(beginDate)} ile  ${getHourAndMinutes(endDate)} Saatleri Arasında Randevu Almak İstediğinize Emin misiniz ?`);
     }
 
+    const getPreviousWeekCalender = () => {
+        let selectedWeek = week - 1;
+        setWeek(selectedWeek);
+        getWeeklyAppointments(selectedWeek);
+    }
+
+    const getNextWeekCalender = () => {
+        let selectedWeek = week + 1;
+        setWeek(selectedWeek);
+        getWeeklyAppointments(selectedWeek);
+    }
+
     return (
         <div>
             <Spin spinning={saveAppointmentLoading}>
-            <Layout style={{ minHeight: '100vh' }}>
-                <MainHeader></MainHeader>
-                <Content style={{ padding: '0 50px', margintop: 10, marginleft: '3%', marginRight: '2%' }}>
+                <Layout style={{ minHeight: '100vh' }}>
+                    <MainHeader></MainHeader>
+                    <Content style={{ padding: '0 50px', margintop: 10, marginleft: '3%', marginRight: '2%' }}>
 
-                    {found === true ? (<div className="site-layout-content">
-                        {loading ? (
-                            <div className="spinClass">
-                                <Skeleton active />
-                            </div>
-                        ) : (
-                            <Card
-                                hoverable
-                                bordered={true}
-                                style={cardStyle}
-                                headStyle={headStyle}>
+                        {found === true ? (<div className="site-layout-content">
+                            {loading ? (
+                                <div className="spinClass">
+                                    <Skeleton active />
+                                </div>
+                            ) : (
+                                <Card
+                                    hoverable
+                                    bordered={true}
+                                    style={cardStyle}
+                                    headStyle={headStyle}>
 
-                                <Row>
-                                    <Col xs={24} xl={6} style={{ paddingRight: "10px" }}>
-                                        <Image
-                                            alt="example"
-                                            style={{ width: "80%", height: "130px" }}
-                                            // src={imageUrlDirectory + "empty-img.png"}
-                                            src={logo}
-                                        />
-                                    </Col>
-                                    <Col xs={24} xl={18} margintop={10} marginleft={10}>
-                                        <Row >
-                                            <Col xs={24} xl={16} style={{ float: "left" }} className="ant-card-meta-title">{saloonInformation.shopTitle}</Col>
-                                            <Col xs={24} xl={8}></Col>
-                                        </Row>
-                                        <Row >
-                                            <Col xs={24} xl={16} style={{ float: "left" }} className="ant-card-meta-title">
-                                                <Breadcrumb>
-                                                    <Breadcrumb.Item>{saloonInformation.cityName}</Breadcrumb.Item>
-                                                    <Breadcrumb.Item>
-                                                        {saloonInformation.districtName}
-                                                    </Breadcrumb.Item>
-                                                    <Breadcrumb.Item>{saloonInformation.zoneName}</Breadcrumb.Item>
-                                                </Breadcrumb></Col>
-                                            <Col xs={24} xl={8}>
-                                            </Col>
-                                        </Row>
-
-                                        <Row style={{ marginTop: 15 }}>
-                                            <Col className="ant-card-meta-description">{saloonInformation.shopDescription}</Col>
-                                        </Row>
-                                        <Row>
-                                            <Col>
-                                            </Col>
-                                        </Row>
-                                    </Col>
-                                </Row>
-                                <Row style={{ marginTop: "10px" }}>
-                                    <Col xs={24} xl={18} marginleft={10}>
-                                        <Row >
-                                            <Col xs={24} xl={4} style={{ float: "left" }}><b>Telefon Numarmız:</b></Col>
-                                            <Col xs={24} xl={8} style={{ float: "left" }}>{saloonInformation.phoneNumber}</Col>
-                                            {/* <Col aria-colspan="3" xs={24} xl={2} style={{ float: "left" }} className="ant-card-meta-title"></Col> */}
-
-                                        </Row>
-                                        <Row>
-                                            <Col xs={24} xl={4} style={{ float: "left" }}><b>Mobil Telefon:</b></Col>
-                                            <Col xs={24} xl={8} style={{ float: "left" }}>{saloonInformation.mobilePhone} </Col>
-                                        </Row>
-                                        <Row xs={24} xl={24}>
-                                            <Col xs={24} xl={4} style={{ float: "left" }}><b>Web Adresi:</b></Col>
-                                            <Col xs={24} xl={8} style={{ float: "left" }}> <a href={saloonInformation.webSite}>{saloonInformation.webSite}</a> </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col xs={24} xl={4} style={{ float: "left" }}><b>Email Adresimiz:</b></Col>
-                                            <Col xs={24} xl={8} style={{ float: "left" }}>{saloonInformation.email} </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col xs={24} xl={4} style={{ float: "left" }}><b>Adresimiz:</b></Col>
-                                            <Col xs={24} xl={16} style={{ float: "left" }}>{saloonInformation.address} </Col>
-                                        </Row>
-
-                                    </Col>
-                                </Row>
-                            </Card>
-                        )}
-
-
-                        {servicesLoading ? (
-                            <div className="spinClass">
-                                <Skeleton active />
-                                <Skeleton active />
-                                <Skeleton active />
-                            </div>
-                        ) : (
-                            <Card
-                                title="Hizmet Seçimi"
-                                hoverable
-                                bordered={true}
-                                style={cardStyle}
-                                headStyle={headStyle}>
-                                <Row>
-                                    <Col span={24}><Select
-                                        placeholder="Aldığınız Hizmeti Seçiniz"
-                                        defaultValue={[]}
-                                        onChange={(key, items) => {
-                                            setSelectedServices(items.map(x => x.key));
-                                          }} 
-                                        mode="multiple"
-                                        style={{ width: "100%" }}
-                                    >
-                                        {saloonServices.map((element) => (
-                                            <Option key={element.services.id} value={element.services.serviceName}>
-                                                {element.services.serviceName}
-                                            </Option>
-                                        ))}
-                                    </Select></Col>
-                                </Row>
-                            </Card>
-                        )}
-
-
-                        {personelsLoading ? (
-                            <div className="spinClass">
-                                <Skeleton active />
-                                <Skeleton active />
-                                <Skeleton active />
-                            </div>
-                        ) : (
-                            <Card title="Personel Seçimi"
-                                hoverable
-                                bordered={true}
-                                style={cardStyle}
-                                headStyle={headStyle}>
-                                <Row>
-                                    <Col span={24}><Select
-                                        onChange={(value, item) => {
-                                            setSelectedSaloonPersonel(item.key);
-                                          }} 
-                                        placeholder="Personel Seçiniz"
-                                        defaultValue={[]}
-                                        style={{ width: "100%" }}
-                                    >
-                                        <Option key={0} value={0}>Farketmez</Option>
-                                        {saloonPersonels.map((element, index) => (
-                                            <Option key={element.id} value={element.personFullName}>
-                                                {element.personFullName}
-                                            </Option>
-                                        ))}
-                                    </Select></Col>
-                                </Row>
-                            </Card>
-                        )}
-
-                    </div>) : (<Alert
-                        message="Hata!"
-                        description="Üzgünüz. Aradığınız Salonu Bulamadık"
-                        type="error"
-                        closable
-                        showIcon
-                        style={{ marginTop: "3%", height: "100px" }}
-                    />)}
-
-
-                     {appointmentCalenderIsLoading ? (
-                            <div className="spinClass">
-                                <Skeleton active />
-                                <Skeleton active />
-                                <Skeleton active />
-                            </div>
-                        ) : (
-                     <Card title="Randevu Saati Seçimi"
-                        hoverable
-                        bordered={true}
-                        style={cardStyle}
-                        headStyle={headStyle}>
-                        {appointmentCalenderList.map((appointmentCalender) => (
-                            <Row>
-                                <Col flex="150px">{convertToFullDate(appointmentCalender.appointmentDate)} {appointmentCalender.dayOfWeek}</Col>
-                                <Col flex="auto">
                                     <Row>
-                                        {
-                                            appointmentCalender.appointmentHoursList.map((appointmentHour) => (
-                                                <Col><Button onClick={() => showAppointmentModal(appointmentHour.startDate, appointmentHour.endDate, appointmentCalender.dayOfWeek)} disabled={!appointmentHour.isActive}>{getHourAndMinutes(appointmentHour.startDate)}</Button></Col>
-                                            ))
-                                        }
+                                        <Col xs={24} xl={6} style={{ paddingRight: "10px" }}>
+                                            <Image
+                                                alt="example"
+                                                style={{ width: "80%", height: "130px" }}
+                                                // src={imageUrlDirectory + "empty-img.png"}
+                                                src={logo}
+                                            />
+                                        </Col>
+                                        <Col xs={24} xl={18} margintop={10} marginleft={10}>
+                                            <Row >
+                                                <Col xs={24} xl={16} style={{ float: "left" }} className="ant-card-meta-title">{saloonInformation.shopTitle}</Col>
+                                                <Col xs={24} xl={8}></Col>
+                                            </Row>
+                                            <Row >
+                                                <Col xs={24} xl={16} style={{ float: "left" }} className="ant-card-meta-title">
+                                                    <Breadcrumb>
+                                                        <Breadcrumb.Item>{saloonInformation.cityName}</Breadcrumb.Item>
+                                                        <Breadcrumb.Item>
+                                                            {saloonInformation.districtName}
+                                                        </Breadcrumb.Item>
+                                                        <Breadcrumb.Item>{saloonInformation.zoneName}</Breadcrumb.Item>
+                                                    </Breadcrumb></Col>
+                                                <Col xs={24} xl={8}>
+                                                </Col>
+                                            </Row>
+
+                                            <Row style={{ marginTop: 15 }}>
+                                                <Col className="ant-card-meta-description">{saloonInformation.shopDescription}</Col>
+                                            </Row>
+                                            <Row>
+                                                <Col>
+                                                </Col>
+                                            </Row>
+                                        </Col>
                                     </Row>
-                                </Col>
-                            </Row>
-                        ))}
-                    </Card>)}
+                                    <Row style={{ marginTop: "10px" }}>
+                                        <Col xs={24} xl={18} marginleft={10}>
+                                            <Row >
+                                                <Col xs={24} xl={4} style={{ float: "left" }}><b>Telefon Numarmız:</b></Col>
+                                                <Col xs={24} xl={8} style={{ float: "left" }}>{saloonInformation.phoneNumber}</Col>
+                                                {/* <Col aria-colspan="3" xs={24} xl={2} style={{ float: "left" }} className="ant-card-meta-title"></Col> */}
 
-                    <Modal title="Randevu Onayı" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-                        <p>{modalContent}</p>
-                    </Modal>
+                                            </Row>
+                                            <Row>
+                                                <Col xs={24} xl={4} style={{ float: "left" }}><b>Mobil Telefon:</b></Col>
+                                                <Col xs={24} xl={8} style={{ float: "left" }}>{saloonInformation.mobilePhone} </Col>
+                                            </Row>
+                                            <Row xs={24} xl={24}>
+                                                <Col xs={24} xl={4} style={{ float: "left" }}><b>Web Adresi:</b></Col>
+                                                <Col xs={24} xl={8} style={{ float: "left" }}> <a href={saloonInformation.webSite}>{saloonInformation.webSite}</a> </Col>
+                                            </Row>
+                                            <Row>
+                                                <Col xs={24} xl={4} style={{ float: "left" }}><b>Email Adresimiz:</b></Col>
+                                                <Col xs={24} xl={8} style={{ float: "left" }}>{saloonInformation.email} </Col>
+                                            </Row>
+                                            <Row>
+                                                <Col xs={24} xl={4} style={{ float: "left" }}><b>Adresimiz:</b></Col>
+                                                <Col xs={24} xl={16} style={{ float: "left" }}>{saloonInformation.address} </Col>
+                                            </Row>
 
-                </Content>
-                <MainFooter />
-            </Layout >
+                                        </Col>
+                                    </Row>
+                                </Card>
+                            )}
+
+
+                            {servicesLoading ? (
+                                <div className="spinClass">
+                                    <Skeleton active />
+                                    <Skeleton active />
+                                    <Skeleton active />
+                                </div>
+                            ) : (
+                                <Card
+                                    title="Hizmet Seçimi"
+                                    hoverable
+                                    bordered={true}
+                                    style={cardStyle}
+                                    headStyle={headStyle}>
+                                    <Row>
+                                        <Col span={24}><Select
+                                            placeholder="Aldığınız Hizmeti Seçiniz"
+                                            defaultValue={[]}
+                                            onChange={(key, items) => {
+                                                setSelectedServices(items.map(x => x.key));
+                                            }}
+                                            mode="multiple"
+                                            style={{ width: "100%" }}
+                                        >
+                                            {saloonServices.map((element) => (
+                                                <Option key={element.services.id} value={element.services.serviceName}>
+                                                    {element.services.serviceName}
+                                                </Option>
+                                            ))}
+                                        </Select></Col>
+                                    </Row>
+                                </Card>
+                            )}
+
+
+                            {personelsLoading ? (
+                                <div className="spinClass">
+                                    <Skeleton active />
+                                    <Skeleton active />
+                                    <Skeleton active />
+                                </div>
+                            ) : (
+                                <Card title="Personel Seçimi"
+                                    hoverable
+                                    bordered={true}
+                                    style={cardStyle}
+                                    headStyle={headStyle}>
+                                    <Row>
+                                        <Col span={24}><Select
+                                            onChange={(value, item) => {
+                                                setSelectedSaloonPersonel(item.key);
+                                            }}
+                                            placeholder="Personel Seçiniz"
+                                            defaultValue={[]}
+                                            style={{ width: "100%" }}
+                                        >
+                                            <Option key={0} value={0}>Farketmez</Option>
+                                            {saloonPersonels.map((element, index) => (
+                                                <Option key={element.id} value={element.personFullName}>
+                                                    {element.personFullName}
+                                                </Option>
+                                            ))}
+                                        </Select></Col>
+                                    </Row>
+                                </Card>
+                            )}
+
+                        </div>) : (<Alert
+                            message="Hata!"
+                            description="Üzgünüz. Aradığınız Salonu Bulamadık"
+                            type="error"
+                            closable
+                            showIcon
+                            style={{ marginTop: "3%", height: "100px" }}
+                        />)}
+
+
+                        {appointmentCalenderIsLoading ? (
+                            <div className="spinClass">
+                                <Skeleton active />
+                                <Skeleton active />
+                                <Skeleton active />
+                            </div>
+                        ) : (
+                            <Card title="Randevu Saati Seçimi"
+                                hoverable
+                                bordered={true}
+                                style={cardStyle}
+                                headStyle={headStyle}>
+                                {appointmentCalenderList.map((appointmentCalender) => (
+                                    <Row>
+                                        <Col flex="150px">{convertToFullDate(appointmentCalender.appointmentDate)} {appointmentCalender.dayOfWeek}</Col>
+                                        <Col flex="auto">
+                                            <Row>
+                                                {
+                                                    appointmentCalender.appointmentHoursList.map((appointmentHour) => (
+                                                        <Col><Button onClick={() => showAppointmentModal(appointmentHour.startDate, appointmentHour.endDate, appointmentCalender.dayOfWeek)} disabled={!appointmentHour.isActive}>{getHourAndMinutes(appointmentHour.startDate)}</Button></Col>
+                                                    ))
+                                                }
+                                            </Row>
+                                        </Col>
+                                    </Row>
+                                ))}
+                                <Row>
+                                    <Col span={12} offset={10}>
+                                        <Button type="primary" onClick={() => getPreviousWeekCalender()} style={{ marginTop: 20, marginLeft: 10, marginRight: 10 }}>Önceki Hafta</Button>
+                                        <Button type="primary" onClick={() => getNextWeekCalender()}>Sonraki Hafta</Button>
+                                    </Col>
+                                </Row>
+
+                            </Card>)}
+
+                        <Modal title="Randevu Onayı" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                            <p>{modalContent}</p>
+                        </Modal>
+
+                    </Content>
+                    <MainFooter />
+                </Layout >
             </Spin>
         </div >
     );
