@@ -45,10 +45,6 @@ const NewAppointment = () => {
     const [appointmentCalenderIsLoading, setAppointmentCalenderIsLoading] = useState(false);
     const [week, setWeek] = useState(0);
 
-    const showModal = () => {
-        setIsModalVisible(true);
-    };
-
     const handleOk = async () => {
         var saveAppointmentModel = {
             BeginDate: beginOfAppointmentDate,
