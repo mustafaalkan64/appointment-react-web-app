@@ -122,7 +122,7 @@ export default function MyAppointments(props) {
         if (error.response.status === 401) {
           history.push("/login");
         } else {
-          message.error("Randevuları Getirme Esnasında Hata ile Karşılaşıldı!");
+          message.error(error.response.data.message);
           return;
         }
       });
@@ -152,10 +152,8 @@ export default function MyAppointments(props) {
           if (error.response.status === 401) {
             history.push("/login");
             message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
-          } else if (error.response.status === 404) {
-            message.warning(error.response.data);
           } else {
-            message.error(error.response.data);
+            message.error(error.response.data.message);
           }
         });
     }

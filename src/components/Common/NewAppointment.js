@@ -6,6 +6,7 @@ import {
     useParams
 } from "react-router-dom";
 import API from "../../api";
+import { useHistory } from "react-router";
 import { imageUrlDirectory } from "../../constUrls";
 import { cardStyle, headStyle } from "../../assets/styles/styles";
 const layout = {
@@ -23,6 +24,7 @@ const { Content } = Layout;
 
 const NewAppointment = () => {
     let { saloonId } = useParams();
+    const history = useHistory();
     const [loading, setLoading] = useState(false);
     const [servicesLoading, setServicesLoading] = useState(false);
     const [personelsLoading, setPersonelsLoading] = useState(false);
@@ -76,6 +78,8 @@ const NewAppointment = () => {
         })
             .then(async (res) => {
                 message.success("Randevunuz Kaydedildi!");
+                localStorage.setItem('appointmentResult', JSON.stringify(saveAppointmentModel));
+                history.push("/appointmentResult/" + res.data.result);
                 await getWeeklyAppointments(week);
                 setSaveAppointmentLoading(false);
             })
@@ -83,7 +87,7 @@ const NewAppointment = () => {
                 if (error.response.status === 401 || error.response.status === 403) {
                     message.error("Randevu Almak İçin Kullanıcı Girişi Yapmanız Gerekmektedir!");
                 } else {
-                    message.error(error.response.data);
+                    message.error(error.response.data.message);
                 }
                 setSaveAppointmentLoading(false);
             });
@@ -107,6 +111,7 @@ const NewAppointment = () => {
                 return true;
             })
             .catch((error) => {
+                message.error(error.response.data.message);
                 setAppointmentCalenderIsLoading(false);
                 return false;
             });

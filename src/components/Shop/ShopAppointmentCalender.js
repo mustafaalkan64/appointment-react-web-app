@@ -69,7 +69,7 @@ function ShopAppointmentCalender() {
                     if (error.response.status === 401) {
                         history.push("/login");
                     } else {
-                        message.error(error.response.data);
+                        message.error(error.response.data.message);
                     }
                 });
         };
