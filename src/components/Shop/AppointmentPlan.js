@@ -45,7 +45,7 @@ const AppointmentPlan = () => {
 
   const createAppointmentPlan = (createAppointmentPlanForm) => {
     setLoading(true);
-    API.post(`shop/createOrUpdateAppointment`, createAppointmentPlanForm, {
+    API.post(`shop/createOrUpdateAppointmentPlan`, createAppointmentPlanForm, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -57,12 +57,11 @@ const AppointmentPlan = () => {
       })
       .catch((error) => {
         setLoading(false);
-        debugger;
         if (error.response.status === 401) {
           history.push("/login");
           message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
         } else {
-          message.error(error.response.data);
+          message.error(error.response.data.message);
         }
       });
   };
@@ -90,7 +89,7 @@ const AppointmentPlan = () => {
                 moment(res.data.emptyTimeRange[0], format),
                 moment(res.data.emptyTimeRange[1], format),
               ],
-              appointmentLong: parseInt(res.data.appointmentLong),
+              // appointmentLong: parseInt(res.data.appointmentLong),
             });
             setStartTime(moment(res.data.startTime, format));
             setEndTime(moment(res.data.endTime, format));
@@ -159,7 +158,8 @@ const AppointmentPlan = () => {
       startTime: startTime.format("HH:mm"),
       endTime: endTime.format("HH:mm"),
       emptyTimeRange: timeRanges,
-      appointmentLong: parseInt(values.appointmentLong),
+      // appointmentLong: parseInt(values.appointmentLong),
+      appointmentLong: 60,
     };
     createAppointmentPlan(createAppointmentPlanForm);
   };
@@ -255,6 +255,7 @@ const AppointmentPlan = () => {
                   onChange={handleChange}
                   style={{ width: "100%" }}
                 >
+                  <Option key="15">15</Option>
                   <Option key="30">30</Option>
                   <Option key="60">60</Option>
                   <Option key="90">90</Option>
@@ -314,7 +315,7 @@ const AppointmentPlan = () => {
                 </Form.Item>
               </ConfigProvider>
 
-              <Form.Item
+              {/* <Form.Item
                 label="Hizmet Süresi"
                 name="appointmentLong"
                 rules={[
@@ -337,7 +338,7 @@ const AppointmentPlan = () => {
                   <Option key="90">3 Ay</Option>
                   <Option key="180">6 Ay</Option>
                 </Select>
-              </Form.Item>
+              </Form.Item> */}
 
               <Form.Item
                 wrapperCol={{ ...layout.wrapperCol, offset: 8 }}

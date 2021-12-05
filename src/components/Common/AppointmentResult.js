@@ -25,15 +25,19 @@ const AppointmentResult = () => {
     const history = useHistory();
     let { appointmentId } = useParams();
     const [loading, setLoading] = useState(false);
-    const [found, setFound] = useState(true);
+    const [found, setFound] = useState(false);
     const [appointmentResult, setAppointmentResult] = useState({});
     // const history = useHistory();
     const token = localStorage.getItem("auth_token");
 
     useEffect(() => {
+        debugger;
         const getAppointmentResult = () => {
-            var retrievedAppointment = JSON.parse(localStorage.getItem('appointmentResult'));
-            setAppointmentResult(retrievedAppointment);
+            if (localStorage.getItem('appointmentResult') != null) {
+                var retrievedAppointment = JSON.parse(localStorage.getItem('appointmentResult'));
+                setAppointmentResult(retrievedAppointment);
+                setFound(true);
+            }
         }
         getAppointmentResult();
 
@@ -65,7 +69,7 @@ const AppointmentResult = () => {
                     <MainHeader></MainHeader>
                     <Content style={{ padding: '0 50px', margintop: 10, marginleft: '3%', marginRight: '2%' }}>
 
-                        {found === true ? (<div className="site-layout-content">
+                        {found ? (<div className="site-layout-content">
                             {loading ? (
                                 <div className="spinClass">
                                     <Skeleton active />
@@ -90,11 +94,9 @@ const AppointmentResult = () => {
                                 </Card>
                             )}
 
-
-
                         </div>) : (<Alert
                             message="Hata!"
-                            description="Üzgünüz. Aradığınız Salonu Bulamadık"
+                            description="Üzgünüz. Hata ile Karşılaşıldı!"
                             type="error"
                             closable
                             showIcon
