@@ -167,12 +167,14 @@ const AppointmentPlan = () => {
 
   function onTimeRangeChange(time, timeString) {
     var times = [];
-    time.map((item) => {
-      if (item !== undefined) {
-        times.push(item.format("HH:mm"));
-      }
-      return times;
-    });
+    if (time != null) {
+      time.map((item) => {
+        if (item !== undefined) {
+          times.push(item.format("HH:mm"));
+        }
+        return times;
+      });
+    }
     setTimeRanges(times);
   }
 
