@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useHistory } from "react-router";
+import { Redirect, useHistory } from "react-router";
 import BreadCrumbContext from "../../contexts/BreadcrumbContext";
 import {
   Form,
@@ -11,7 +11,11 @@ import {
   message,
   ConfigProvider,
   Card,
+  Input
 } from "antd";
+import {
+  useParams
+} from "react-router-dom";
 import API from "../../api";
 import "moment/locale/tr";
 import locale from "antd/lib/locale/tr_TR";
@@ -19,6 +23,7 @@ import moment from "moment";
 import { cardStyle, headStyle } from "../../assets/styles/styles";
 
 const AppointmentPlan = () => {
+  let { planId } = useParams();
   const [form] = Form.useForm();
   const {
     setFirstBreadcrumb,
@@ -43,9 +48,16 @@ const AppointmentPlan = () => {
     setComponentSize(size);
   };
 
-  const createAppointmentPlan = (createAppointmentPlanForm) => {
+  const saveAppointmentPlan = (appointmentPlanForm) => {
     setLoading(true);
-    API.post(`shop/createOrUpdateAppointmentPlan`, createAppointmentPlanForm, {
+    var url = '';
+    if (parseInt(appointmentPlanForm.id) > 0) {
+      url = 'shop/updateAppointmentPlan';
+    }
+    else {
+      url = 'shop/createAppointmentPlan';
+    }
+    API.post(url, appointmentPlanForm, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -71,49 +83,62 @@ const AppointmentPlan = () => {
 
     const getAppointmentPlan = async () => {
       setLoading(true);
-      await API.get(`shop/getAppointmentPlan`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => {
-          setLoading(false);
-          if (res.data !== "") {
-            form.setFieldsValue({
-              weekdays: res.data.weekDays,
-              appointmentPeriod: parseInt(res.data.appointmentPeriod),
-              startTime: moment(res.data.startTime, format),
-              endTime: moment(res.data.endTime, format),
-              emptyTimeRange: [
-                moment(res.data.emptyTimeRange[0], format),
-                moment(res.data.emptyTimeRange[1], format),
-              ],
-              // appointmentLong: parseInt(res.data.appointmentLong),
-            });
-            setStartTime(moment(res.data.startTime, format));
-            setEndTime(moment(res.data.endTime, format));
-
-            let times = [];
-            res.data.emptyTimeRange.map((item) => {
-              if (item !== undefined) {
-                times.push(item);
-              }
-              return times;
-            });
-            setTimeRanges(times);
-          }
+      if (planId > 0) {
+        await API.get(`shop/getAppointmentPlanById?id=${planId}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         })
-        .catch((error) => {
-          if (error.response.status === 401) {
-            history.push("/login");
-            message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
-          } else {
-            message.error(
-              "Kişisel Bilgileri Getirme Esnasında Hata ile Karşılaşıldı!"
-            );
-          }
-        });
+          .then((res) => {
+            setLoading(false);
+            if (res.data !== "") {
+              var emptyTimeRange = null;
+              if (res.data.emptyTimeRange != null || res.data.emptyTimeRange != undefined) {
+                emptyTimeRange = [
+                  moment(res.data.emptyTimeRange[0], format),
+                  moment(res.data.emptyTimeRange[1], format),
+                ];
+              }
+
+              form.setFieldsValue({
+                weekdays: res.data.weekDays,
+                appointmentPeriod: parseInt(res.data.appointmentPeriod),
+                startTime: moment(res.data.startTime, format),
+                endTime: moment(res.data.endTime, format),
+                name: res.data.name,
+                emptyTimeRange
+                // appointmentLong: parseInt(res.data.appointmentLong),
+              });
+              setStartTime(moment(res.data.startTime, format));
+              setEndTime(moment(res.data.endTime, format));
+
+              if (res.data.emptyTimeRange != null) {
+                let times = [];
+                res.data.emptyTimeRange.map((item) => {
+                  if (item !== undefined) {
+                    times.push(item);
+                  }
+                  return times;
+                });
+                setTimeRanges(times);
+              }
+
+            }
+          })
+          .catch((error) => {
+            if (error.response.status === 401) {
+              history.push("/login");
+              message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
+            } else {
+              message.error(
+                error.response.data.message
+              );
+            }
+          });
+      }
+      setLoading(false);
+
     };
     getAppointmentPlan();
     setFirstBreadcrumb("Anasayfa");
@@ -152,16 +177,18 @@ const AppointmentPlan = () => {
   }
 
   const onFinish = (values) => {
-    const createAppointmentPlanForm = {
+    const appointmentPlanForm = {
+      id: planId,
       weekDays: values.weekdays,
       appointmentPeriod: parseInt(values.appointmentPeriod),
       startTime: startTime.format("HH:mm"),
       endTime: endTime.format("HH:mm"),
       emptyTimeRange: timeRanges,
+      name: values.name,
       // appointmentLong: parseInt(values.appointmentLong),
       appointmentLong: 60,
     };
-    createAppointmentPlan(createAppointmentPlanForm);
+    saveAppointmentPlan(appointmentPlanForm);
   };
 
   const layout = {
@@ -196,6 +223,18 @@ const AppointmentPlan = () => {
               size={componentSize}
               onFinish={onFinish}
             >
+              <Form.Item
+                label="Plan Adı"
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: "Lütfen Boş Bırakmayınız!",
+                  },
+                ]}
+              >
+                <Input type="text"></Input>
+              </Form.Item>
               <Form.Item
                 label="Hizmet Verilen Günler"
                 name="weekdays"
@@ -355,7 +394,7 @@ const AppointmentPlan = () => {
                         .filter(({ errors }) => errors.length).length
                     }
                   >
-                    Oluştur
+                    Kaydet
                   </Button>
                 )}
               </Form.Item>

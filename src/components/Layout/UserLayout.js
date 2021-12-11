@@ -6,7 +6,8 @@ import MyActiveAppointments from "../../components/User/myActiveAppointments";
 import MyCanceledAppointments from "../../components/User/MyCanceledAppointments";
 import MyPreviousAppointments from "../../components/User/MyPreviousAppointments";
 import MyOncomingAppointments from "../../components/User/MyOncomingAppointments";
-import AppointmentPlan from "../Shop/AppointmentPlan";
+import SaveAppointmentPlan from "../Shop/SaveAppointmentPlan";
+import AppointmentPlanList from "../Shop/AppointmentPlanList";
 import ShopServices from "../Shop/ShopServices";
 import ShopProfile from "../Shop/ShopProfile";
 import ShopImages from "../Shop/ShopImages";
@@ -168,8 +169,12 @@ export default function UserLayout() {
                         component={MyPreviousAppointments}
                       />
                       <Route
-                        path="/appointmentPlan"
-                        component={AppointmentPlan}
+                        path="/appointmentPlanList"
+                        component={AppointmentPlanList}
+                      />
+                      <Route
+                        path="/saveAppointmentPlan/:planId"
+                        component={SaveAppointmentPlan}
                       />
                       <Route path="/userProfile" component={UserProfile} />
                       <Route path="/comments" component={Comments} />

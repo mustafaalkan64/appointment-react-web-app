@@ -85,8 +85,11 @@ const SideNav = () => {
   const handleMyActiveAppointments = () => {
     history.push("/myActiveAppointments");
   };
-  const handleAppointmentPlan = () => {
-    history.push("/appointmentPlan");
+  const handleCreateNewAppointmentPlan = () => {
+    history.push("/saveAppointmentPlan/0");
+  };
+  const handleAppointmentPlanList = () => {
+    history.push("/appointmentPlanList");
   };
   const handleMyCanceledAppointments = () => {
     history.push("/myCanceledAppointments");
@@ -182,8 +185,11 @@ const SideNav = () => {
                 icon={<CheckSquareOutlined />}
                 title={<span>Randevu Bilgilerim</span>}
               >
-                <Menu.Item key="8" onClick={handleAppointmentPlan}>
-                  Randevu Planı Yönetme
+                <Menu.Item key="8" onClick={handleCreateNewAppointmentPlan}>
+                  Yeni Randevu Planı Oluştur
+              </Menu.Item>
+                <Menu.Item key="21" onClick={handleAppointmentPlanList}>
+                  Randevu Planlarım
               </Menu.Item>
                 <Menu.Item key="9" onClick={handleAppointmentCalender}>
                   Randevu Takvimim
