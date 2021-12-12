@@ -36,7 +36,7 @@ const Comments = () => {
                 setLoading(false);
             })
             .catch((error) => {
-                message.error(error.response.data);
+                message.error(error.response.data.message);
                 setLoading(false);
             });
     }
@@ -61,7 +61,7 @@ const Comments = () => {
                 setLoading(false);
             })
             .catch((error) => {
-                message.error(error.response.data);
+                message.error(error.response.data.message);
                 setLoading(false);
             });
     }, [token]);
@@ -130,7 +130,7 @@ const Comments = () => {
                 setLoading(false);
             })
             .catch((error) => {
-                message.error(error.response.data);
+                message.error(error.response.data.message);
                 setLoading(false);
             });
     }
@@ -150,7 +150,7 @@ const Comments = () => {
                 setLoading(false);
             })
             .catch((error) => {
-                message.error(error.response.data);
+                message.error(error.response.data.message);
                 setLoading(false);
             });
     }

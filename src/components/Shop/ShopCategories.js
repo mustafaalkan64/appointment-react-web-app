@@ -36,7 +36,7 @@ const ShopCategories = () => {
           if (error.response.status === 401) {
             history.push("/login");
           } else {
-            message.error(error.response.data);
+            message.error(error.response.data.message);
           }
           setLoading(false);
         });
@@ -57,7 +57,7 @@ const ShopCategories = () => {
           if (error.response.status === 401) {
             history.push("/login");
           } else {
-            message.error(error.response.data);
+            message.error(error.response.data.message);
           }
           setLoading(false);
         });
@@ -91,7 +91,7 @@ const ShopCategories = () => {
           history.push("/login");
           message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
         } else {
-          message.error(error.response.data);
+          message.error(error.response.data.message);
         }
         setSaveLoading(false);
       });

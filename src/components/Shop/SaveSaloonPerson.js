@@ -80,7 +80,7 @@ const SaveSaloonPersons = () => {
                     history.push("/login");
                     message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
                 } else {
-                    message.error(error.response.data);
+                    message.error(error.response.data.message);
                 }
             });
     }, [form, history, token]);
@@ -118,7 +118,7 @@ const SaveSaloonPersons = () => {
                     history.push("/login");
                     message.error("Bu İşlemi Yapmaya Yetkiniz Yok!");
                 } else {
-                    message.error(error.response.data);
+                    message.error(error.response.data.message);
                 }
             });
     };

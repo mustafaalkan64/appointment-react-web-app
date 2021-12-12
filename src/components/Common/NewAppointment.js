@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Layout, message, Row, Col, Image, Spin, Modal, Skeleton, Breadcrumb, Select, Anchor, Alert, Button } from 'antd';
+import { Card, Layout, message, Row, Col, Image, Spin, Modal, Skeleton, Breadcrumb, Select, Alert, Button } from 'antd';
 import MainHeader from "./MainHeader";
 import MainFooter from "./MainFooter";
 import {
@@ -9,17 +9,6 @@ import API from "../../api";
 import { useHistory } from "react-router";
 import { imageUrlDirectory } from "../../constUrls";
 import { cardStyle, headStyle } from "../../assets/styles/styles";
-const layout = {
-    labelCol: {
-        span: 2,
-    },
-    wrapperCol: {
-        span: 16,
-    },
-};
-
-const { Link } = Anchor;
-
 const { Content } = Layout;
 
 const NewAppointment = () => {
@@ -56,13 +45,13 @@ const NewAppointment = () => {
             SaloonId: saloonId
         };
 
-        if (selectedServices == null || selectedServices.length == 0) {
+        if (selectedServices === null || selectedServices.length === 0) {
             setIsModalVisible(false);
             message.error("En Az Bir Hizmet Seçmelisiniz");
             return;
         }
 
-        if (selectedSaloonPersonel == null || selectedSaloonPersonel == undefined) {
+        if (selectedSaloonPersonel === null || selectedSaloonPersonel === undefined) {
             setIsModalVisible(false);
             message.error("En Az Bir Personel Seçmelisiniz");
             return;
@@ -128,7 +117,7 @@ const NewAppointment = () => {
             })
                 .then((res) => {
                     setFound(true);
-                    if (res.data == null || res.data == undefined || res.data == '')
+                    if (res.data === null || res.data === undefined || res.data === '')
                         setFound(false);
                     setSaloonInformation(res.data);
                     setLogo(imageUrlDirectory + res.data.logoUrl);
@@ -139,7 +128,7 @@ const NewAppointment = () => {
                     if (error.response.status === 404) {
                         setFound(false);
                     } else {
-                        message.error(error.response.data);
+                        message.error(error.response.data.message);
                     }
                     setLoading(false);
                     return false;
@@ -162,7 +151,7 @@ const NewAppointment = () => {
                     setServicesLoading(false);
                 })
                 .catch((error) => {
-                    console.log(error.response.data);
+                    console.log(error.response.data.message);
                     setServicesLoading(false);
                 });
         };
@@ -179,7 +168,7 @@ const NewAppointment = () => {
                     setPersonelsLoading(false);
                 })
                 .catch((error) => {
-                    console.log(error.response.data);
+                    message.error(error.response.data.message);
                     setPersonelsLoading(false);
                 });
         };
@@ -188,6 +177,7 @@ const NewAppointment = () => {
         getSaloonServices();
         getSaloonPersonels();
         getCurrentWeekAppointments();
+        getWeeklyAppointments(0);
 
     }, [saloonId]);
 
@@ -212,13 +202,13 @@ const NewAppointment = () => {
 
     const showAppointmentModal = (beginDate, endDate, dayOfWeek) => {
 
-        if (selectedServices == null || selectedServices.length == 0) {
+        if (selectedServices === null || selectedServices.length === 0) {
             setIsModalVisible(false);
             message.error("En Az Bir Hizmet Seçmelisiniz");
             return;
         }
 
-        if (selectedSaloonPersonel == null || selectedSaloonPersonel == undefined) {
+        if (selectedSaloonPersonel === null || selectedSaloonPersonel === undefined) {
             setIsModalVisible(false);
             message.error("En Az Bir Personel Seçmelisiniz");
             return;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import { List, message, Row, Col, Card, Skeleton, Avatar, Button } from "antd";
+import { List, message, Row, Col, Card, Skeleton, Button } from "antd";
 import { useHistory } from "react-router";
 import API from "../../api";
 import "moment/locale/tr";

@@ -1,23 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Layout, Spin, Skeleton, Result, Anchor, Alert, Button } from 'antd';
+import { Card, Layout, Spin, Skeleton, Result, Alert, Button } from 'antd';
 import MainHeader from "./MainHeader";
 import MainFooter from "./MainFooter";
 import {
     useParams
 } from "react-router-dom";
-import API from "../../api";
 import { cardStyle, headStyle } from "../../assets/styles/styles";
 import { useHistory } from "react-router";
-const layout = {
-    labelCol: {
-        span: 2,
-    },
-    wrapperCol: {
-        span: 16,
-    },
-};
-
-const { Link } = Anchor;
 
 const { Content } = Layout;
 
@@ -27,17 +16,17 @@ const AppointmentResult = () => {
     const [loading, setLoading] = useState(false);
     const [found, setFound] = useState(false);
     const [appointmentResult, setAppointmentResult] = useState({});
-    // const history = useHistory();
-    const token = localStorage.getItem("auth_token");
 
     useEffect(() => {
-        debugger;
+
         const getAppointmentResult = () => {
+            setLoading(true);
             if (localStorage.getItem('appointmentResult') != null) {
                 var retrievedAppointment = JSON.parse(localStorage.getItem('appointmentResult'));
                 setAppointmentResult(retrievedAppointment);
                 setFound(true);
             }
+            setLoading(false);
         }
         getAppointmentResult();
 

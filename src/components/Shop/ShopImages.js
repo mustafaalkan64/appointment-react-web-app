@@ -49,7 +49,7 @@ export const ShopImages = () => {
         if (error.response.status === 401 || error.response.status === 403) {
           history.push("/login");
         } else {
-          message.error(error.response.data);
+          message.error(error.response.data.message);
         }
         setLoading(false);
       });
@@ -85,7 +85,7 @@ export const ShopImages = () => {
             if (error.response.status === 401) {
               history.push("/login");
             } else {
-              message.error(error.response.data);
+              message.error(error.response.data.message);
             }
             setLoading(false);
           });
@@ -118,7 +118,7 @@ export const ShopImages = () => {
           if (error.response.status === 401) {
             history.push("/login");
           } else {
-            message.error(error.response.data);
+            message.error(error.response.data.message);
           }
           setLoading(false);
         });

@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Menu, message, notification, Image, Skeleton } from "antd";
+import { Menu, message, Image, Skeleton } from "antd";
 import API from "../../api";
 import UserContext from "../../contexts/UserContext";
-import { HubConnectionBuilder } from "@microsoft/signalr";
-import { appointmentHub } from "../../constUrls";
+// import { HubConnectionBuilder } from "@microsoft/signalr";
+// import { appointmentHub } from "../../constUrls";
 import { imageUrlDirectory } from "../../constUrls";
 
 import {
@@ -21,7 +21,7 @@ const SideNav = () => {
     setIsLoggedIn,
     setToken,
     userRole,
-    currentShop,
+    // currentShop,
     token,
   } = useContext(UserContext);
   // const token = localStorage.getItem("auth_token");
@@ -69,7 +69,7 @@ const SideNav = () => {
             if (error.response.status === 401) {
               history.push("/login");
             } else {
-              message.error(error.response.data);
+              message.error(error.response.data.message);
             }
             setLoading(false);
           });

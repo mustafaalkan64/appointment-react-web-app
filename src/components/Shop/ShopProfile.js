@@ -74,7 +74,7 @@ const ShopProfile = () => {
       })
       .catch((error) => {
         if (error.response !== undefined) {
-          message.error(error.response.data);
+          message.error(error.response.data.message);
         } else {
           message.error(
             "Güncelleme Esnasında Hata ile Karşılaşıldı!"
@@ -150,7 +150,7 @@ const ShopProfile = () => {
           if (error.response.status === 401) {
             history.push("/login");
           } else {
-            message.error(error.response.data);
+            message.error(error.response.data.message);
           }
           setLoading(false);
         });
@@ -253,7 +253,7 @@ const ShopProfile = () => {
           } else if (error.response.status === 403) {
             history.push("/userProfile");
           } else {
-            message.error(error.response.data);
+            message.error(error.response.data.message);
           }
           setLoading(false);
         });

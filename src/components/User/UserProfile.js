@@ -146,7 +146,7 @@ const UserProfile = () => {
             history.push("/shopProfile");
           }
           else {
-            message.error(error.response.data);
+            message.error(error.response.data.message);
           }
           setLoading(false);
         });

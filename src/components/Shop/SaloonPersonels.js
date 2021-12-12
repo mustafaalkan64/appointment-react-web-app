@@ -38,7 +38,7 @@ const SaloonPersonels = () => {
                 if (error.response.status === 401) {
                     history.push("/login");
                 } else {
-                    message.error(error.response.data);
+                    message.error(error.response.data.message);
                 }
                 setLoading(false);
             });
@@ -64,7 +64,7 @@ const SaloonPersonels = () => {
                 if (error.response.status === 401) {
                     history.push("/login");
                 } else {
-                    message.error(error.response.data);
+                    message.error(error.response.data.message);
                 }
                 setLoading(false);
             });

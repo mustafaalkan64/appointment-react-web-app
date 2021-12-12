@@ -54,7 +54,7 @@ export default function LayoutHeader() {
 
       })
       .catch((error) => {
-        console.log(error.response.data);
+        console.log(error.response.data.message);
       });
   };
 

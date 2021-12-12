@@ -23,7 +23,7 @@ const { Link } = Anchor;
 const { Content } = Layout;
 
 const SaloonPage = () => {
-    let { saloonUrl, saloonId } = useParams();
+    let { saloonId } = useParams();
     const [loading, setLoading] = useState(false);
     const [servicesLoading, setServicesLoading] = useState(false);
     const [imagesLoading, setImagesLoading] = useState(false);
@@ -57,7 +57,7 @@ const SaloonPage = () => {
                 setCommentLoading(false);
             })
             .catch((error) => {
-                message.error(error.response.data);
+                message.error(error.response.data.message);
                 setCommentLoading(false);
             });
     }
@@ -94,7 +94,7 @@ const SaloonPage = () => {
                 if (error.response.status === 401 || error.response.status === 403) {
                     message.error("Yorum Yapabilmeniz İçin Kullanıcı Girişi Yapmanız Gerekmektedir!");
                 } else {
-                    message.error(error.response.data);
+                    message.error(error.response.data.message);
                 }
                 setCommentLoading(false);
             });
@@ -119,7 +119,7 @@ const SaloonPage = () => {
                     setCommentLoading(false);
                 })
                 .catch((error) => {
-                    message.error(error.response.data);
+                    message.error(error.response.data.message);
                     setCommentLoading(false);
                 });
         }
@@ -156,7 +156,7 @@ const SaloonPage = () => {
                     if (error.response.status === 404) {
                         setFound(false);
                     } else {
-                        message.error(error.response.data);
+                        message.error(error.response.data.message);
                     }
                     setLoading(false);
                     return false;
@@ -175,7 +175,7 @@ const SaloonPage = () => {
                     setServicesLoading(false);
                 })
                 .catch((error) => {
-                    console.log(error.response.data);
+                    console.log(error.response.data.message);
                     setServicesLoading(false);
                 });
         };
@@ -201,7 +201,7 @@ const SaloonPage = () => {
                     }
                 })
                 .catch((error) => {
-                    console.log(error.response.data);
+                    console.log(error.response.data.message);
                     setImagesLoading(false);
                 });
         };
@@ -218,7 +218,7 @@ const SaloonPage = () => {
                     setPersonelsLoading(false);
                 })
                 .catch((error) => {
-                    console.log(error.response.data);
+                    console.log(error.response.data.message);
                     setPersonelsLoading(false);
                 });
         };

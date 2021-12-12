@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { message, Row, Button, Col, Spin, Card, Table, Input, InputNumber, Popconfirm, Form, Typography } from "antd";
+import { message, Row, Col, Card, Table, Spin, Input, InputNumber, Popconfirm, Form, Typography } from "antd";
 import { useHistory } from "react-router";
 import API from "../../api";
 import "moment/locale/tr";
@@ -43,9 +43,7 @@ const EditableCell = ({
 
 const ShopServicesWithPrices = () => {
     const history = useHistory();
-    const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [saveLoading, setSaveLoading] = useState(false);
     const token = localStorage.getItem("auth_token");
     const [form] = Form.useForm();
     const [data, setData] = useState([]);
@@ -66,19 +64,15 @@ const ShopServicesWithPrices = () => {
                 },
             })
                 .then((res) => {
-                    debugger;
-                    setServices(res.data);
                     setData(res.data);
                     setLoading(false);
                 })
                 .catch((error) => {
                     if (error.response.status === 401) {
                         history.push("/login");
-                    } else if (error.response.status === 500) {
-                        message.error("Sunucu Kaynaklı Hata ile Karşılaşıldı.");
                     }
                     else {
-                        message.error(error.response.data);
+                        message.error(error.response.data.message);
                     }
                     setLoading(false);
                 });
@@ -143,13 +137,13 @@ const ShopServicesWithPrices = () => {
                     })
                     .catch((error) => {
                         if (error.response !== undefined) {
-                            if (error.response.status == 400) {
+                            if (error.response.status === 400) {
                                 message.error(
                                     "Lütfen Fiyat Formatlarını Doğru Giriniz"
                                 );
                             }
                             else {
-                                message.error(error.response.data);
+                                message.error(error.response.data.message);
                             }
 
                         } else {
@@ -271,25 +265,23 @@ const ShopServicesWithPrices = () => {
                         headStyle={headStyle}
                     >
                         <Form form={form} component={false}>
-                            <Table
-                                components={{
-                                    body: {
-                                        cell: EditableCell,
-                                    },
-                                }}
-                                bordered
-                                dataSource={data}
-                                columns={mergedColumns}
-                                rowClassName="editable-row"
-                                pagination={{
-                                    onChange: cancel,
-                                }}
-                            />
+                            <Spin spinning={loading} delay={500}>
+                                <Table
+                                    components={{
+                                        body: {
+                                            cell: EditableCell,
+                                        },
+                                    }}
+                                    bordered
+                                    dataSource={data}
+                                    columns={mergedColumns}
+                                    rowClassName="editable-row"
+                                    pagination={{
+                                        onChange: cancel,
+                                    }}
+                                />
+                            </Spin>
                         </Form>
-
-                        {/* <Spin spinning={loading} delay={500}>
-                            <Table dataSource={services} columns={columns} />
-                        </Spin> */}
                     </Card>
                 </Col>
             </Row>

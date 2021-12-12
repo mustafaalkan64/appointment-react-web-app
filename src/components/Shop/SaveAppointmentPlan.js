@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Redirect, useHistory } from "react-router";
+import { useHistory } from "react-router";
 import BreadCrumbContext from "../../contexts/BreadcrumbContext";
 import {
   Form,
@@ -84,6 +84,7 @@ const AppointmentPlan = () => {
     const getAppointmentPlan = async () => {
       setLoading(true);
       if (planId > 0) {
+        debugger;
         await API.get(`shop/getAppointmentPlanById?id=${planId}`, {
           headers: {
             "Content-Type": "application/json",
