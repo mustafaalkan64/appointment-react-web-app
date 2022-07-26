@@ -68,7 +68,10 @@ export default function Home() {
 
     const handlePlaceSearch = async (value) => {
 
-        await API.get(`place/getPlacesByQuery?query=${value}`, {
+        if (value == null || value == undefined) {
+            return;
+        }
+        await API.get(`place/filterPlacesByTerm?query=${value}`, {
             headers: {
                 "Content-Type": "application/json",
             },
@@ -119,7 +122,7 @@ export default function Home() {
 
     const handleServiceSearch = async (value) => {
 
-        await API.get(`services/getAllServicesByQuery?query=${value}`, {
+        await API.get(`services/filterAllServicesByQuery?query=${value}`, {
             headers: {
                 "Content-Type": "application/json",
             },
@@ -192,7 +195,7 @@ export default function Home() {
     };
 
     const onServiceSearch = (value, option) => {
-        setSelectedServiceId(option.value);
+        setSelectedServiceId(option.key);
     };
 
     const handleSortChange = useCallback((value) => {
@@ -209,7 +212,7 @@ export default function Home() {
             PageSize: 10,
             SortValue: value
         };
-        API.get(`home / search`, { params: searchModel }, {
+        API.get(`home/search`, { params: searchModel }, {
             headers: {
                 "Content-Type": "application/json",
             },
