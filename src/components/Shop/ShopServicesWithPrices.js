@@ -137,9 +137,10 @@ const ShopServicesWithPrices = () => {
                     })
                     .catch((error) => {
                         if (error.response !== undefined) {
+                            debugger;
                             if (error.response.status === 400) {
                                 message.error(
-                                    "Lütfen Fiyat Formatlarını Doğru Giriniz"
+                                    error.response.data.message
                                 );
                             }
                             else {

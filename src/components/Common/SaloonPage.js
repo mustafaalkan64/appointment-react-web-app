@@ -195,10 +195,11 @@ const SaloonPage = () => {
                         }, []);
 
                         setModifiedCollection(modifiedCollections);
-                        setImagesLoading(false);
                         // getCommentsRateAverage();
 
                     }
+                    setImagesLoading(false);
+
                 })
                 .catch((error) => {
                     console.log(error.response.data.message);
